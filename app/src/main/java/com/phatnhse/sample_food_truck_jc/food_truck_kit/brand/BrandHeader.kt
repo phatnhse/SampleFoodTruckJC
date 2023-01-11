@@ -1,8 +1,6 @@
 package com.phatnhse.sample_food_truck_jc.food_truck_kit.brand
 
 import android.content.res.Resources
-import android.util.DisplayMetrics
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.animateFloat
@@ -25,17 +23,16 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.Matrix
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.imageResource
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.phatnhse.sample_food_truck_jc.R
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.brand.HeaderSize.*
+import com.phatnhse.sample_food_truck_jc.food_truck_kit.brand.HeaderSize.REDUCE
+import com.phatnhse.sample_food_truck_jc.food_truck_kit.brand.HeaderSize.STANDARD
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.MultipleDevices
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.SingleDevice
 import com.phatnhse.sample_food_truck_jc.ui.theme.SkyEnd
 import com.phatnhse.sample_food_truck_jc.ui.theme.SkyStart
 
@@ -104,17 +101,17 @@ fun BrandHeader(
         Canvas(
             modifier = Modifier
                 .fillMaxWidth()
-                .offset{
+                .offset {
                     IntOffset(
                         x = 0, y = canvasSize.roundToPx()
                     )
                 }
         ) {
             val centerX = size.width * 0.5F
-            val yOffsetBackground = if (density < 3.0F) 490.dp.toPx() else 460.dp.toPx()
+            val yOffsetBackground = if (density < 3.0F) 420.dp.toPx() else 460.dp.toPx()
             val yOffsetRoad = if (density < 3.0F) 280.dp.toPx() else 295.dp.toPx()
-            val yOffsetTruck = if (density < 3.0F) 260.dp.toPx() else 275.dp.toPx()
-            val yOffsetForeground = if (density < 3.0F) 520.dp.toPx() else 480.dp.toPx()
+            val yOffsetTruck = if (density < 3.0F) 265.dp.toPx() else 275.dp.toPx()
+            val yOffsetForeground = if (density < 3.0F) 440.dp.toPx() else 480.dp.toPx()
 
             // draw background
             backgroundLayers.map { (layer, rotation) ->
@@ -142,9 +139,7 @@ fun BrandHeader(
                 )
                 scale(scaleX = scale, scaleY = scale, pivot = road.rect.center)
             }) {
-                drawImage(
-                    image = road.image, topLeft = road.rect.topLeft
-                )
+                drawImage(image = road.image, topLeft = road.rect.topLeft)
             }
 
             // draw truck
@@ -185,15 +180,6 @@ fun BrandHeader(
     }
 }
 
-@MultipleDevices
-@Composable
-fun Preview() {
-    Column {
-        BrandHeader(animated = true, headerSize = STANDARD)
-        BrandHeader(animated = true, headerSize = REDUCE)
-    }
-}
-
 enum class HeaderSize(val value: Float) {
     STANDARD(2F), REDUCE(1F)
 }
@@ -213,7 +199,6 @@ fun ImageResource.toCanvasLayer(res: Resources): RotatedLayer {
     val image = (ImageBitmap.imageResource(
         res = res, id = this.imageId
     ))
-    image.prepareToDraw()
 
     val width = image.width.toFloat()
     val height = image.height.toFloat()
@@ -267,3 +252,13 @@ val truckFrames = listOf(
         imageId = R.drawable.food_truck_frame_4
     )
 )
+
+
+@MultipleDevices
+@Composable
+fun Preview() {
+    Column {
+        BrandHeader(animated = true, headerSize = STANDARD)
+        BrandHeader(animated = true, headerSize = REDUCE)
+    }
+}

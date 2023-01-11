@@ -1,26 +1,11 @@
 package com.phatnhse.sample_food_truck_jc.truck.cards
 
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.ExitTransition
-import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.AnimationSpec
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.SpringSpec
-import androidx.compose.animation.core.Transition
+import android.annotation.SuppressLint
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.expandVertically
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
-import androidx.compose.animation.shrinkHorizontally
-import androidx.compose.animation.shrinkVertically
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOut
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.with
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -35,11 +20,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Constraints
@@ -52,7 +43,6 @@ import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.OrderDetail
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.SingleDevice
 import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun TruckOrdersCard(
     modifier: Modifier = Modifier,
@@ -62,8 +52,7 @@ fun TruckOrdersCard(
     val orders = viewModel.orders
 
     Card(
-        modifier = modifier,
-        colors = CardDefaults.cardColors(
+        modifier = modifier, colors = CardDefaults.cardColors(
             containerColor = Color.White
         )
     ) {
@@ -103,28 +92,20 @@ fun TruckOrdersCard(
         Spacer(modifier = Modifier.height(8.dp))
 
         HeroSquareTilingLayout(
-            modifier = Modifier,
-            spacing = padding
+            modifier = Modifier, spacing = padding
         ) {
             orders.asReversed().take(5).mapIndexed { reversedIndex, order ->
                 val orderIndex = reversedIndex + orders.size - 1
 
-                AnimatedContent(
-                    targetState = orderIndex,
-                    transitionSpec = {
-                        slideInHorizontally() with ExitTransition.None
-                    }
+                Card(
+                    colors = CardDefaults.cardColors(
+                        containerColor = colorScheme.surface
+                    )
                 ) {
-                    Card(
-                        colors = CardDefaults.cardColors(
-                            containerColor = colorScheme.surface
-                        )
-                    ) {
-                        DonutStackView(
-                            modifier = Modifier.padding(padding),
-                            OrderDetail(index = orderIndex, donuts = order.donuts)
-                        )
-                    }
+                    DonutStackView(
+                        modifier = Modifier.padding(padding),
+                        OrderDetail(index = orderIndex, donuts = order.donuts)
+                    )
                 }
             }
         }
@@ -160,14 +141,38 @@ fun TruckOrdersCard(
     }
 }
 
+private enum class SubViewState {
+    IDLE, MOVING
+}
+
+private data class DonutPlaceable(
+    val placeable: Placeable,
+    val x: Int,
+    val y: Int,
+    val width: Int,
+    val height: Int
+)
+
+@SuppressLint("UnusedTransitionTargetStateParameter")
 @Composable
-fun HeroSquareTilingLayout(
+private fun HeroSquareTilingLayout(
     modifier: Modifier = Modifier,
     spacing: Dp = 12.dp,
     content: @Composable () -> Unit,
 ) {
+    val donutViews: MutableList<DonutPlaceable> = mutableListOf()
+
+    val view1 = remember {
+        mutableStateOf(SubViewState.IDLE)
+    }
+    val animation1 = updateTransition(targetState = view1.value, label = "view1")
+    val position = animation1.animateFloat() {
+        when()
+    }
+
     Layout(
-        modifier = modifier, content = content
+        modifier = modifier,
+        content = content,
     ) { measurables, constraints ->
         val subViews = measurables.take(5)
 
@@ -181,41 +186,64 @@ fun HeroSquareTilingLayout(
         val halfSize = (size * 0.5).toInt()
         val tileSize = (halfSize * 0.5).toInt()
 
-        layout(constraints.maxWidth, halfSize) {
-            subViews.forEachIndexed { index, subView ->
-                when (index) {
-                    0 -> {
-                        val placeable = subView.measure(
-                            Constraints.fixed(width = halfSize, height = halfSize)
+        // measurement
+        subViews.forEachIndexed { index, subView ->
+            when (index) {
+                0 -> {
+                    val placeable = subView.measure(
+                        Constraints.fixed(width = halfSize, height = halfSize)
+                    )
+
+                    donutViews.add(
+                        index,
+                        DonutPlaceable(
+                            placeable = placeable,
+                            x = 0 + spacingInPx,
+                            y = 0,
+                            width = halfSize,
+                            height = halfSize
                         )
-
-                        placeable.placeRelative(
-                            x = 0 + spacingInPx, y = 0
-                        )
-                    }
-
-                    else -> {
-                        val tileIndex = index - 1
-                        val xPos = if (tileIndex % 2 == 0) 0 else 1
-                        val yPos = if (tileIndex < 2) 0 else 1
-
-                        val placeable = subView.measure(
-                            Constraints.fixed(
-                                width = tileSize, height = tileSize - halfSpacing
-                            )
-                        )
-
-                        val firstSubViewTotalWidth = halfSize + spacingInPx + spacingInPx
-                        val subViewTotalWidth = xPos * (tileSize + spacingInPx)
-                        val topLefOffset = firstSubViewTotalWidth + subViewTotalWidth
-
-                        placeable.placeRelativeWithLayer(
-                            IntOffset(
-                                x = topLefOffset, y = yPos * (tileSize + halfSpacing)
-                            )
-                        )
-                    }
+                    )
                 }
+
+                else -> {
+                    val tileIndex = index - 1
+                    val xPos = if (tileIndex % 2 == 0) 0 else 1
+                    val yPos = if (tileIndex < 2) 0 else 1
+
+                    val placeable = subView.measure(
+                        Constraints.fixed(
+                            width = tileSize,
+                            height = tileSize - halfSpacing
+                        )
+                    )
+
+                    val firstSubViewTotalWidth = halfSize + spacingInPx + spacingInPx
+                    val subViewTotalWidth = xPos * (tileSize + spacingInPx)
+                    val topLefOffset = firstSubViewTotalWidth + subViewTotalWidth
+
+                    donutViews.add(
+                        index,
+                        DonutPlaceable(
+                            placeable = placeable,
+                            x = topLefOffset,
+                            y = yPos * (tileSize + halfSpacing),
+                            width = tileSize,
+                            height = tileSize - halfSpacing
+                        )
+                    )
+                }
+            }
+        }
+
+
+        // placement
+        layout(constraints.maxWidth, halfSize) {
+            donutViews.forEachIndexed { index, donutPlaceable ->
+                donutPlaceable.placeable.placeRelative(
+                    donutPlaceable.x,
+                    donutPlaceable.y
+                )
             }
         }
     }
@@ -228,3 +256,4 @@ fun TruckOrdersCard_Preview() {
         TruckOrdersCard()
     }
 }
+
