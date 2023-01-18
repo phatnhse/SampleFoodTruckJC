@@ -8,6 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
+import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.MultipleDevices
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.ingredientImage
 import kotlin.math.min
 
@@ -60,7 +61,7 @@ fun DonutView(
     }
 }
 
-@Preview(showBackground = true, device = "id:pixel_5")
+@MultipleDevices
 @Composable
 fun DonutView_Preview() {
     DonutView(donut = Donut.preview)
@@ -73,4 +74,4 @@ data class DonutLayer(
 )
 
 private val all = DonutLayer()
-private const val DONUT_THUMBNAIL_SIZE = 192
+private const val DONUT_THUMBNAIL_SIZE = 72

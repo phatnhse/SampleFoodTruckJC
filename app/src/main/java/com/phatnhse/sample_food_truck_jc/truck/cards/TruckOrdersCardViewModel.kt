@@ -12,17 +12,14 @@ import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
 class TruckOrdersCardViewModel : ViewModel() {
-    private val _orders = mutableStateListOf<Order>()
+    private val _orders = mutableStateListOf(*Order.previews.toTypedArray())
     val orders: List<Order> = _orders
 
     private val _state = mutableStateOf(false)
     val state: MutableState<Boolean> = _state
 
     init {
-        _orders.addAll(Order.previews)
-
         viewModelScope.launch {
-            Log.d("nhp", "run delay")
             while (true) {
                 delay(3.seconds)
                 val generatedOrders = Order.previews[(0 until Order.previews.size).random()]
