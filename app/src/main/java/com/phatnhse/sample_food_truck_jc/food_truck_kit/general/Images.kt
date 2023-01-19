@@ -15,6 +15,11 @@ fun donutSymbol(): Painter {
 }
 
 @Composable
+fun shippingSymbol(): Painter {
+    return painterResource(id = R.drawable.shipping_box)
+}
+
+@Composable
 fun flavorSymbol(flavor: Flavor): Painter {
     return when (flavor) {
         is Bitter -> painterResource(id = R.drawable.bitter)

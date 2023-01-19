@@ -14,13 +14,14 @@ import kotlin.math.min
 
 @Composable
 fun DonutView(
+    modifier: Modifier = Modifier,
     donut: Donut,
     visibleLayers: DonutLayer = all
 ) {
     val density = LocalDensity.current
 
     BoxWithConstraints(
-        modifier = Modifier
+        modifier = modifier
             .aspectRatio(ratio = 1F, matchHeightConstraintsFirst = true)
             .fillMaxSize()
     ) {
