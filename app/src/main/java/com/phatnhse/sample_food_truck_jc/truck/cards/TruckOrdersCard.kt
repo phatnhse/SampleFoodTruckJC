@@ -1,16 +1,13 @@
 package com.phatnhse.sample_food_truck_jc.truck.cards
 
 import android.annotation.SuppressLint
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.SpringSpec
 import androidx.compose.animation.core.VectorConverter
+import androidx.compose.animation.core.animateInt
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.scaleOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.with
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -24,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
@@ -38,6 +36,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.phatnhse.sample_food_truck_jc.R
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.DonutStackView
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.OrderDetail
@@ -50,89 +49,117 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
 
-val padding: Dp = 12.dp
+val padding = 12.dp
 
 @Composable
 fun TruckOrdersCard(
-    modifier: Modifier = Modifier, viewModel: TruckOrdersCardViewModel = TruckOrdersCardViewModel()
+    modifier: Modifier = Modifier,
+    viewModel: TruckOrdersCardViewModel = TruckOrdersCardViewModel()
 ) {
     Card(
         modifier = modifier, colors = CardDefaults.cardColors(
             containerColor = Color.White
         )
     ) {
-        OrderHeader()
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = padding),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                modifier = Modifier
+                    .height(24.dp)
+                    .width(24.dp),
+                painter = painterResource(id = R.drawable.shipping_box),
+                contentDescription = "Donut",
+                colorFilter = ColorFilter.tint(color = colorScheme.tertiary)
+            )
+
+            Text(
+                modifier = Modifier.padding(padding),
+                text = "New Order",
+                color = colorScheme.tertiary,
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.SemiBold
+            )
+
+            Image(
+                modifier = Modifier
+                    .height(12.dp)
+                    .width(6.dp),
+                painter = painterResource(id = R.drawable.chevron_right),
+                contentDescription = "Donut",
+                colorFilter = ColorFilter.tint(color = colorScheme.onBackground)
+            )
+        }
 
         HeroSquareTilingLayout(
-            modifier = Modifier.padding(vertical = padding),
-            orders = viewModel.orders.asReversed().take(5),
-            orderAdded = viewModel.state.value
+            modifier = Modifier.padding(vertical = 8.dp),
+            spacing = padding,
+            orders = viewModel.orders.asReversed().take(5)
         )
 
-        LastOrder()
+        LatestOrder(viewModel.orderAdded)
     }
 }
 
 @Composable
-fun OrderHeader() {
+fun LatestOrder(
+    orderAdded: MutableState<Boolean>
+) {
+    val latestOrder = updateTransition(targetState = orderAdded.value, "order added animation")
+
+    val animateFontWeight = latestOrder.animateInt(
+        label = "animate weight"
+    ) {
+        when (it) {
+            true -> 800
+            false -> 400
+        }
+    }
+    val animateFontSize = latestOrder.animateInt(
+        label = "animate font size"
+    ) {
+        when (it) {
+            true -> 16
+            false -> 15
+        }
+    }
+
+    if (latestOrder.currentState == latestOrder.targetState) {
+        orderAdded.value = false
+    }
+
     Row(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = padding),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Image(
-            modifier = Modifier
-                .height(24.dp)
-                .width(24.dp),
-            painter = painterResource(id = R.drawable.shipping_box),
-            contentDescription = "Donut",
-            colorFilter = ColorFilter.tint(color = colorScheme.tertiary)
-        )
-
-        Text(
-            modifier = Modifier.padding(padding),
-            text = "New Order",
-            color = colorScheme.tertiary,
-            style = MaterialTheme.typography.bodyLarge,
-            fontWeight = FontWeight.SemiBold
-        )
-
-        Image(
-            modifier = Modifier
-                .height(12.dp)
-                .width(6.dp),
-            painter = painterResource(id = R.drawable.chevron_right),
-            contentDescription = "Donut",
-            colorFilter = ColorFilter.tint(color = colorScheme.onBackground)
-        )
-    }
-}
-
-@Composable
-fun LastOrder() {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
+            .fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
             modifier = Modifier.padding(padding),
             text = "Order#1224",
-            color = colorScheme.onBackground
+            fontSize = animateFontSize.value.sp,
+            color = colorScheme.onBackground,
+            fontWeight = FontWeight(animateFontWeight.value)
         )
 
         Image(
             modifier = Modifier
-                .height(24.dp)
-                .width(24.dp),
+                .height((animateFontSize.value + 9).dp)
+                .width(((animateFontSize.value + 9)).dp),
             painter = painterResource(id = R.drawable.donut),
             contentDescription = "Donut",
             colorFilter = ColorFilter.tint(color = colorScheme.onBackground)
         )
 
         Text(
-            modifier = Modifier.padding(padding), text = "hihi", color = colorScheme.onBackground
+            modifier = Modifier.padding(padding),
+            text = "Lorem Ipsum",
+            fontSize = animateFontSize.value.sp,
+            color = colorScheme.onBackground,
+            fontWeight = FontWeight(animateFontWeight.value)
         )
     }
 }
@@ -144,63 +171,26 @@ class PlaceableInfo(
     val targetSize: IntSize? = null
 ) {
     val animatedOffset = Animatable(
-        initialOffset ?: IntOffset.Zero, IntOffset.VectorConverter
+        initialOffset ?: IntOffset.Zero,
+        IntOffset.VectorConverter
     )
     val animatedSize = Animatable(
-        initialSize ?: IntSize.Zero, IntSize.VectorConverter
+        initialSize ?: IntSize.Zero,
+        IntSize.VectorConverter
     )
-}
-
-fun runAnimationIfNeeded(
-    scope: CoroutineScope, placeableInfo: List<PlaceableInfo>
-) {
-    fun <T> getAnimationSpec(): SpringSpec<T> {
-        return spring(
-            stiffness = Spring.StiffnessLow, dampingRatio = 1F
-        )
-    }
-
-    scope.launch {
-        try {
-            val jobs = mutableListOf<Job>()
-            placeableInfo.forEach { placeable ->
-                placeable.targetOffset?.let { targetOffset ->
-                    val animateOffsetJob = launch {
-                        placeable.animatedOffset.animateTo(
-                            targetValue = targetOffset, getAnimationSpec()
-                        )
-                    }
-                    jobs.add(animateOffsetJob)
-                }
-
-                placeable.targetSize?.let { targetSize ->
-                    val animateSizeJob = launch {
-                        placeable.animatedSize.animateTo(
-                            targetValue = targetSize, getAnimationSpec()
-                        )
-                    }
-
-                    jobs.add(animateSizeJob)
-                }
-            }
-
-            jobs.joinAll()
-        } catch (_: CancellationException) {
-            // we don't reset inProgress in case of cancellation as it means
-            // there is a new animation started which would reset it later
-        }
-    }
 }
 
 enum class DonutSize { BIG, SMALL }
 
-@OptIn(ExperimentalAnimationApi::class)
 @SuppressLint("UnrememberedAnimatable")
 @Composable
 fun HeroSquareTilingLayout(
-    modifier: Modifier = Modifier, orders: List<Order>, orderAdded: Boolean
+    modifier: Modifier = Modifier,
+    spacing: Dp,
+    orders: List<Order>
 ) {
     val scope = rememberCoroutineScope()
+
     val itemPositions = remember { mutableMapOf<Int, IntOffset>() }
     val itemSizes = remember { mutableMapOf<DonutSize, IntSize>() }
 
@@ -219,7 +209,8 @@ fun HeroSquareTilingLayout(
 
             else -> {
                 PlaceableInfo(
-                    initialOffset = itemPositions[index], targetOffset = itemPositions[index + 1]
+                    initialOffset = itemPositions[index],
+                    targetOffset = itemPositions[index + 1]
                 )
             }
         }
@@ -229,16 +220,13 @@ fun HeroSquareTilingLayout(
 
     Layout(modifier = modifier, content = {
         orders.map { order ->
-            AnimatedContent(targetState = orderAdded, transitionSpec = {
-                slideInHorizontally() with scaleOut()
-            }) {
-                DonutStackView(
-                    modifier = Modifier.padding(padding), OrderDetail(donuts = order.donuts)
-                )
-            }
+            DonutStackView(
+                modifier = Modifier.padding(spacing),
+                orderDetail = OrderDetail(donuts = order.donuts)
+            )
         }
     }) { measurables, constraints ->
-        val spaceBetweenItems = padding.roundToPx()
+        val spaceBetweenItems = spacing.roundToPx()
         val totalHorizontalSpace = spaceBetweenItems * 4
 
         val maxWidth = constraints.maxWidth - totalHorizontalSpace
@@ -256,7 +244,7 @@ fun HeroSquareTilingLayout(
             measurables.forEachIndexed { index, _ ->
                 when (index) {
                     0 -> {
-                        itemPositions[0] = IntOffset(x = spaceBetweenItems, y = 0)
+                        itemPositions[0] = IntOffset(spaceBetweenItems, 0)
                     }
 
                     else -> {
@@ -282,12 +270,13 @@ fun HeroSquareTilingLayout(
                 when (index) {
                     0 -> {
                         val constraint = Constraints.fixed(
-                            width = bigDonutSize.width, height = bigDonutSize.height
+                            width = bigDonutSize.width,
+                            height = bigDonutSize.height
                         )
                         val placeable = measurable.measure(constraint)
 
-                        placeable.placeRelative(
-                            itemPositions[0] ?: IntOffset.Zero
+                        placeable.placeRelativeWithLayer(
+                            itemPositions[index] ?: IntOffset.Zero
                         )
                     }
 
@@ -299,17 +288,64 @@ fun HeroSquareTilingLayout(
                             )
                         } else {
                             Constraints.fixed(
-                                width = smallDonutSize.width, height = smallDonutSize.height
+                                width = smallDonutSize.width,
+                                height = smallDonutSize.height
                             )
                         }
                         val placeable = measurable.measure(constraint)
 
-                        placeable.placeRelative(
+                        placeable.placeRelativeWithLayer(
                             placeableInfo[index - 1].animatedOffset.value
                         )
                     }
                 }
             }
+        }
+    }
+}
+
+
+fun runAnimationIfNeeded(
+    scope: CoroutineScope,
+    placeableInfo: List<PlaceableInfo>
+) {
+    fun <T> getAnimationSpec(): SpringSpec<T> {
+        return spring(
+            stiffness = Spring.StiffnessLow,
+            dampingRatio = 0.8F
+        )
+    }
+
+    scope.launch {
+        try {
+            val jobs = mutableListOf<Job>()
+            placeableInfo.forEach { placeable ->
+                placeable.targetOffset?.let { targetOffset ->
+                    val animateOffsetJob = launch {
+                        placeable.animatedOffset.animateTo(
+                            targetValue = targetOffset,
+                            animationSpec = getAnimationSpec()
+                        )
+                    }
+                    jobs.add(animateOffsetJob)
+                }
+
+                placeable.targetSize?.let { targetSize ->
+                    val animateSizeJob = launch {
+                        placeable.animatedSize.animateTo(
+                            targetValue = targetSize,
+                            animationSpec = getAnimationSpec()
+                        )
+                    }
+
+                    jobs.add(animateSizeJob)
+                }
+            }
+
+            jobs.joinAll()
+        } catch (_: CancellationException) {
+            // we don't reset inProgress in case of cancellation as it means
+            // there is a new animation started which would reset it later
         }
     }
 }

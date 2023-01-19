@@ -2,25 +2,26 @@ package com.phatnhse.sample_food_truck_jc.ui.theme
 
 import androidx.compose.ui.graphics.Color
 
-val Purple80 = Color(0xFFD0BCFF)
-val PurpleGrey80 = Color(0xFFCCC2DC)
-val Tertiary = Color(0xFF5856D6)
+val primaryDark = Color(0xFFD0BCFF)
+val secondaryDark = Color(0xFFCCC2DC)
 
-val Purple40 = Color(0xFF6650a4)
-val PurpleGrey40 = Color(0xFF625b71)
+val tertiaryDark = Color(0xFF5856D6)
+val tertiaryLight = Color(0xFF5856D6)
 
-// Brand header
+val primaryLight = Color(0xFF6650a4)
+val secondaryLight = Color(0xFF625b71)
+
 val SkyStart = Color(0xFF7ACFED)
 val SkyEnd = Color(0xFF7897EC)
 
-val backgroundDark = Color(0xFF5D5D97)
-val backgroundLight = Color(0xFFF2F2F7)
+val backgroundDark = Color(0xFF1c1b1e)
+val backgroundLight = Color(0xFFfffbff)
 
 val cardBackgroundLight = Color(0xFFEFEFF0)
 val cardBackgroundDark = Color(0xFFEFEFF0)
 
-val onBackgroundLight = Color(0xFF8A8A8E)
-val onBackgroundDark = Color(0xFF373739)
+val onBackgroundDark = Color(0xFFe6e1e6)
+val onBackgroundLight = Color(0xFF1c1b1e)
 
 // Donut
 val donutSugarDark = Color(0xFFCEF9FF)
