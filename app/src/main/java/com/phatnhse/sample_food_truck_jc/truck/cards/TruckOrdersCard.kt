@@ -42,14 +42,13 @@ import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.DonutStackView
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.OrderDetail
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.SingleDevice
 import com.phatnhse.sample_food_truck_jc.order.Order
+import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.joinAll
 import kotlinx.coroutines.launch
-
-val padding = 12.dp
 
 @Composable
 fun TruckOrdersCard(
@@ -64,7 +63,7 @@ fun TruckOrdersCard(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = padding),
+                .padding(horizontal = PaddingNormal),
             verticalAlignment = Alignment.CenterVertically
         ) {
             Image(
@@ -77,7 +76,7 @@ fun TruckOrdersCard(
             )
 
             Text(
-                modifier = Modifier.padding(padding),
+                modifier = Modifier.padding(PaddingNormal),
                 text = "New Order",
                 color = colorScheme.tertiary,
                 style = MaterialTheme.typography.bodyLarge,
@@ -96,7 +95,7 @@ fun TruckOrdersCard(
 
         HeroSquareTilingLayout(
             modifier = Modifier.padding(vertical = 8.dp),
-            spacing = padding,
+            spacing = PaddingNormal,
             orders = viewModel.orders.asReversed().take(5)
         )
 
@@ -138,7 +137,7 @@ fun LatestOrder(
         horizontalArrangement = Arrangement.Center
     ) {
         Text(
-            modifier = Modifier.padding(padding),
+            modifier = Modifier.padding(PaddingNormal),
             text = "Order#1224",
             fontSize = animateFontSize.value.sp,
             color = colorScheme.onBackground,
@@ -155,7 +154,7 @@ fun LatestOrder(
         )
 
         Text(
-            modifier = Modifier.padding(padding),
+            modifier = Modifier.padding(PaddingNormal),
             text = "Lorem Ipsum",
             fontSize = animateFontSize.value.sp,
             color = colorScheme.onBackground,
