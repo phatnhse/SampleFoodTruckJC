@@ -15,8 +15,23 @@ fun donutSymbol(): Painter {
 }
 
 @Composable
+fun socialFeedSymbol(): Painter {
+    return painterResource(id = R.drawable.text_bubble)
+}
+
+@Composable
 fun shippingSymbol(): Painter {
     return painterResource(id = R.drawable.shipping_box)
+}
+
+@Composable
+fun buildingSymbol(): Painter {
+    return painterResource(id = R.drawable.building)
+}
+
+@Composable
+fun tagSymbol(): Painter {
+    return painterResource(id = R.drawable.tag)
 }
 
 @Composable
