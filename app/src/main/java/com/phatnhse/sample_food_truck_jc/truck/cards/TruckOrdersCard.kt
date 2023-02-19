@@ -16,7 +16,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
@@ -38,6 +37,7 @@ import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.DonutStackView
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.OrderDetail
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.SingleDevice
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.shippingSymbol
+import com.phatnhse.sample_food_truck_jc.food_truck_kit.model.FoodTruckViewModel
 import com.phatnhse.sample_food_truck_jc.navigation.HeaderNavigation
 import com.phatnhse.sample_food_truck_jc.order.Order
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
@@ -51,10 +51,11 @@ import kotlinx.coroutines.launch
 @Composable
 fun TruckOrdersCard(
     modifier: Modifier = Modifier,
-    viewModel: TruckOrdersCardViewModel = TruckOrdersCardViewModel()
+    viewModel: FoodTruckViewModel = FoodTruckViewModel()
 ) {
     Card(
-        modifier = modifier, colors = CardDefaults.cardColors(
+        modifier = modifier,
+        colors = CardDefaults.cardColors(
             containerColor = Color.White
         )
     ) {
