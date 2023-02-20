@@ -56,7 +56,7 @@ fun TruckOrdersCard(
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = colorScheme.surface
         )
     ) {
         HeaderNavigation(

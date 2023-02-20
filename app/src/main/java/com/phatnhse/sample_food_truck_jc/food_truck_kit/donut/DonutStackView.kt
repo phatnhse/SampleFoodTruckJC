@@ -12,6 +12,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -34,7 +35,7 @@ fun DonutStackView(
 ) {
     Card(
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = colorScheme.secondaryContainer
         )
     ) {
         Box(
@@ -53,13 +54,13 @@ fun DonutStackView(
                     modifier = Modifier
                         .size(23.dp)
                         .clip(CircleShape)
-                        .background(Color.LightGray)
+                        .background(colorScheme.surfaceVariant)
                         .zIndex(1000F),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         text = "+${extra}",
-                        color = Color.DarkGray,
+                        color = colorScheme.onSurface,
                         fontSize = 8.sp
                     )
                 }

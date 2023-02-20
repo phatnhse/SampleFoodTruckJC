@@ -27,20 +27,18 @@ import java.lang.Integer.min
 @Composable
 fun TruckSocialFeedCard(
     modifier: Modifier = Modifier,
-    tags: List<SocialFeedTag>
+    tags: List<SocialFeedTag> = SocialFeedTag.tags
 ) {
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = colorScheme.surface
         )
     ) {
         HeaderNavigation(
             title = "Social Feed",
             symbol = socialFeedSymbol(),
-            color = colorScheme.onBackground.copy(
-                alpha = 0.5F
-            )
+            color = colorScheme.onBackground.copy(alpha = 0.5F)
         )
 
         FlowLayout {
