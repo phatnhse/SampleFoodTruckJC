@@ -1,5 +1,7 @@
 package com.phatnhse.sample_food_truck_jc.truck
 
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -11,10 +13,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.city.City
@@ -121,19 +125,20 @@ sealed class SocialFeedTag(
 @Composable
 fun SocialFeedTagView(modifier: Modifier = Modifier, socialFeedTag: SocialFeedTag) {
     Card(
-        modifier = modifier,
-        shape = RoundedCornerShape(12),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+        modifier = modifier, shape = RoundedCornerShape(5.dp), colors = CardDefaults.cardColors(
+            containerColor = colorScheme.secondaryContainer
         )
     ) {
         Row(
-            modifier = Modifier.padding(4.dp),
-            verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.padding(4.dp), verticalAlignment = Alignment.CenterVertically
         ) {
             TagIcon(socialFeedTag = socialFeedTag)
             Spacer(modifier = Modifier.padding(4.dp))
-            Text(text = socialFeedTag.title, fontSize = 12.sp)
+            Text(
+                text = socialFeedTag.title,
+                fontSize = 12.sp,
+                color = colorScheme.onSecondaryContainer
+            )
         }
     }
 }
@@ -141,12 +146,17 @@ fun SocialFeedTagView(modifier: Modifier = Modifier, socialFeedTag: SocialFeedTa
 @Composable
 private fun TagIcon(socialFeedTag: SocialFeedTag) {
     val defaultModifier = Modifier
-        .height(16.dp)
+        .height(14.dp)
         .width(16.dp)
 
     when (socialFeedTag) {
         is SocialFeedTag.CityTag -> {
-            Icon(modifier = defaultModifier, painter = buildingSymbol(), contentDescription = "")
+            Image(
+                modifier = defaultModifier,
+                painter = buildingSymbol(),
+                contentDescription = "",
+                colorFilter = ColorFilter.tint(color = colorScheme.secondary)
+            )
         }
 
         is SocialFeedTag.DonutTag -> {
@@ -156,7 +166,12 @@ private fun TagIcon(socialFeedTag: SocialFeedTag) {
         }
 
         is SocialFeedTag.TitleTag -> {
-            Icon(modifier = defaultModifier, painter = buildingSymbol(), contentDescription = "")
+            Image(
+                modifier = defaultModifier,
+                painter = buildingSymbol(),
+                contentDescription = "",
+                colorFilter = ColorFilter.tint(color = colorScheme.secondary)
+            )
         }
     }
 }

@@ -3,9 +3,9 @@ package com.phatnhse.sample_food_truck_jc.truck.cards
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
@@ -23,12 +23,12 @@ import java.lang.Integer.min
 @Composable
 fun TruckDonutCards(
     modifier: Modifier = Modifier,
-    donuts: List<Donut>
+    donuts: List<Donut> = Donut.all
 ) {
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = Color.White
+            containerColor = colorScheme.surface
         )
     ) {
         HeaderNavigation(
