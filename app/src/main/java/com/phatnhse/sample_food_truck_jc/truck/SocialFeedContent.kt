@@ -14,11 +14,13 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.city.City
@@ -136,8 +138,8 @@ fun SocialFeedTagView(modifier: Modifier = Modifier, socialFeedTag: SocialFeedTa
             Spacer(modifier = Modifier.padding(4.dp))
             Text(
                 text = socialFeedTag.title,
-                fontSize = 12.sp,
-                color = colorScheme.onSecondaryContainer
+                color = colorScheme.onSecondaryContainer,
+                style = typography.bodySmall
             )
         }
     }

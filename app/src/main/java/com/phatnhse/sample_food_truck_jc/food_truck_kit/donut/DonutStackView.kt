@@ -13,6 +13,7 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -60,8 +61,9 @@ fun DonutStackView(
                 ) {
                     Text(
                         text = "+${extra}",
-                        color = colorScheme.onSurface,
-                        fontSize = 8.sp
+                        style = typography.labelSmall.copy(
+                            fontSize = 8.sp
+                        )
                     )
                 }
             }
