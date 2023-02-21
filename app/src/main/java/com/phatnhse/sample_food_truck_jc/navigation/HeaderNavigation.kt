@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
@@ -40,12 +41,11 @@ fun HeaderNavigation(
         symbol?.let {
             Image(
                 modifier = Modifier
-                    .height(24.dp)
-                    .width(24.dp),
+                    .size(20.dp),
                 painter = it,
                 contentDescription = "Header Symbol",
                 colorFilter = ColorFilter.tint(
-                    color = color ?: colorScheme.tertiary
+                    color = color ?: colorScheme.primary
                 )
             )
         }
@@ -53,9 +53,8 @@ fun HeaderNavigation(
         Text(
             modifier = Modifier.padding(PaddingNormal),
             text = title,
-            color = color ?: colorScheme.tertiary,
-            style = typography.bodyLarge,
-            fontWeight = FontWeight.SemiBold
+            color = color ?: colorScheme.primary,
+            style = typography.titleMedium
         )
 
         Image(
@@ -65,9 +64,7 @@ fun HeaderNavigation(
             painter = painterResource(id = R.drawable.chevron_right),
             contentDescription = "Chevron Right",
             colorFilter = ColorFilter.tint(
-                color = colorScheme.onBackground.copy(
-                    alpha = 0.5F
-                )
+                color = colorScheme.onBackground.copy(alpha = 0.5F)
             )
         )
     }

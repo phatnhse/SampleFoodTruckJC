@@ -21,6 +21,7 @@ import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.socialFeedSymbol
 import com.phatnhse.sample_food_truck_jc.navigation.HeaderNavigation
 import com.phatnhse.sample_food_truck_jc.truck.SocialFeedTag
 import com.phatnhse.sample_food_truck_jc.truck.SocialFeedTagView
+import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
 import java.lang.Integer.min
 
@@ -37,8 +38,7 @@ fun TruckSocialFeedCard(
     ) {
         HeaderNavigation(
             title = "Social Feed",
-            symbol = socialFeedSymbol(),
-            color = colorScheme.onBackground.copy(alpha = 0.5F)
+            symbol = socialFeedSymbol()
         )
 
         FlowLayout {
@@ -53,7 +53,7 @@ fun TruckSocialFeedCard(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 12.dp),
+                .padding(vertical = PaddingNormal),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             Text(
