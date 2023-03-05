@@ -13,16 +13,17 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.Donut
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.DonutView
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.SingleDevice
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.donutSymbol
-import com.phatnhse.sample_food_truck_jc.navigation.HeaderNavigation
+import com.phatnhse.sample_food_truck_jc.navigation.CardNavigationHeader
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
-import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
+import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 import java.lang.Integer.min
 
 @Composable
 fun TruckDonutCards(
     modifier: Modifier = Modifier,
+    onNavigateToDonuts: () -> Unit,
     donuts: List<Donut> = Donut.all
 ) {
     Card(
@@ -31,9 +32,10 @@ fun TruckDonutCards(
             containerColor = colorScheme.surface
         )
     ) {
-        HeaderNavigation(
+        CardNavigationHeader(
             title = "Donut",
-            symbol = donutSymbol()
+            symbol = donutSymbol(),
+            onNavigated = onNavigateToDonuts
         )
 
         DonutLatticeLayout(
@@ -115,8 +117,11 @@ fun DonutLatticeLayout(
 @SingleDevice
 @Composable
 fun TruckDonutCards_Preview() {
-    SampleFoodTruckJCTheme {
-        TruckDonutCards(donuts = Donut.all)
+    PreviewSurface {
+        TruckDonutCards(
+            donuts = Donut.all,
+            onNavigateToDonuts = {}
+        )
     }
 }
 

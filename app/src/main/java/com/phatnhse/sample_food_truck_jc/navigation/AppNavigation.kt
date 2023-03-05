@@ -1,0 +1,131 @@
+package com.phatnhse.sample_food_truck_jc.navigation
+
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.phatnhse.sample_food_truck_jc.food_truck_kit.city.City.Companion.getCityFromId
+import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.buildingSymbol
+import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.clockSymbol
+import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.donutSymbol
+import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.shippingSymbol
+import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.socialFeedSymbol
+import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.trophySymbol
+import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.truckSymbol
+import com.phatnhse.sample_food_truck_jc.home.HomeView
+import com.phatnhse.sample_food_truck_jc.order.OrderView
+import com.phatnhse.sample_food_truck_jc.truck.TruckView
+import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
+
+const val LauncherViewId = "Food Truck"
+
+@Composable
+fun AppNavigation(
+    navController: NavHostController = rememberNavController(),
+    selection: MutableState<MenuItem> = remember { mutableStateOf(MenuItem.Truck) }
+) {
+    fun openHome() {
+        navController.navigate(LauncherViewId) {
+            launchSingleTop = true
+        }
+    }
+
+    NavHost(
+        navController = navController, startDestination = selection.value.title
+    ) {
+        composable(LauncherViewId) {
+            HomeView(onMenuItemClicked = {
+                selection.value = it
+                navController.navigate(it.title)
+            })
+        }
+        composable(MenuItem.Truck.title) {
+            val previous = navController.previousBackStackEntry?.destination?.route
+            TruckView(
+                currentViewTitle = selection.value.title,
+                previousViewTitle = previous ?: LauncherViewId, // should be open from home page
+                onNavigateToDonuts = {
+                    navController.navigate(MenuItem.Donuts.title)
+                },
+                onNavigateToSocialFeed = {
+                    navController.navigate(MenuItem.SocialFeed.title)
+                },
+                onNavigateToOrders = {
+                    navController.navigate(MenuItem.Orders.title)
+                },
+                onBackPressed = {
+                    openHome()
+                }
+            )
+        }
+        composable(MenuItem.Orders.title) {
+            val openFromHome = selection.value == MenuItem.Orders
+            val previous = navController.previousBackStackEntry?.destination?.route
+            OrderView(
+                currentViewTitle = selection.value.title,
+                previousViewTitle = previous ?: LauncherViewId,
+                onBackPressed = {
+                    if (openFromHome) {
+                        openHome()
+                    } else {
+                        navController.popBackStack()
+                    }
+                }
+            )
+        }
+        composable(MenuItem.SocialFeed.title) { Text(text = "SocialFeed") }
+        composable(MenuItem.SalesHistory.title) { Text(text = "SalesHistory") }
+        composable(MenuItem.Donuts.title) { Text(text = "Donuts") }
+        composable(MenuItem.DonutEditor.title) { Text(text = "DonutEditor") }
+        composable(MenuItem.TopFive.title) { Text(text = "TopFive") }
+    }
+}
+
+sealed class MenuItem(val title: String) {
+    object Truck : MenuItem("Truck")
+    object SocialFeed : MenuItem("SocialFeed")
+    object Orders : MenuItem("Orders")
+    object SalesHistory : MenuItem("SalesHistory")
+    object Donuts : MenuItem("Donuts")
+    object DonutEditor : MenuItem("DonutEditor")
+    object TopFive : MenuItem("TopFive")
+    data class City(
+        val id: String
+    ) : MenuItem("City")
+}
+
+@Composable
+fun MenuItem.getSymbol(): Painter {
+    return when (this) {
+        is MenuItem.City -> buildingSymbol()
+        MenuItem.DonutEditor -> donutSymbol()
+        MenuItem.Donuts -> donutSymbol()
+        MenuItem.Orders -> shippingSymbol()
+        MenuItem.SalesHistory -> clockSymbol()
+        MenuItem.SocialFeed -> socialFeedSymbol()
+        MenuItem.TopFive -> trophySymbol()
+        MenuItem.Truck -> truckSymbol()
+    }
+}
+
+fun MenuItem.getTitle(): String {
+    return when (this) {
+        is MenuItem.City -> getCityFromId(id)?.name ?: ""
+        else -> this.title
+    }
+}
+
+@Preview
+@Composable
+fun NavigationDrawer_Preview() {
+    PreviewSurface {
+        AppNavigation(rememberNavController())
+    }
+}

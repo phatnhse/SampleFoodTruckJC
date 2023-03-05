@@ -99,6 +99,12 @@ data class City(
         )
 
         val all = listOf(cupertino, sanFrancisco, london)
+
+        fun getCityFromId(id: String): City? {
+            return all.firstOrNull {
+                it.id == id
+            }
+        }
     }
 }
 
