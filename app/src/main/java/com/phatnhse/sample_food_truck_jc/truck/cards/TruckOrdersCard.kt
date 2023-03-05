@@ -18,10 +18,12 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.res.painterResource
@@ -35,13 +37,13 @@ import androidx.compose.ui.unit.sp
 import com.phatnhse.sample_food_truck_jc.R
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.DonutStackView
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.OrderDetail
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.SingleDevice
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.shippingSymbol
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.model.FoodTruckViewModel
-import com.phatnhse.sample_food_truck_jc.navigation.HeaderNavigation
+import com.phatnhse.sample_food_truck_jc.navigation.CardNavigationHeader
 import com.phatnhse.sample_food_truck_jc.order.Order
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
-import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
+import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -51,6 +53,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun TruckOrdersCard(
     modifier: Modifier = Modifier,
+    onNavigateToOrders: () -> Unit,
     viewModel: FoodTruckViewModel = FoodTruckViewModel()
 ) {
     Card(
@@ -59,9 +62,10 @@ fun TruckOrdersCard(
             containerColor = colorScheme.surface
         )
     ) {
-        HeaderNavigation(
+        CardNavigationHeader(
             title = "New Order",
-            symbol = shippingSymbol()
+            symbol = shippingSymbol(),
+            onNavigated = onNavigateToOrders
         )
 
         HeroSquareTilingLayout(
@@ -330,8 +334,10 @@ fun LatestOrder(
 @SingleDevice
 @Composable
 fun TruckOrdersCard_Preview() {
-    SampleFoodTruckJCTheme {
-        TruckOrdersCard()
+    PreviewSurface {
+        TruckOrdersCard(
+            onNavigateToOrders = {}
+        )
     }
 }
 

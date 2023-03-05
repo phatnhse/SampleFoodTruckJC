@@ -10,6 +10,11 @@ import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.Flavor.*
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Ingredient
 
 @Composable
+fun truckSymbol(): Painter {
+    return painterResource(id = R.drawable.truck)
+}
+
+@Composable
 fun donutSymbol(): Painter {
     return painterResource(id = R.drawable.donut)
 }
@@ -32,6 +37,21 @@ fun buildingSymbol(): Painter {
 @Composable
 fun tagSymbol(): Painter {
     return painterResource(id = R.drawable.tag)
+}
+
+@Composable
+fun trophySymbol(): Painter {
+    return painterResource(id = R.drawable.trophy)
+}
+
+@Composable
+fun clockSymbol(): Painter {
+    return painterResource(id = R.drawable.clock)
+}
+
+@Composable
+fun sliderSymbol(): Painter {
+    return painterResource(id = R.drawable.slider)
 }
 
 @Composable

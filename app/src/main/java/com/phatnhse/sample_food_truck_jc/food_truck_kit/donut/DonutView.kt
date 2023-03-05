@@ -7,8 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.tooling.preview.Preview
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.MultipleDevices
+import com.phatnhse.sample_food_truck_jc.utils.MultipleDevices
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.ingredientImage
 import kotlin.math.min
 

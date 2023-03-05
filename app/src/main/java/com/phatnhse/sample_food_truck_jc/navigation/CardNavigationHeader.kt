@@ -1,6 +1,7 @@
 package com.phatnhse.sample_food_truck_jc.navigation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,17 +18,17 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.phatnhse.sample_food_truck_jc.R
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.SingleDevice
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.shippingSymbol
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
 
 @Composable
-fun HeaderNavigation(
+fun CardNavigationHeader(
     modifier: Modifier = Modifier,
+    onNavigated: (() -> Unit)? = null,
     title: String,
     symbol: Painter?,
     color: Color? = null
@@ -35,7 +36,10 @@ fun HeaderNavigation(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(horizontal = PaddingNormal),
+            .padding(horizontal = PaddingNormal)
+            .clickable {
+                onNavigated?.invoke()
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         symbol?.let {
@@ -74,7 +78,7 @@ fun HeaderNavigation(
 @Composable
 fun HeaderNavigation_Preview() {
     SampleFoodTruckJCTheme {
-        HeaderNavigation(
+        CardNavigationHeader(
             title = "Shipping",
             symbol = shippingSymbol()
         )

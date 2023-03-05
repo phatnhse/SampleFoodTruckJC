@@ -23,7 +23,6 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.geometry.center
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.Matrix
 import androidx.compose.ui.graphics.drawscope.withTransform
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
@@ -32,7 +31,7 @@ import androidx.compose.ui.unit.dp
 import com.phatnhse.sample_food_truck_jc.R
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.brand.HeaderSize.REDUCE
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.brand.HeaderSize.STANDARD
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.MultipleDevices
+import com.phatnhse.sample_food_truck_jc.utils.MultipleDevices
 import com.phatnhse.sample_food_truck_jc.ui.theme.SkyEnd
 import com.phatnhse.sample_food_truck_jc.ui.theme.SkyStart
 

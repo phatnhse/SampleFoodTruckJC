@@ -8,8 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.MultipleDevices
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.SingleDevice
+import com.phatnhse.sample_food_truck_jc.utils.MultipleDevices
 import kotlin.math.min
 
 @Composable

@@ -10,7 +10,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.Placeable
 import androidx.compose.ui.tooling.preview.Preview
@@ -18,17 +17,18 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.socialFeedSymbol
-import com.phatnhse.sample_food_truck_jc.navigation.HeaderNavigation
+import com.phatnhse.sample_food_truck_jc.navigation.CardNavigationHeader
 import com.phatnhse.sample_food_truck_jc.truck.SocialFeedTag
 import com.phatnhse.sample_food_truck_jc.truck.SocialFeedTagView
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
-import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
+import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 import java.lang.Integer.min
 
 @Composable
 fun TruckSocialFeedCard(
     modifier: Modifier = Modifier,
-    tags: List<SocialFeedTag> = SocialFeedTag.tags
+    onNavigateToSocialFeed: () -> Unit,
+    tags: List<SocialFeedTag> = SocialFeedTag.tags,
 ) {
     Card(
         modifier = modifier,
@@ -36,9 +36,10 @@ fun TruckSocialFeedCard(
             containerColor = colorScheme.surface
         )
     ) {
-        HeaderNavigation(
+        CardNavigationHeader(
             title = "Social Feed",
-            symbol = socialFeedSymbol()
+            symbol = socialFeedSymbol(),
+            onNavigated = onNavigateToSocialFeed
         )
 
         FlowLayout {
@@ -130,10 +131,11 @@ fun FlowLayout(
 @Preview
 @Composable
 fun TruckSocialFeedCard_Preview() {
-    SampleFoodTruckJCTheme {
+    PreviewSurface {
         TruckSocialFeedCard(
             modifier = Modifier,
-            tags = SocialFeedTag.tags
+            tags = SocialFeedTag.tags,
+            onNavigateToSocialFeed = { }
         )
     }
 }
