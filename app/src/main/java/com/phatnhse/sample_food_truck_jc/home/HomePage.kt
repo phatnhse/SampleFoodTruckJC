@@ -1,7 +1,6 @@
 package com.phatnhse.sample_food_truck_jc.home
 
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,22 +13,17 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.city.City.Companion.cupertino
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.city.City.Companion.london
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.city.City.Companion.sanFrancisco
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.shippingSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.city.City.Companion.cupertino
+import com.phatnhse.sample_food_truck_jc.foodtruck.city.City.Companion.london
+import com.phatnhse.sample_food_truck_jc.foodtruck.city.City.Companion.sanFrancisco
 import com.phatnhse.sample_food_truck_jc.navigation.HomeMenuNavigationHeader
 import com.phatnhse.sample_food_truck_jc.navigation.LauncherViewId
 import com.phatnhse.sample_food_truck_jc.navigation.MenuItem
-import com.phatnhse.sample_food_truck_jc.navigation.NavigationHeader
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingExtraLarge
-import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
-import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 
 @Composable

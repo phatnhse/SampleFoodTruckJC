@@ -35,15 +35,14 @@ import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.phatnhse.sample_food_truck_jc.R
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.DonutStackView
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.OrderDetail
-import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.shippingSymbol
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.model.FoodTruckViewModel
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutStackView
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.shippingSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.model.FoodTruckViewModel
 import com.phatnhse.sample_food_truck_jc.navigation.CardNavigationHeader
 import com.phatnhse.sample_food_truck_jc.order.Order
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -111,7 +110,7 @@ fun HeroSquareTilingLayout(
         orders.map { order ->
             DonutStackView(
                 modifier = Modifier.padding(spacing),
-                orderDetail = OrderDetail(donuts = order.donuts)
+                donuts = order.donuts
             )
         }
     }) { measurables, constraints ->

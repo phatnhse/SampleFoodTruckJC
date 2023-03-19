@@ -9,14 +9,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.brand.BrandHeader
-import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
+import com.phatnhse.sample_food_truck_jc.foodtruck.brand.BrandHeader
 import com.phatnhse.sample_food_truck_jc.navigation.NavigationHeader
 import com.phatnhse.sample_food_truck_jc.truck.cards.TruckDonutCards
 import com.phatnhse.sample_food_truck_jc.truck.cards.TruckOrdersCard
 import com.phatnhse.sample_food_truck_jc.truck.cards.TruckSocialFeedCard
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
 
 @Composable
 fun TruckView(

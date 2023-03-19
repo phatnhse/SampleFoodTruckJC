@@ -1,10 +1,7 @@
-package com.phatnhse.sample_food_truck_jc.food_truck_kit.donut
+package com.phatnhse.sample_food_truck_jc.foodtruck.donut
 
 import androidx.annotation.DrawableRes
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.painter.Painter
 import com.phatnhse.sample_food_truck_jc.R
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.flavorSymbol
 
 data class FlavorProfile(
     val salty: Int = 0,

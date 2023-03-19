@@ -1,4 +1,4 @@
-package com.phatnhse.sample_food_truck_jc.food_truck_kit.donut
+package com.phatnhse.sample_food_truck_jc.foodtruck.donut
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
@@ -22,13 +22,13 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
 
-class OrderDetail(val donuts: List<Donut>)
+class OrderDetail()
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
 fun DonutStackView(
     modifier: Modifier = Modifier,
-    orderDetail: OrderDetail,
+    donuts: List<Donut>,
     includeOverflowCount: Boolean = false
 ) {
     Card(
@@ -41,12 +41,12 @@ fun DonutStackView(
             contentAlignment = Alignment.BottomEnd
         ) {
             DiagonalDonutStackLayout {
-                orderDetail.donuts.map {
+                donuts.map {
                     DonutView(donut = it)
                 }
             }
 
-            val extra = orderDetail.donuts.count() - 3
+            val extra = donuts.count() - 3
             if (extra > 0 && includeOverflowCount) {
                 Box(
                     modifier = Modifier
@@ -76,9 +76,7 @@ fun DonutStackView_Preview() {
             modifier = Modifier
                 .height(120.dp)
                 .width(120.dp),
-            orderDetail = OrderDetail(
-                donuts = Donut.all
-            ),
+            donuts = Donut.all,
             includeOverflowCount = true
         )
     }

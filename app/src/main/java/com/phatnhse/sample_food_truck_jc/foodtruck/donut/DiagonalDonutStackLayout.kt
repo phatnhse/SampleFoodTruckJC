@@ -1,4 +1,4 @@
-package com.phatnhse.sample_food_truck_jc.food_truck_kit.donut
+package com.phatnhse.sample_food_truck_jc.foodtruck.donut
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
