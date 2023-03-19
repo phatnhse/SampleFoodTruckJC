@@ -1,26 +1,26 @@
-package com.phatnhse.sample_food_truck_jc.food_truck_kit.donut
+package com.phatnhse.sample_food_truck_jc.foodtruck.donut
 
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Dough
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Dough.Companion.blueberry
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Dough.Companion.lemonade
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Dough.Companion.plain
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Dough.Companion.strawberry
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Glaze
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Glaze.Companion.chocolate
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Glaze.Companion.lemon
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Glaze.Companion.spicy
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Ingredient
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Topping
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Topping.Companion.blueberryDrizzle
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Topping.Companion.blueberryLattice
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Topping.Companion.chocolateDrizzle
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Topping.Companion.lemonLines
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Topping.Companion.powderedSugar
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Topping.Companion.spicySauceDrizzle
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Topping.Companion.sprinkles
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Topping.Companion.starSprinkles
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Topping.Companion.sugarDrizzle
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient.Topping.Companion.sugarLattice
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Dough
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Dough.Companion.blueberry
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Dough.Companion.lemonade
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Dough.Companion.plain
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Dough.Companion.strawberry
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Glaze
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Glaze.Companion.chocolate
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Glaze.Companion.lemon
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Glaze.Companion.spicy
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Ingredient
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Topping
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Topping.Companion.blueberryDrizzle
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Topping.Companion.blueberryLattice
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Topping.Companion.chocolateDrizzle
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Topping.Companion.lemonLines
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Topping.Companion.powderedSugar
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Topping.Companion.spicySauceDrizzle
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Topping.Companion.sprinkles
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Topping.Companion.starSprinkles
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Topping.Companion.sugarDrizzle
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Topping.Companion.sugarLattice
 
 data class Donut(
     val id: Int,
@@ -45,7 +45,12 @@ data class Donut(
         }
 
     fun matches(searchText: String): Boolean {
-        return false
+        val foundInName = name.contains(searchText, ignoreCase = true)
+        val foundInIngredients = ingredients.any {
+            it.name.contains(searchText, ignoreCase = true)
+        }
+
+        return foundInName || foundInIngredients
     }
 
     companion object {

@@ -11,14 +11,15 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.city.City.Companion.getCityFromId
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.buildingSymbol
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.clockSymbol
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.donutSymbol
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.shippingSymbol
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.socialFeedSymbol
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.trophySymbol
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.truckSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.city.City.Companion.getCityFromId
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.buildingSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.clockSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.donutSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.shippingSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.socialFeedSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.trophySymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.truckSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.model.FoodTruckViewModel
 import com.phatnhse.sample_food_truck_jc.home.HomeView
 import com.phatnhse.sample_food_truck_jc.order.OrderView
 import com.phatnhse.sample_food_truck_jc.truck.TruckView
@@ -77,7 +78,8 @@ fun AppNavigation(
                     } else {
                         navController.popBackStack()
                     }
-                }
+                },
+                model = FoodTruckViewModel()
             )
         }
         composable(MenuItem.SocialFeed.title) { Text(text = "SocialFeed") }

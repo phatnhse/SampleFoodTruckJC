@@ -11,13 +11,13 @@ import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.Donut
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.DonutView
-import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.donutSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.Donut
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutView
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.donutSymbol
 import com.phatnhse.sample_food_truck_jc.navigation.CardNavigationHeader
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
 import java.lang.Integer.min
 
 @Composable

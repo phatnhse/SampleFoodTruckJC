@@ -1,4 +1,4 @@
-package com.phatnhse.sample_food_truck_jc.food_truck_kit.general
+package com.phatnhse.sample_food_truck_jc.foodtruck.general
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color

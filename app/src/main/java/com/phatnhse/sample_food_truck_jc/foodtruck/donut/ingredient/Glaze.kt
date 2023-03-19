@@ -1,6 +1,6 @@
-package com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient
+package com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient
 
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.FlavorProfile
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.FlavorProfile
 
 data class Glaze(
     override val name: String,

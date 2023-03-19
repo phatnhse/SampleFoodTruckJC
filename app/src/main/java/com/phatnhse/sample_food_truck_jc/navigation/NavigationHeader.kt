@@ -22,10 +22,10 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.phatnhse.sample_food_truck_jc.R
-import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
 
 @Composable
 fun NavigationHeader(

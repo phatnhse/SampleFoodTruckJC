@@ -1,7 +1,6 @@
-package com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.ingredient
+package com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient
 
-import androidx.compose.ui.text.toUpperCase
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.FlavorProfile
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.FlavorProfile
 
 data class Dough(
     override val name: String,

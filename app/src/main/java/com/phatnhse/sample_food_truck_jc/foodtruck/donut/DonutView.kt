@@ -1,6 +1,5 @@
-package com.phatnhse.sample_food_truck_jc.food_truck_kit.donut
+package com.phatnhse.sample_food_truck_jc.foodtruck.donut
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,7 +7,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import com.phatnhse.sample_food_truck_jc.utils.MultipleDevices
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.ingredientImage
 import kotlin.math.min
 
 @Composable
@@ -29,34 +27,15 @@ fun DonutView(
         }
 
         if (visibleLayers.dough) {
-            Image(
-                painter = ingredientImage(
-                    donut.dough,
-                    thumbnail = useThumb
-                ), contentDescription = donut.dough.name
-            )
+            donut.dough.ingredientImage(useThumb)
         }
 
         if (visibleLayers.glaze) {
-            donut.glaze?.let {
-                Image(
-                    painter = ingredientImage(
-                        donut.glaze,
-                        thumbnail = useThumb
-                    ), contentDescription = it.name
-                )
-            }
+            donut.glaze?.ingredientImage(useThumb)
         }
 
         if (visibleLayers.topping) {
-            donut.topping?.let {
-                Image(
-                    painter = ingredientImage(
-                        donut.topping,
-                        thumbnail = useThumb
-                    ), contentDescription = it.name
-                )
-            }
+            donut.topping?.ingredientImage(useThumb)
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.phatnhse.sample_food_truck_jc.food_truck_kit.city
+package com.phatnhse.sample_food_truck_jc.foodtruck.city
 
 data class Location(
     val latitude: Double,

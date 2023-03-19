@@ -1,4 +1,4 @@
-package com.phatnhse.sample_food_truck_jc.food_truck_kit.brand
+package com.phatnhse.sample_food_truck_jc.foodtruck.brand
 
 import android.content.res.Resources
 import androidx.annotation.DrawableRes
@@ -29,11 +29,11 @@ import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.phatnhse.sample_food_truck_jc.R
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.brand.HeaderSize.REDUCE
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.brand.HeaderSize.STANDARD
-import com.phatnhse.sample_food_truck_jc.utils.MultipleDevices
+import com.phatnhse.sample_food_truck_jc.foodtruck.brand.HeaderSize.REDUCE
+import com.phatnhse.sample_food_truck_jc.foodtruck.brand.HeaderSize.STANDARD
 import com.phatnhse.sample_food_truck_jc.ui.theme.SkyEnd
 import com.phatnhse.sample_food_truck_jc.ui.theme.SkyStart
+import com.phatnhse.sample_food_truck_jc.utils.MultipleDevices
 
 @Composable
 fun BrandHeader(

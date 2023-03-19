@@ -7,7 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -18,13 +17,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.unit.dp
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.city.City
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.Donut
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.donut.DonutView
-import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
-import com.phatnhse.sample_food_truck_jc.food_truck_kit.general.buildingSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.city.City
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.Donut
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutView
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.buildingSymbol
 import com.phatnhse.sample_food_truck_jc.truck.SocialFeedTag.Companion.tags
 import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
+import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeCornerSmall
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
 import java.util.Calendar
 import java.util.Date
 import java.util.UUID
@@ -122,7 +122,7 @@ sealed class SocialFeedTag(
 @Composable
 fun SocialFeedTagView(modifier: Modifier = Modifier, socialFeedTag: SocialFeedTag) {
     Card(
-        modifier = modifier, shape = RoundedCornerShape(5.dp), colors = CardDefaults.cardColors(
+        modifier = modifier, shape = ShapeCornerSmall, colors = CardDefaults.cardColors(
             containerColor = colorScheme.secondaryContainer
         )
     ) {

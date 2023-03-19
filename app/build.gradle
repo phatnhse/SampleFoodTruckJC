@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.phatnhse.sample_food_truck_jc"
-        minSdk 21
+        minSdk 26
         targetSdk 33
         versionCode 1
         versionName "1.0"
