@@ -68,4 +68,13 @@ class FoodTruckViewModel {
             }
         }
     }
+
+    fun findOrder(orderId: String?): Order {
+        if (orderId == null) {
+            throw RuntimeException("Order id can't be null")
+        }
+        return orders.firstOrNull {
+            orderId == it.id
+        } ?: throw Exception("Order not found")
+    }
 }

@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.phatnhse.sample_food_truck_jc.R
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.arrowLeftSymbol
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
@@ -48,7 +49,7 @@ fun NavigationHeader(
                     modifier = Modifier
                         .height(12.dp)
                         .width(6.dp),
-                    painter = painterResource(id = R.drawable.chevron_left),
+                    painter = arrowLeftSymbol(),
                     contentDescription = "Chevron Left",
                     colorFilter = ColorFilter.tint(
                         color = colorScheme.primary

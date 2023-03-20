@@ -21,12 +21,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.phatnhse.sample_food_truck_jc.R
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutStackView
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.arrowRightSymbol
+import com.phatnhse.sample_food_truck_jc.ui.composable.CustomDivider
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
 import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
@@ -72,8 +72,8 @@ fun OrderRow(
                         modifier = Modifier
                             .height(12.dp)
                             .width(6.dp),
-                        painter = painterResource(id = R.drawable.chevron_right),
-                        contentDescription = "Chevron Right",
+                        painter = arrowRightSymbol(),
+                        contentDescription = "Arrow right",
                         colorFilter = ColorFilter.tint(
                             color = colorScheme.onBackground.copy(alpha = 0.5F)
                         )
@@ -82,13 +82,7 @@ fun OrderRow(
             }
 
             if (showDivider) {
-                Divider(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(start = 72.dp),
-                    thickness = (0.5F).dp,
-                    color = colorScheme.surfaceVariant
-                )
+                CustomDivider(paddingStart = 72.dp)
             }
         }
     }
