@@ -1,5 +1,6 @@
 package com.phatnhse.sample_food_truck_jc.navigation
 
+import android.net.Uri
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
@@ -16,11 +17,14 @@ import com.phatnhse.sample_food_truck_jc.foodtruck.general.buildingSymbol
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.clockSymbol
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.donutSymbol
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.shippingSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.sliderSymbol
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.socialFeedSymbol
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.trophySymbol
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.truckSymbol
 import com.phatnhse.sample_food_truck_jc.foodtruck.model.FoodTruckViewModel
 import com.phatnhse.sample_food_truck_jc.home.HomeView
+import com.phatnhse.sample_food_truck_jc.order.Order
+import com.phatnhse.sample_food_truck_jc.order.OrderDetailView
 import com.phatnhse.sample_food_truck_jc.order.OrderView
 import com.phatnhse.sample_food_truck_jc.truck.TruckView
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
@@ -32,6 +36,8 @@ fun AppNavigation(
     navController: NavHostController = rememberNavController(),
     selection: MutableState<MenuItem> = remember { mutableStateOf(MenuItem.Truck) }
 ) {
+    val model = FoodTruckViewModel()
+
     fun openHome() {
         navController.navigate(LauncherViewId) {
             launchSingleTop = true
@@ -79,7 +85,12 @@ fun AppNavigation(
                         navController.popBackStack()
                     }
                 },
-                model = FoodTruckViewModel()
+                model = model,
+                orderClicked = {
+                    val orderId = it.id
+                    val encodedOrderId = Uri.encode(orderId)
+                    navController.navigate("orders/${encodedOrderId}")
+                }
             )
         }
         composable(MenuItem.SocialFeed.title) { Text(text = "SocialFeed") }
@@ -87,6 +98,18 @@ fun AppNavigation(
         composable(MenuItem.Donuts.title) { Text(text = "Donuts") }
         composable(MenuItem.DonutEditor.title) { Text(text = "DonutEditor") }
         composable(MenuItem.TopFive.title) { Text(text = "TopFive") }
+        composable("orders/{orderId}") {
+            val orderId = it.arguments?.getString("orderId")
+            val previous = navController.previousBackStackEntry?.destination?.route
+            OrderDetailView(
+                currentViewTitle = selection.value.title,
+                previousViewTitle = previous ?: LauncherViewId,
+                onBackPressed = {
+                    navController.popBackStack()
+                },
+                order = model.findOrder(orderId)
+            )
+        }
     }
 }
 
@@ -101,13 +124,23 @@ sealed class MenuItem(val title: String) {
     data class City(
         val id: String
     ) : MenuItem("City")
+
+    companion object {
+        fun valueOf(title: String): MenuItem {
+            return MenuItem::class.sealedSubclasses
+                .mapNotNull { it.objectInstance }
+                .first {
+                    it.title == title
+                }
+        }
+    }
 }
 
 @Composable
 fun MenuItem.getSymbol(): Painter {
     return when (this) {
         is MenuItem.City -> buildingSymbol()
-        MenuItem.DonutEditor -> donutSymbol()
+        MenuItem.DonutEditor -> sliderSymbol()
         MenuItem.Donuts -> donutSymbol()
         MenuItem.Orders -> shippingSymbol()
         MenuItem.SalesHistory -> clockSymbol()

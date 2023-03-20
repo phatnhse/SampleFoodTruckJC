@@ -35,6 +35,7 @@ fun OrderView(
     previousViewTitle: String,
     currentViewTitle: String,
     onBackPressed: () -> Unit,
+    orderClicked: (Order) -> Unit,
     model: FoodTruckViewModel
 ) {
     var searchText by remember { mutableStateOf("") }
@@ -65,16 +66,18 @@ fun OrderView(
                     searchText = ""
                 })
             }
-            orders(status = "New", orders = newOrders)
-            orders(status = "Preparing", orders = preparingOrders)
-            orders(status = "Ready", orders = readyOrders)
-            orders(status = "Completed", orders = completeOrders)
+            orders(status = "New", orders = newOrders, orderClicked)
+            orders(status = "Preparing", orders = preparingOrders, orderClicked)
+            orders(status = "Ready", orders = readyOrders, orderClicked)
+            orders(status = "Completed", orders = completeOrders, orderClicked)
         }
     }
 }
 
 fun LazyListScope.orders(
-    status: String, orders: List<Order>
+    status: String,
+    orders: List<Order>,
+    orderClicked: (Order) -> Unit
 ) {
     if (orders.isNotEmpty()) {
         item {
@@ -120,7 +123,9 @@ fun LazyListScope.orders(
         ) {
             OrderRow(
                 order = order,
-                onOrderClicked = {},
+                onOrderClicked = {
+                    orderClicked(it)
+                },
                 showDivider = index != orders.lastIndex
             )
         }
@@ -145,7 +150,8 @@ fun OrderView_Preview() {
             previousViewTitle = "Food Truck",
             currentViewTitle = "Order",
             onBackPressed = {},
-            model = FoodTruckViewModel()
+            model = FoodTruckViewModel(),
+            orderClicked = {}
         )
     }
 }

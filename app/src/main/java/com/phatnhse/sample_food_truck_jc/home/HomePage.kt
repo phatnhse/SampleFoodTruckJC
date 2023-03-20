@@ -19,7 +19,7 @@ import androidx.compose.ui.unit.sp
 import com.phatnhse.sample_food_truck_jc.foodtruck.city.City.Companion.cupertino
 import com.phatnhse.sample_food_truck_jc.foodtruck.city.City.Companion.london
 import com.phatnhse.sample_food_truck_jc.foodtruck.city.City.Companion.sanFrancisco
-import com.phatnhse.sample_food_truck_jc.navigation.HomeMenuNavigationHeader
+import com.phatnhse.sample_food_truck_jc.navigation.HomeMenuNavigationSection
 import com.phatnhse.sample_food_truck_jc.navigation.LauncherViewId
 import com.phatnhse.sample_food_truck_jc.navigation.MenuItem
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingExtraLarge
@@ -28,7 +28,8 @@ import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 
 @Composable
 fun HomeView(
-    modifier: Modifier = Modifier, onMenuItemClicked: (MenuItem) -> Unit
+    modifier: Modifier = Modifier,
+    onMenuItemClicked: (MenuItem) -> Unit
 ) {
     Card(
         modifier = modifier
@@ -52,64 +53,42 @@ fun HomeView(
         )
 
         Column {
-            Card(
-                modifier = modifier.padding(PaddingNormal), colors = CardDefaults.cardColors(
-                    containerColor = colorScheme.surface
-                )
-            ) {
-                HomeMenuNavigationHeader(
-                    menuItem = MenuItem.Truck, onClicked = onMenuItemClicked
-                )
-                HomeMenuNavigationHeader(
-                    menuItem = MenuItem.Orders, onClicked = onMenuItemClicked
-                )
-                HomeMenuNavigationHeader(
-                    menuItem = MenuItem.SocialFeed, onClicked = onMenuItemClicked
-                )
-                HomeMenuNavigationHeader(
-                    menuItem = MenuItem.SalesHistory,
-                    showDivider = false,
-                    onClicked = onMenuItemClicked
-                )
-            }
+            HomeMenuNavigationSection(
+                title = "",
+                menuItems = listOf(
+                    MenuItem.Truck,
+                    MenuItem.Orders,
+                    MenuItem.SocialFeed
+                ),
+                onClicked = { menuItem ->
+                    onMenuItemClicked(menuItem)
+                }
+            )
 
-            Card(
-                modifier = modifier.padding(PaddingNormal), colors = CardDefaults.cardColors(
-                    containerColor = colorScheme.surface
-                )
-            ) {
-                HomeMenuNavigationHeader(
-                    menuItem = MenuItem.Donuts, onClicked = onMenuItemClicked
-                )
-                HomeMenuNavigationHeader(
-                    menuItem = MenuItem.DonutEditor, onClicked = onMenuItemClicked
-                )
-                HomeMenuNavigationHeader(
-                    menuItem = MenuItem.TopFive, onClicked = onMenuItemClicked, showDivider = false
-                )
-            }
+            HomeMenuNavigationSection(
+                title = "donuts",
+                menuItems = listOf(
+                    MenuItem.Donuts,
+                    MenuItem.DonutEditor,
+                    MenuItem.TopFive
+                ),
+                onClicked = { menuItem ->
+                    onMenuItemClicked(menuItem)
+                }
+            )
 
-            Card(
-                modifier = modifier.padding(PaddingNormal), colors = CardDefaults.cardColors(
-                    containerColor = colorScheme.surface
-                )
-            ) {
-                HomeMenuNavigationHeader(
-                    menuItem = MenuItem.City(cupertino.id),
-                    symbolColor = colorScheme.secondary,
-                    onClicked = onMenuItemClicked
-                )
-                HomeMenuNavigationHeader(
-                    menuItem = MenuItem.City(sanFrancisco.id),
-                    symbolColor = colorScheme.secondary,
-                    onClicked = onMenuItemClicked
-                )
-                HomeMenuNavigationHeader(
-                    menuItem = MenuItem.City(london.id),
-                    symbolColor = colorScheme.secondary,
-                    onClicked = onMenuItemClicked
-                )
-            }
+            HomeMenuNavigationSection(
+                title = "cities",
+                symbolColor = colorScheme.secondary,
+                menuItems = listOf(
+                    MenuItem.City(cupertino.id),
+                    MenuItem.City(sanFrancisco.id),
+                    MenuItem.City(london.id),
+                ),
+                onClicked = { menuItem ->
+                    onMenuItemClicked(menuItem)
+                }
+            )
         }
     }
 }

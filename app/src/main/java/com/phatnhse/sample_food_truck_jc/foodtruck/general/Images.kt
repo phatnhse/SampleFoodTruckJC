@@ -25,6 +25,15 @@ fun shippingSymbol(): Painter {
     return painterResource(id = R.drawable.shipping_box)
 }
 
+@Composable
+fun arrowRightSymbol(): Painter {
+    return painterResource(id = R.drawable.chevron_right)
+}
+
+@Composable
+fun arrowLeftSymbol(): Painter {
+    return painterResource(id = R.drawable.chevron_left)
+}
 
 @Composable
 fun checkmarkCircleSymbol(): Painter {

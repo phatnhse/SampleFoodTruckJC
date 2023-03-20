@@ -20,6 +20,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.phatnhse.sample_food_truck_jc.R
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.arrowRightSymbol
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.shippingSymbol
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
@@ -65,7 +66,7 @@ fun CardNavigationHeader(
             modifier = Modifier
                 .height(12.dp)
                 .width(6.dp),
-            painter = painterResource(id = R.drawable.chevron_right),
+            painter = arrowRightSymbol(),
             contentDescription = "Chevron Right",
             colorFilter = ColorFilter.tint(
                 color = colorScheme.onBackground.copy(alpha = 0.5F)

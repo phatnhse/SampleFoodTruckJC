@@ -79,4 +79,5 @@ dependencies {
     implementation 'androidx.compose.runtime:runtime-livedata'
     // Optional - Integration with RxJava
     implementation 'androidx.compose.runtime:runtime-rxjava2'
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.7.20"
 }

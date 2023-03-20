@@ -1,6 +1,8 @@
 package com.phatnhse.sample_food_truck_jc.order
 
+import android.graphics.Paint
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.painter.Painter
 import com.phatnhse.sample_food_truck_jc.foodtruck.city.City
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.Donut
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.checkmarkCircleSymbol
@@ -54,19 +56,6 @@ data class Order(
 
     val isComplete: Boolean
         get() = status == OrderStatus.COMPLETED
-    val LocalDateTime.formattedDate: String
-        get() {
-            val currentDate = LocalDateTime.now()
-            val today = currentDate.truncatedTo(ChronoUnit.DAYS)
-            val yesterday = today.minusDays(1)
-            val date: String = when {
-                truncatedTo(ChronoUnit.DAYS).isEqual(today) -> "Today"
-                truncatedTo(ChronoUnit.DAYS).isEqual(yesterday) -> "Yesterday"
-                else -> format(DateTimeFormatter.ofPattern("M/d/yyyy"))
-            }
-            val time = format(DateTimeFormatter.ofPattern("h:mm a"))
-            return "$date, $time"
-        }
 
     fun matches(searchText: String): Boolean {
         return id.contains(searchText, ignoreCase = true)
@@ -139,6 +128,20 @@ data class Order(
     }
 }
 
+val LocalDateTime.formattedDate: String
+    get() {
+        val currentDate = LocalDateTime.now()
+        val today = currentDate.truncatedTo(ChronoUnit.DAYS)
+        val yesterday = today.minusDays(1)
+        val date: String = when {
+            truncatedTo(ChronoUnit.DAYS).isEqual(today) -> "Today"
+            truncatedTo(ChronoUnit.DAYS).isEqual(yesterday) -> "Yesterday"
+            else -> format(DateTimeFormatter.ofPattern("M/d/yyyy"))
+        }
+        val time = format(DateTimeFormatter.ofPattern("h:mm a"))
+        return "$date, $time"
+    }
+
 enum class OrderStatus() : Comparable<OrderStatus> {
     PLACED, PREPARING, READY, COMPLETED;
 
@@ -159,8 +162,8 @@ enum class OrderStatus() : Comparable<OrderStatus> {
         }
 
     @Composable
-    fun iconSystemName() {
-        when (this) {
+    fun iconSystemName(): Painter {
+        return when (this) {
             PLACED -> paperplaneSymbol()
             PREPARING -> timerSymbol()
             READY -> checkmarkCircleSymbol()
