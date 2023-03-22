@@ -1,6 +1,5 @@
 package com.phatnhse.sample_food_truck_jc.order
 
-import android.graphics.Paint
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
 import com.phatnhse.sample_food_truck_jc.foodtruck.city.City
@@ -16,7 +15,7 @@ import java.time.format.DateTimeFormatter
 
 data class Order(
     val id: String,
-    val status: OrderStatus,
+    var status: OrderStatus,
     val donuts: List<Donut>,
     val sales: Map<Int, Int>,
     val grandTotal: Double,
@@ -65,7 +64,7 @@ data class Order(
         val preview: Order
             get() = Order(
                 id = "Order#1203",
-                status = OrderStatus.READY,
+                status = OrderStatus.PLACED,
                 donuts = listOf(Donut.classic),
                 sales = mapOf(Donut.classic.id to 1),
                 grandTotal = BigDecimal("4.78").toDouble(),
@@ -162,12 +161,12 @@ enum class OrderStatus() : Comparable<OrderStatus> {
         }
 
     @Composable
-    fun iconSystemName(): Painter {
+    fun iconSystemName(fill: Boolean = false): Painter {
         return when (this) {
             PLACED -> paperplaneSymbol()
             PREPARING -> timerSymbol()
             READY -> checkmarkCircleSymbol()
-            COMPLETED -> shippingSymbol()
+            COMPLETED -> shippingSymbol(fill = fill)
         }
     }
 

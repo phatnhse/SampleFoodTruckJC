@@ -4,6 +4,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.phatnhse.sample_food_truck_jc.foodtruck.city.City
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.Donut
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Dough
@@ -12,14 +14,12 @@ import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Topping
 import com.phatnhse.sample_food_truck_jc.order.Order
 import com.phatnhse.sample_food_truck_jc.order.OrderGenerator
 import com.phatnhse.sample_food_truck_jc.order.OrderSummary
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import java.time.LocalDateTime
 
-class FoodTruckViewModel {
+class FoodTruckViewModel : ViewModel() {
     var orders = mutableStateListOf<Order>()
     var orderAdded = mutableStateOf(false)
     var donuts by mutableStateOf(Donut.all)
@@ -51,30 +51,35 @@ class FoodTruckViewModel {
             )
         }
 
-        CoroutineScope(Dispatchers.IO).launch {
+        viewModelScope.launch(Dispatchers.IO) {
             val generator = OrderGenerator.SeededRandomGenerator(seed = 5)
             repeat(20) {
                 delay((3..8).random(generator).toLong() * 1000)
-                withContext(Dispatchers.Main) {
-                    orders.add(
-                        orderGenerator.generateOrder(
-                            number = orders.size + 1,
-                            dateTime = LocalDateTime.now(),
-                            generator = generator
-                        )
+                orders.add(
+                    orderGenerator.generateOrder(
+                        number = orders.size + 1,
+                        dateTime = LocalDateTime.now(),
+                        generator = generator
                     )
-                    orderAdded.value = true
-                }
+                )
+                orderAdded.value = true
             }
         }
     }
 
-    fun findOrder(orderId: String?): Order {
+    fun findOrderIndex(orderId: String?): Int {
         if (orderId == null) {
-            throw RuntimeException("Order id can't be null")
+            throw Exception("Order id can't be null")
         }
-        return orders.firstOrNull {
+
+        val orderIndex = orders.indexOfFirst {
             orderId == it.id
-        } ?: throw Exception("Order not found")
+        }
+
+        if (orderIndex < 0) {
+            throw Exception("Order not found")
+        } else {
+            return orderIndex
+        }
     }
 }

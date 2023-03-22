@@ -21,8 +21,14 @@ fun socialFeedSymbol(): Painter {
 }
 
 @Composable
-fun shippingSymbol(): Painter {
-    return painterResource(id = R.drawable.shipping_box)
+fun shippingSymbol(fill: Boolean = false): Painter {
+    // TODO consider to load svg by name runtime
+    // like "shippingbox" +"_fill+ "_other_extras"
+    if (fill){
+        return painterResource(id = R.drawable.shipping_box_fill)
+    }else{
+        return painterResource(id = R.drawable.shipping_box)
+    }
 }
 
 @Composable

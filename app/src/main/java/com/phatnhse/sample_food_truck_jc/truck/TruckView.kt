@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import com.phatnhse.sample_food_truck_jc.foodtruck.brand.BrandHeader
+import com.phatnhse.sample_food_truck_jc.foodtruck.model.FoodTruckViewModel
 import com.phatnhse.sample_food_truck_jc.navigation.NavigationHeader
 import com.phatnhse.sample_food_truck_jc.truck.cards.TruckDonutCards
 import com.phatnhse.sample_food_truck_jc.truck.cards.TruckOrdersCard
@@ -25,7 +26,9 @@ fun TruckView(
     onNavigateToOrders: () -> Unit,
     onNavigateToDonuts: () -> Unit,
     onNavigateToSocialFeed: () -> Unit,
-    onBackPressed: () -> Unit
+    onBackPressed: () -> Unit,
+    viewModel: FoodTruckViewModel
+
 ) {
     Column(
         modifier = Modifier
@@ -47,7 +50,10 @@ fun TruckView(
                 alignment = Alignment.CenterVertically
             )
         ) {
-            TruckOrdersCard(onNavigateToOrders = onNavigateToOrders)
+            TruckOrdersCard(
+                onNavigateToOrders = onNavigateToOrders,
+                viewModel = viewModel
+            )
             TruckDonutCards(onNavigateToDonuts = onNavigateToDonuts)
             TruckSocialFeedCard(onNavigateToSocialFeed = onNavigateToSocialFeed)
         }
@@ -63,7 +69,9 @@ fun TruckView_Preview() {
             currentViewTitle = "Truck",
             onNavigateToOrders = { /*TODO*/ },
             onNavigateToDonuts = { /*TODO*/ },
-            onNavigateToSocialFeed = { /*TODO*/ }) {
-        }
+            onNavigateToSocialFeed = { /*TODO*/ },
+            onBackPressed = { /*TODO*/ },
+            viewModel = FoodTruckViewModel()
+        )
     }
 }
