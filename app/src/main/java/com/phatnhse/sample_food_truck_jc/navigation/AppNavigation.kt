@@ -23,7 +23,6 @@ import com.phatnhse.sample_food_truck_jc.foodtruck.general.trophySymbol
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.truckSymbol
 import com.phatnhse.sample_food_truck_jc.foodtruck.model.FoodTruckViewModel
 import com.phatnhse.sample_food_truck_jc.home.HomeView
-import com.phatnhse.sample_food_truck_jc.order.Order
 import com.phatnhse.sample_food_truck_jc.order.OrderDetailView
 import com.phatnhse.sample_food_truck_jc.order.OrderView
 import com.phatnhse.sample_food_truck_jc.truck.TruckView
@@ -36,7 +35,7 @@ fun AppNavigation(
     navController: NavHostController = rememberNavController(),
     selection: MutableState<MenuItem> = remember { mutableStateOf(MenuItem.Truck) }
 ) {
-    val model = FoodTruckViewModel()
+    val foodTruckViewModel = FoodTruckViewModel()
 
     fun openHome() {
         navController.navigate(LauncherViewId) {
@@ -69,7 +68,8 @@ fun AppNavigation(
                 },
                 onBackPressed = {
                     openHome()
-                }
+                },
+                viewModel = foodTruckViewModel
             )
         }
         composable(MenuItem.Orders.title) {
@@ -85,7 +85,7 @@ fun AppNavigation(
                         navController.popBackStack()
                     }
                 },
-                model = model,
+                model = foodTruckViewModel,
                 orderClicked = {
                     val orderId = it.id
                     val encodedOrderId = Uri.encode(orderId)
@@ -107,7 +107,8 @@ fun AppNavigation(
                 onBackPressed = {
                     navController.popBackStack()
                 },
-                order = model.findOrder(orderId)
+                orderId = orderId ?: "",
+                viewModel = foodTruckViewModel
             )
         }
     }

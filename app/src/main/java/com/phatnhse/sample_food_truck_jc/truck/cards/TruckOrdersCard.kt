@@ -53,7 +53,7 @@ import kotlinx.coroutines.launch
 fun TruckOrdersCard(
     modifier: Modifier = Modifier,
     onNavigateToOrders: () -> Unit,
-    viewModel: FoodTruckViewModel = FoodTruckViewModel()
+    viewModel: FoodTruckViewModel
 ) {
     Card(
         modifier = modifier,
@@ -335,7 +335,8 @@ fun LatestOrder(
 fun TruckOrdersCard_Preview() {
     PreviewSurface {
         TruckOrdersCard(
-            onNavigateToOrders = {}
+            onNavigateToOrders = { /*TODO*/ },
+            viewModel = FoodTruckViewModel()
         )
     }
 }
