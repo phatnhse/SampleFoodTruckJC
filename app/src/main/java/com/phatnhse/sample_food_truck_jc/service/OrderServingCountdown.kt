@@ -7,15 +7,26 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.CountDownTimer
+import androidx.annotation.RequiresApi
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import androidx.core.graphics.drawable.toBitmap
 import com.phatnhse.sample_food_truck_jc.MainActivity
 import com.phatnhse.sample_food_truck_jc.R
 
 object CountdownNotificationHelper {
-
     private val timers = mutableMapOf<Int, Triple<CountDownTimer, Int, Long>>()
+
+    private const val CHANNEL_ID = "order-scheduler-channel-id"
+    private const val CHANNEL_NAME = "Order Scheduler Channel"
+    private const val CHANNEL_DESCRIPTION = "A channel for the order scheduler notifications."
+    private const val NOTIFICATION_GROUP_KEY = "order-schedule-group-key"
+    private const val NOTIFICATION_GROUP_NAME = "Order Scheduler Group"
+
+    private const val TIME_COMPLETE_SINGLE_ORDER = 60_000L
+    private const val TIME_COUNTDOWN_INTERVAL = 1_000L
 
     fun showCountdownNotification(context: Context, notificationId: Int, donuts: Int) {
         if (timers.containsKey(notificationId)) {
@@ -23,35 +34,35 @@ object CountdownNotificationHelper {
         }
 
         val notificationManager = NotificationManagerCompat.from(context)
-        val channelId = "countdown_timer_channel_$notificationId"
-        createNotificationChannel(context, channelId)
+        createNotificationChannel(context)
 
-        val groupId = "group-id"
-        val group = NotificationChannelGroup(groupId, "Group Name")
+        val group = NotificationChannelGroup(NOTIFICATION_GROUP_KEY, NOTIFICATION_GROUP_NAME)
         notificationManager.createNotificationChannelGroup(group)
 
         val originalTimestamp = System.currentTimeMillis()
-        val countDownTimer = object : CountDownTimer(60_000, 1_000) {
-            override fun onTick(millisUntilFinished: Long) {
-                val remainingTime = (millisUntilFinished / 1000).toInt()
-                timers[notificationId] = Triple(this, remainingTime, originalTimestamp)
-                val notification = createNotification(
-                    context,
-                    channelId,
-                    notificationId,
-                    remainingTime,
-                    originalTimestamp,
-                    donuts
-                )
-                notificationManager.notify(notificationId, notification)
-            }
+        val countDownTimer =
+            object : CountDownTimer(TIME_COMPLETE_SINGLE_ORDER, TIME_COUNTDOWN_INTERVAL) {
+                @RequiresApi(Build.VERSION_CODES.S)
+                override fun onTick(millisUntilFinished: Long) {
+                    val remainingTime = (millisUntilFinished / 1000).toInt()
+                    timers[notificationId] = Triple(this, remainingTime, originalTimestamp)
+                    val notification = createNotification(
+                        context,
+                        notificationId,
+                        remainingTime,
+                        originalTimestamp,
+                        donuts
+                    )
+                    notificationManager.notify(notificationId, notification)
+                }
 
-            override fun onFinish() {
-                timers.remove(notificationId)
-            }
-        }.start()
+                override fun onFinish() {
+                    timers.remove(notificationId)
+                }
+            }.start()
 
-        timers[notificationId] = Triple(countDownTimer, 60, originalTimestamp)
+        timers[notificationId] =
+            Triple(countDownTimer, (TIME_COMPLETE_SINGLE_ORDER / 1000).toInt(), originalTimestamp)
     }
 
     fun cancelCountdownNotification(context: Context, notificationId: Int) {
@@ -60,24 +71,23 @@ object CountdownNotificationHelper {
         NotificationManagerCompat.from(context).cancel(notificationId)
     }
 
-    private fun createNotificationChannel(context: Context, channelId: String) {
+    private fun createNotificationChannel(context: Context) {
         val channel = NotificationChannel(
-            channelId,
-            "Countdown Timer For Order ",
+            CHANNEL_ID,
+            CHANNEL_NAME,
             NotificationManager.IMPORTANCE_LOW
         ).apply {
-            description = "A channel for the countdown timer notifications."
+            description = CHANNEL_DESCRIPTION
         }
+
         val notificationManager =
             context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.createNotificationChannel(channel)
     }
 
-    private const val NOTIFICATION_GROUP_KEY = "countdown_timers_group"
-
+    @RequiresApi(Build.VERSION_CODES.S)
     private fun createNotification(
         context: Context,
-        channelId: String,
         notificationId: Int,
         remainingTime: Int,
         originalTimestamp: Long,
@@ -93,16 +103,22 @@ object CountdownNotificationHelper {
                 )
             }
 
-        return NotificationCompat.Builder(context, channelId)
+        val appIcon = context.getDrawable(R.drawable.app_icon)
+        val notificationLargeIcon = appIcon?.toBitmap()
+
+        val orderTitle = "Order $notificationId"
+        val orderContent = "$donuts donuts - 0:$remainingTime Remaining"
+
+        return NotificationCompat.Builder(context, CHANNEL_ID)
             .setSmallIcon(R.drawable.app_icon)
-            .setContentTitle("Order $notificationId")
-            .setContentText("$donuts donuts - 0:$remainingTime Remaining")
+            .setContentTitle(orderTitle)
+            .setContentText(orderContent)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setContentIntent(pendingIntent)
-            .setSmallIcon(R.drawable.app_icon)
             .setOngoing(true)
-            .setWhen(originalTimestamp) // Set the original timestamp
-            .setGroup(NOTIFICATION_GROUP_KEY) // Set a group key for the notifications
+            .setWhen(originalTimestamp)
+            .setLargeIcon(notificationLargeIcon)
+            .setGroup(NOTIFICATION_GROUP_KEY)
             .build()
     }
 }
