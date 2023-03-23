@@ -52,6 +52,7 @@ fun OrderDetailView(
                         val updateOrder = order.markAsNextStep()
                         viewModel.orders[orderIndex] = updateOrder
                         when (updateOrder.status) {
+                            // TODO Add new view for order completed animation here
                             OrderStatus.PREPARING -> {
                                 prepareOrder(context, order)
                             }

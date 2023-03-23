@@ -57,6 +57,8 @@ object CountdownNotificationHelper {
                 }
 
                 override fun onFinish() {
+                    // TODO
+                    // Update Notification content when the order is completed
                     timers.remove(notificationId)
                 }
             }.start()
