@@ -13,7 +13,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
@@ -25,7 +24,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutStackView
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.arrowRightSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.arrowRightPainter
 import com.phatnhse.sample_food_truck_jc.ui.composable.CustomDivider
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
@@ -72,7 +71,7 @@ fun OrderRow(
                         modifier = Modifier
                             .height(12.dp)
                             .width(6.dp),
-                        painter = arrowRightSymbol(),
+                        painter = arrowRightPainter(),
                         contentDescription = "Arrow right",
                         colorFilter = ColorFilter.tint(
                             color = colorScheme.onBackground.copy(alpha = 0.5F)

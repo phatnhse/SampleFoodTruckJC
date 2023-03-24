@@ -13,14 +13,14 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.phatnhse.sample_food_truck_jc.foodtruck.city.City.Companion.getCityFromId
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.buildingSymbol
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.clockSymbol
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.donutSymbol
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.shippingSymbol
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.sliderSymbol
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.socialFeedSymbol
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.trophySymbol
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.truckSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.buildingPainter
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.clockPainter
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.donutPainter
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.shippingPainter
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.sliderPainter
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.socialFeedPainter
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.trophyPainter
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.truckPainter
 import com.phatnhse.sample_food_truck_jc.foodtruck.model.FoodTruckViewModel
 import com.phatnhse.sample_food_truck_jc.home.HomeView
 import com.phatnhse.sample_food_truck_jc.order.OrderDetailView
@@ -140,14 +140,14 @@ sealed class MenuItem(val title: String) {
 @Composable
 fun MenuItem.getSymbol(): Painter {
     return when (this) {
-        is MenuItem.City -> buildingSymbol()
-        MenuItem.DonutEditor -> sliderSymbol()
-        MenuItem.Donuts -> donutSymbol()
-        MenuItem.Orders -> shippingSymbol()
-        MenuItem.SalesHistory -> clockSymbol()
-        MenuItem.SocialFeed -> socialFeedSymbol()
-        MenuItem.TopFive -> trophySymbol()
-        MenuItem.Truck -> truckSymbol()
+        is MenuItem.City -> buildingPainter()
+        MenuItem.DonutEditor -> sliderPainter()
+        MenuItem.Donuts -> donutPainter()
+        MenuItem.Orders -> shippingPainter()
+        MenuItem.SalesHistory -> clockPainter()
+        MenuItem.SocialFeed -> socialFeedPainter()
+        MenuItem.TopFive -> trophyPainter()
+        MenuItem.Truck -> truckPainter()
     }
 }
 

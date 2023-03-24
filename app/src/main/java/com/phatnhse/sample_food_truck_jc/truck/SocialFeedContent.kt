@@ -20,7 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.phatnhse.sample_food_truck_jc.foodtruck.city.City
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.Donut
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutView
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.buildingSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.buildingPainter
 import com.phatnhse.sample_food_truck_jc.truck.SocialFeedTag.Companion.tags
 import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
 import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeCornerSmall
@@ -150,7 +150,7 @@ private fun TagIcon(socialFeedTag: SocialFeedTag) {
         is SocialFeedTag.CityTag -> {
             Image(
                 modifier = defaultModifier,
-                painter = buildingSymbol(),
+                painter = buildingPainter(),
                 contentDescription = "",
                 colorFilter = ColorFilter.tint(color = colorScheme.secondary)
             )
@@ -165,7 +165,7 @@ private fun TagIcon(socialFeedTag: SocialFeedTag) {
         is SocialFeedTag.TitleTag -> {
             Image(
                 modifier = defaultModifier,
-                painter = buildingSymbol(),
+                painter = buildingPainter(),
                 contentDescription = "",
                 colorFilter = ColorFilter.tint(color = colorScheme.secondary)
             )

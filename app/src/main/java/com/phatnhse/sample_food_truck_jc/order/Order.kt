@@ -4,10 +4,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.painter.Painter
 import com.phatnhse.sample_food_truck_jc.foodtruck.city.City
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.Donut
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.checkmarkCircleSymbol
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.paperplaneSymbol
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.shippingSymbol
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.timerSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.checkmarkCirclePainter
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.paperplanePainter
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.shippingPainter
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.timerPainter
 import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
@@ -163,10 +163,10 @@ enum class OrderStatus() : Comparable<OrderStatus> {
     @Composable
     fun iconSystemName(fill: Boolean = false): Painter {
         return when (this) {
-            PLACED -> paperplaneSymbol()
-            PREPARING -> timerSymbol()
-            READY -> checkmarkCircleSymbol()
-            COMPLETED -> shippingSymbol(fill = fill)
+            PLACED -> paperplanePainter()
+            PREPARING -> timerPainter()
+            READY -> checkmarkCirclePainter()
+            COMPLETED -> shippingPainter(fill = fill)
         }
     }
 

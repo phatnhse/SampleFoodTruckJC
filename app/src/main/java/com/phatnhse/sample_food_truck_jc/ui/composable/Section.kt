@@ -6,7 +6,6 @@ import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
@@ -38,12 +37,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.Donut
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutView
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.arrowRightSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.arrowRightPainter
 import com.phatnhse.sample_food_truck_jc.order.Order
 import com.phatnhse.sample_food_truck_jc.order.formattedDate
 import com.phatnhse.sample_food_truck_jc.ui.theme.IconSizeLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.IconSizeTiny
-import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 
@@ -94,7 +92,7 @@ fun Section(
                             collapsed = !collapsed
                         }
                         .rotate(animateRotate.value),
-                    painter = arrowRightSymbol(),
+                    painter = arrowRightPainter(),
                     contentDescription = "",
                     tint = colorScheme.primary
                 )
@@ -167,7 +165,7 @@ fun SectionItem(
                         modifier = Modifier
                             .height(12.dp)
                             .width(6.dp),
-                        painter = arrowRightSymbol(),
+                        painter = arrowRightPainter(),
                         contentDescription = "Chevron Right",
                         colorFilter = ColorFilter.tint(
                             color = colorScheme.onBackground.copy(alpha = 0.5F)

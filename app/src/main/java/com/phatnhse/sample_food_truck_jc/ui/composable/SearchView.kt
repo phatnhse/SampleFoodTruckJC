@@ -26,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.searchSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.searchPainter
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
 import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeCornerLarge
@@ -64,7 +64,7 @@ fun SearchView(
                     Modifier.padding(horizontal = PaddingNormal),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(painter = searchSymbol(), contentDescription = "Leading Icon")
+                    Icon(painter = searchPainter(), contentDescription = "Leading Icon")
                     Spacer(modifier = Modifier.width(PaddingNormal))
                     Box(
                         modifier = Modifier

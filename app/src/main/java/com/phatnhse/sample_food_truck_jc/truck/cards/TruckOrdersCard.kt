@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.phatnhse.sample_food_truck_jc.R
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutStackView
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.shippingSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.shippingPainter
 import com.phatnhse.sample_food_truck_jc.foodtruck.model.FoodTruckViewModel
 import com.phatnhse.sample_food_truck_jc.navigation.CardNavigationHeader
 import com.phatnhse.sample_food_truck_jc.order.Order
@@ -63,7 +63,7 @@ fun TruckOrdersCard(
     ) {
         CardNavigationHeader(
             title = "New Order",
-            symbol = shippingSymbol(),
+            symbol = shippingPainter(),
             onNavigated = onNavigateToOrders
         )
 

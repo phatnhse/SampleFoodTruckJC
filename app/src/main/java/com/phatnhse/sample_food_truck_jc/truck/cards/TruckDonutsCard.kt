@@ -13,7 +13,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.Donut
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutView
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.donutSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.donutPainter
 import com.phatnhse.sample_food_truck_jc.navigation.CardNavigationHeader
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
@@ -34,7 +34,7 @@ fun TruckDonutCards(
     ) {
         CardNavigationHeader(
             title = "Donut",
-            symbol = donutSymbol(),
+            symbol = donutPainter(),
             onNavigated = onNavigateToDonuts
         )
 
