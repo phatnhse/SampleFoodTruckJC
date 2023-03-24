@@ -23,10 +23,10 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.boxBottomPainter
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.boxPainter
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.boxLidPainter
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.boxPainter
 import com.phatnhse.sample_food_truck_jc.ui.composable.noRippleClickable
-import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingLarge
+import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingExtraLarge
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
 
 @Composable
@@ -131,7 +131,8 @@ fun DonutBoxView_Preview() {
             DonutView(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(PaddingLarge), donut = Donut.preview
+                    .padding(48.dp),
+                donut = Donut.preview
             )
         }
     }
