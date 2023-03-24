@@ -16,7 +16,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.socialFeedSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.socialFeedPainter
 import com.phatnhse.sample_food_truck_jc.navigation.CardNavigationHeader
 import com.phatnhse.sample_food_truck_jc.truck.SocialFeedTag
 import com.phatnhse.sample_food_truck_jc.truck.SocialFeedTagView
@@ -38,7 +38,7 @@ fun TruckSocialFeedCard(
     ) {
         CardNavigationHeader(
             title = "Social Feed",
-            symbol = socialFeedSymbol(),
+            symbol = socialFeedPainter(),
             onNavigated = onNavigateToSocialFeed
         )
 

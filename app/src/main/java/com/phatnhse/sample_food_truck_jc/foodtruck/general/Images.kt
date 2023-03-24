@@ -6,85 +6,100 @@ import androidx.compose.ui.res.painterResource
 import com.phatnhse.sample_food_truck_jc.R
 
 @Composable
-fun truckSymbol(): Painter {
+fun truckPainter(): Painter {
     return painterResource(id = R.drawable.truck)
 }
 
 @Composable
-fun donutSymbol(): Painter {
+fun donutPainter(): Painter {
     return painterResource(id = R.drawable.donut)
 }
 
 @Composable
-fun socialFeedSymbol(): Painter {
+fun socialFeedPainter(): Painter {
     return painterResource(id = R.drawable.text_bubble)
 }
 
 @Composable
-fun shippingSymbol(fill: Boolean = false): Painter {
+fun boxPainter(): Painter {
+    return painterResource(id = R.drawable.box_inside)
+}
+
+@Composable
+fun boxBottomPainter(): Painter {
+    return painterResource(id = R.drawable.box_bottom)
+}
+
+@Composable
+fun boxLidPainter(): Painter {
+    return painterResource(id = R.drawable.box_lid)
+}
+
+@Composable
+fun shippingPainter(fill: Boolean = false): Painter {
     // TODO consider to load svg by name runtime
     // like "shippingbox" +"_fill+ "_other_extras"
-    if (fill){
-        return painterResource(id = R.drawable.shipping_box_fill)
-    }else{
-        return painterResource(id = R.drawable.shipping_box)
+    return if (fill) {
+        painterResource(id = R.drawable.shipping_box_fill)
+    } else {
+        painterResource(id = R.drawable.shipping_box)
     }
 }
 
 @Composable
-fun arrowRightSymbol(): Painter {
+fun arrowRightPainter(): Painter {
     return painterResource(id = R.drawable.chevron_right)
 }
 
 @Composable
-fun arrowLeftSymbol(): Painter {
+fun arrowLeftPainter(): Painter {
     return painterResource(id = R.drawable.chevron_left)
 }
 
 @Composable
-fun checkmarkCircleSymbol(): Painter {
+fun checkmarkCirclePainter(): Painter {
     return painterResource(id = R.drawable.checkmark)
 }
 
 
 @Composable
-fun paperplaneSymbol(): Painter {
+fun paperplanePainter(): Painter {
     return painterResource(id = R.drawable.paperplane)
 }
 
 
 @Composable
-fun timerSymbol(): Painter {
+fun timerPainter(): Painter {
     return painterResource(id = R.drawable.timer)
 }
 
 @Composable
-fun buildingSymbol(): Painter {
+fun buildingPainter(): Painter {
     return painterResource(id = R.drawable.building)
 }
 
 @Composable
-fun tagSymbol(): Painter {
+fun tagPainter(): Painter {
     return painterResource(id = R.drawable.tag)
 }
 
 @Composable
-fun trophySymbol(): Painter {
+fun trophyPainter(): Painter {
     return painterResource(id = R.drawable.trophy)
 }
 
 @Composable
-fun clockSymbol(): Painter {
+fun clockPainter(): Painter {
     return painterResource(id = R.drawable.clock)
 }
 
 @Composable
-fun sliderSymbol(): Painter {
+fun sliderPainter(): Painter {
     return painterResource(id = R.drawable.slider)
 }
 
 @Composable
-fun searchSymbol(): Painter {
+fun searchPainter(): Painter {
     return painterResource(id = R.drawable.search)
 }
 

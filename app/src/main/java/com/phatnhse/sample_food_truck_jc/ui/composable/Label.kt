@@ -14,7 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.unit.dp
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.shippingSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.shippingPainter
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
@@ -58,7 +58,7 @@ fun HeaderNavigation_Preview() {
     SampleFoodTruckJCTheme {
         Label(
             title = "Shipping",
-            symbol = shippingSymbol(),
+            symbol = shippingPainter(),
             color = MaterialTheme.colorScheme.onBackground
         )
     }

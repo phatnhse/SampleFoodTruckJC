@@ -37,7 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.Donut
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutView
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.arrowRightSymbol
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.arrowRightPainter
 import com.phatnhse.sample_food_truck_jc.order.Order
 import com.phatnhse.sample_food_truck_jc.order.formattedDate
 import com.phatnhse.sample_food_truck_jc.ui.theme.IconSizeLarge
@@ -92,7 +92,7 @@ fun Section(
                             collapsed = !collapsed
                         }
                         .rotate(animateRotate.value),
-                    painter = arrowRightSymbol(),
+                    painter = arrowRightPainter(),
                     contentDescription = "",
                     tint = colorScheme.primary
                 )
@@ -165,7 +165,7 @@ fun SectionItem(
                         modifier = Modifier
                             .height(12.dp)
                             .width(6.dp),
-                        painter = arrowRightSymbol(),
+                        painter = arrowRightPainter(),
                         contentDescription = "Chevron Right",
                         colorFilter = ColorFilter.tint(
                             color = colorScheme.onBackground.copy(alpha = 0.5F)

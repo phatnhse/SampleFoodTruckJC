@@ -1,13 +1,10 @@
 package com.phatnhse.sample_food_truck_jc.foodtruck.donut
 
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.SpringSpec
-import androidx.compose.animation.core.animateDp
-import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.Spring.StiffnessMedium
+import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
@@ -21,68 +18,94 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import com.phatnhse.sample_food_truck_jc.R
+import androidx.compose.ui.unit.min
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.boxBottomPainter
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.boxPainter
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.boxLidPainter
 import com.phatnhse.sample_food_truck_jc.ui.composable.noRippleClickable
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingLarge
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
 
-
 @Composable
 fun DonutBoxView(
-    modifier: Modifier = Modifier, isOpen: Boolean, content: @Composable () -> Unit
+    modifier: Modifier = Modifier,
+    isOpen: Boolean,
+    content: @Composable () -> Unit
 ) {
-    val boxInside: Painter = painterResource(id = R.drawable.box_inside)
-    val boxBottom: Painter = painterResource(id = R.drawable.box_bottom)
-    val boxLid: Painter = painterResource(id = R.drawable.box_lid)
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val screenWidth = configuration.screenWidthDp.dp
+    val length = min(screenHeight, screenWidth)
 
-    val updateTransition = updateTransition(targetState = isOpen, label = "")
-    val scale = updateTransition.animateFloat(label = "") {
-        when (it) {
-            true -> 1F
+    val scale by animateFloatAsState(
+        targetValue = when (isOpen) {
             false -> 0.75F
-        }
-    }
+            true -> 1F
+        },
+        animationSpec = spring()
+    )
 
-    val boxYOffset = updateTransition.animateDp(
-        label = ""
-    ) {
-        when (it) {
+    val offset by animateDpAsState(
+        targetValue = when (isOpen) {
+            false -> -length.times(0.5F)
             true -> 0.dp
-            false -> (-200).dp
-        }
-    }
+        },
+        animationSpec = spring()
+    )
+
+    val opacity by animateFloatAsState(
+        targetValue = when (isOpen) {
+            false -> 0F
+            true -> 1F
+        },
+        animationSpec = spring()
+    )
+
+    val boxBouncingAnimation by animateDpAsState(
+        targetValue = when (isOpen) {
+            false -> 10.dp
+            true -> 0.dp
+        },
+        animationSpec = spring(
+            dampingRatio = 0.4f,
+            stiffness = StiffnessMedium
+        )
+    )
 
     Box(
-        modifier = modifier, contentAlignment = Alignment.Center
+        modifier = modifier,
+        contentAlignment = Alignment.Center
     ) {
         Image(
-            painter = boxInside,
+            painter = boxPainter(),
             contentDescription = "Box Inside",
             contentScale = ContentScale.Fit,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .offset(y = boxBouncingAnimation)
         )
         content()
         Image(
-            painter = boxBottom,
+            painter = boxBottomPainter(),
             contentDescription = "Box Bottom",
             contentScale = ContentScale.Fit,
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .offset(y = boxBouncingAnimation)
         )
-        if (isOpen) {
-            Image(
-                painter = boxLid,
-                contentDescription = "Box Lid",
-                contentScale = ContentScale.Fit,
-                modifier = Modifier
-                    .fillMaxSize()
-                    .scale(scale.value)
-                    .offset(y = boxYOffset.value)
-            )
-        }
+        Image(
+            modifier = Modifier
+                .fillMaxSize()
+                .scale(scale)
+                .offset(y = offset),
+            painter = boxLidPainter(),
+            contentDescription = "Box Lid",
+            contentScale = ContentScale.Fit,
+            alpha = opacity,
+        )
     }
 }
 
@@ -90,7 +113,7 @@ fun DonutBoxView(
 @Composable
 fun DonutBoxView_Preview() {
     var open by remember {
-        mutableStateOf(true)
+        mutableStateOf(false)
     }
 
     Box(
