@@ -33,7 +33,6 @@ import androidx.compose.ui.unit.sp
 import com.google.android.play.core.review.ReviewInfo
 import com.google.android.play.core.review.ReviewManager
 import com.google.android.play.core.review.ReviewManagerFactory
-import com.google.android.play.core.review.testing.FakeReviewManager
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutBoxView
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutView
 import com.phatnhse.sample_food_truck_jc.ui.composable.noRippleClickable
@@ -45,61 +44,55 @@ import kotlinx.coroutines.delay
 import java.time.LocalDateTime
 
 @Composable
-fun rememberReviewTask(reviewManager: ReviewManager): ReviewInfo? {
-    var reviewInfo: ReviewInfo? by remember {
-        mutableStateOf(null)
-    }
-    reviewManager.requestReviewFlow().addOnCompleteListener {
-        if (it.isSuccessful) {
-            reviewInfo = it.result
-        }
-    }
-
-    return reviewInfo
-}
-
-@Composable
 fun OrderCompleteView(
     modifier: Modifier = Modifier,
     order: Order,
-    onOrderDone: (Order) -> Unit
+    onOrderDone: (Order) -> Unit,
+    startAnimation: Boolean,
 ) {
-    var boxOpen by remember {
-        mutableStateOf(false)
-    }
-
+    // this review function will not working if the app is not on play store
     val localContext = LocalContext.current
-
-    val reviewManager = remember {
-        FakeReviewManager(localContext)
-    }
-
+    val reviewManager = remember { ReviewManagerFactory.create(localContext) }
     val reviewInfo = rememberReviewTask(reviewManager)
-
     LaunchedEffect(key1 = reviewInfo) {
         reviewInfo?.let {
             reviewManager.launchReviewFlow(localContext as Activity, reviewInfo)
         }
     }
 
+    var boxOpen by remember { mutableStateOf(false) }
+    var boxBounce by remember { mutableStateOf(false) }
+
     val boxBouncingAnimation by animateDpAsState(
-        targetValue = when (boxOpen) {
-            false -> 10.dp
-            true -> 0.dp
+        targetValue = when (boxBounce) {
+            false -> 0.dp
+            true -> 10.dp
         },
         animationSpec = spring(
-            dampingRatio = 1F,
-            stiffness = Spring.StiffnessLow
-        )
+            dampingRatio = 0.8F,
+            stiffness = Spring.StiffnessMedium
+        ),
+        finishedListener = {
+            boxBounce = false
+        }
     )
+
+    LaunchedEffect(boxOpen) {
+        if (boxOpen) {
+            delay(150)
+            boxBounce = true
+        }
+    }
 
     fun toggleAnimation() {
         boxOpen = !boxOpen
     }
 
-    LaunchedEffect(Unit) {
-        delay(750)
-        toggleAnimation()
+    LaunchedEffect(startAnimation) {
+        if (startAnimation) {
+            delay(500)
+            toggleAnimation()
+        }
     }
 
     Column {
@@ -128,7 +121,7 @@ fun OrderCompleteView(
                     },
                 text = "Done",
                 color = colorScheme.primary,
-                style = typography.titleSmall
+                style = typography.titleMedium
             )
         }
 
@@ -175,13 +168,29 @@ fun OrderCompleteView(
     }
 }
 
+@Composable
+fun rememberReviewTask(reviewManager: ReviewManager): ReviewInfo? {
+    var reviewInfo: ReviewInfo? by remember {
+        mutableStateOf(null)
+    }
+
+    reviewManager.requestReviewFlow().addOnCompleteListener {
+        if (it.isSuccessful) {
+            reviewInfo = it.result
+        }
+    }
+
+    return reviewInfo
+}
+
 @SingleDevice
 @Composable
 fun OrderCompleteView_Preview() {
     SampleFoodTruckJCTheme {
         OrderCompleteView(
             order = Order.preview,
-            onOrderDone = {}
+            onOrderDone = {},
+            startAnimation = false
         )
     }
 }
