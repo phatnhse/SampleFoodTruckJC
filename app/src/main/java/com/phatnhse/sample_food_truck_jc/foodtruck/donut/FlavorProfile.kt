@@ -1,69 +1,103 @@
 package com.phatnhse.sample_food_truck_jc.foodtruck.donut
 
-import androidx.annotation.DrawableRes
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.res.painterResource
 import com.phatnhse.sample_food_truck_jc.R
 
 data class FlavorProfile(
-    val salty: Int = 0,
-    val sweet: Int = 0,
-    val bitter: Int = 0,
-    val sour: Int = 0,
-    val savory: Int = 0,
-    val spicy: Int = 0
+    var salty: Int = 0,
+    var sweet: Int = 0,
+    var bitter: Int = 0,
+    var sour: Int = 0,
+    var savory: Int = 0,
+    var spicy: Int = 0
 ) {
-    fun getFlavor(flavor: Flavor): Int {
+    operator fun get(flavor: Flavor): Int {
         return when (flavor) {
-            is Flavor.Bitter -> bitter
-            is Flavor.Salty -> salty
-            is Flavor.Savory -> savory
-            is Flavor.Sour -> sour
-            is Flavor.Spicy -> spicy
-            is Flavor.Sweet -> sweet
+            Flavor.Salty -> salty
+            Flavor.Sweet -> sweet
+            Flavor.Bitter -> bitter
+            Flavor.Sour -> sour
+            Flavor.Savory -> savory
+            Flavor.Spicy -> spicy
         }
     }
 
-    fun union(other: FlavorProfile): FlavorProfile {
-        return FlavorProfile(
-            salty + other.salty,
-            sweet + other.sweet,
-            bitter + other.bitter,
-            sour + other.sour,
-            savory + other.savory,
-            spicy + other.spicy
-        )
+    operator fun set(flavor: Flavor, newValue: Int) {
+        when (flavor) {
+            Flavor.Salty -> salty = newValue
+            Flavor.Sweet -> sweet = newValue
+            Flavor.Bitter -> bitter = newValue
+            Flavor.Sour -> sour = newValue
+            Flavor.Savory -> savory = newValue
+            Flavor.Spicy -> spicy = newValue
+        }
     }
 
     operator fun plus(other: FlavorProfile): FlavorProfile {
         return union(other)
     }
+
+    fun union(other: FlavorProfile): FlavorProfile {
+        val result = this.copy()
+        for (flavor in Flavor.values()) {
+            result[flavor] += other[flavor]
+        }
+        return result
+    }
+
+    fun formUnion(other: FlavorProfile) {
+        this.copyFrom(union(other))
+    }
+
+    private fun copyFrom(other: FlavorProfile) {
+        salty = other.salty
+        sweet = other.sweet
+        bitter = other.bitter
+        sour = other.sour
+        savory = other.savory
+        spicy = other.spicy
+    }
+
+    val mostPotent: Pair<Flavor, Int>
+        get() {
+            var highestValue = 0
+            var mostPotent = Flavor.Sweet
+            for (flavor in Flavor.values()) {
+                val value = this[flavor]
+                if (value > highestValue) {
+                    highestValue = value
+                    mostPotent = flavor
+                }
+            }
+            return Pair(mostPotent, highestValue)
+        }
+
+    val mostPotentFlavor: Flavor
+        get() = mostPotent.first
+
+    val mostPotentValue: Int
+        get() = mostPotent.second
 }
 
-sealed class Flavor(
-    open val name: String, @DrawableRes open val imageRes: Int
-) {
-    data class Salty(
-        override val name: String = "Salty", override val imageRes: Int = R.drawable.salty
-    ) : Flavor(name, imageRes)
+enum class Flavor(val displayName: String) {
+    Salty("Salty"),
+    Sweet("Sweet"),
+    Bitter("Bitter"),
+    Sour("Sour"),
+    Savory("Savory"),
+    Spicy("Spicy");
+}
 
-    data class Sweet(
-        override val name: String = "Sweet", override val imageRes: Int = R.drawable.sweet
-    ) : Flavor(name, imageRes)
-
-
-    data class Bitter(
-        override val name: String = "Bitter", override val imageRes: Int = R.drawable.bitter
-    ) : Flavor(name, imageRes)
-
-
-    data class Sour(
-        override val name: String = "Sour", override val imageRes: Int = R.drawable.sour
-    ) : Flavor(name, imageRes)
-
-    data class Savory(
-        override val name: String = "Savory", override val imageRes: Int = R.drawable.savory
-    ) : Flavor(name, imageRes)
-
-    data class Spicy(
-        override val name: String = "Spicy", override val imageRes: Int = R.drawable.spicy
-    ) : Flavor(name, imageRes)
+@Composable
+fun flavorPainter(flavor: Flavor): Painter {
+    return when (flavor) {
+        Flavor.Bitter -> painterResource(id = R.drawable.bitter)
+        Flavor.Salty -> painterResource(id = R.drawable.salty)
+        Flavor.Savory -> painterResource(id = R.drawable.savory)
+        Flavor.Sour -> painterResource(id = R.drawable.sour)
+        Flavor.Spicy -> painterResource(id = R.drawable.spicy)
+        Flavor.Sweet -> painterResource(id = R.drawable.sweet)
+    }
 }

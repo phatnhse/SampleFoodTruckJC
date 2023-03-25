@@ -1,5 +1,6 @@
 package com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
@@ -16,8 +17,9 @@ sealed class Ingredient(
         return "$imagePrefix-$imageAssetName"
     }
 
+    @SuppressLint("DiscouragedApi")
     @Composable
-    fun ingredientImage(thumbnail: Boolean) {
+    fun IngredientImage(thumbnail: Boolean) {
         val context = LocalContext.current
         val fileName = imageResourceName(thumbnail)
         val iconResId: Int = context.resources

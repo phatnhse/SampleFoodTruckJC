@@ -25,15 +25,15 @@ fun DonutView(
         }
 
         if (visibleLayers.dough) {
-            donut.dough.ingredientImage(useThumb)
+            donut.dough.IngredientImage(useThumb)
         }
 
         if (visibleLayers.glaze) {
-            donut.glaze?.ingredientImage(useThumb)
+            donut.glaze?.IngredientImage(useThumb)
         }
 
         if (visibleLayers.topping) {
-            donut.topping?.ingredientImage(useThumb)
+            donut.topping?.IngredientImage(useThumb)
         }
     }
 }

@@ -102,15 +102,3 @@ fun sliderPainter(): Painter {
 fun searchPainter(): Painter {
     return painterResource(id = R.drawable.search)
 }
-
-//@Composable
-//fun flavorSymbol(flavor: Flavor): Painter {
-//    return when (flavor) {
-//        is Bitter -> painterResource(id = R.drawable.bitter)
-//        is Salty -> painterResource(id = R.drawable.salty)
-//        is Savory -> painterResource(id = R.drawable.savory)
-//        is Sour -> painterResource(id = R.drawable.sour)
-//        is Spicy -> painterResource(id = R.drawable.spicy)
-//        is Sweet -> painterResource(id = R.drawable.sweet)
-//    }
-//}
