@@ -1,5 +1,6 @@
 package com.phatnhse.sample_food_truck_jc.service
 
+import android.annotation.SuppressLint
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationChannelGroup
@@ -42,6 +43,7 @@ object CountdownNotificationHelper {
         val originalTimestamp = System.currentTimeMillis()
         val countDownTimer =
             object : CountDownTimer(TIME_COMPLETE_SINGLE_ORDER, TIME_COUNTDOWN_INTERVAL) {
+                @SuppressLint("MissingPermission")
                 @RequiresApi(Build.VERSION_CODES.S)
                 override fun onTick(millisUntilFinished: Long) {
                     val remainingTime = (millisUntilFinished / 1000).toInt()
@@ -57,8 +59,6 @@ object CountdownNotificationHelper {
                 }
 
                 override fun onFinish() {
-                    // TODO
-                    // Update Notification content when the order is completed
                     timers.remove(notificationId)
                 }
             }.start()

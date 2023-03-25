@@ -6,15 +6,24 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.BottomSheetScaffold
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutView
 import com.phatnhse.sample_food_truck_jc.foodtruck.model.FoodTruckViewModel
 import com.phatnhse.sample_food_truck_jc.navigation.NavigationHeader
@@ -22,7 +31,9 @@ import com.phatnhse.sample_food_truck_jc.service.CountdownNotificationHelper
 import com.phatnhse.sample_food_truck_jc.ui.composable.Section
 import com.phatnhse.sample_food_truck_jc.ui.theme.IconSizeLarge
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun OrderDetailView(
     previousViewTitle: String,
@@ -36,50 +47,81 @@ fun OrderDetailView(
     val orderIndex = viewModel.findOrderIndex(orderId)
     val order = viewModel.orders[orderIndex]
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = colorScheme.background)
+    val bottomSheetState = rememberBottomSheetScaffoldState()
+    val scope = rememberCoroutineScope()
+    var startAnimation by remember {
+        mutableStateOf(false)
+    }
+    BottomSheetScaffold(
+        scaffoldState = bottomSheetState,
+        sheetContent = {
+            OrderCompleteView(
+                order = order,
+                onOrderDone = {
+                    scope.launch {
+                        bottomSheetState.bottomSheetState.partialExpand()
+                    }
+                },
+                startAnimation = startAnimation
+            )
+        },
+        sheetPeekHeight = 0.dp,
+        sheetDragHandle = null
     ) {
-        NavigationHeader(
-            previousViewTitle = previousViewTitle,
-            currentViewTitle = currentViewTitle,
-            onBackPressed = onBackPressed,
-            menuItems = listOf {
-                IconButton(
-                    enabled = !order.isComplete,
-                    onClick = {
-                        val updateOrder = order.markAsNextStep()
-                        viewModel.orders[orderIndex] = updateOrder
-                        when (updateOrder.status) {
-                            // TODO Add new view for order completed animation here
-                            OrderStatus.PREPARING -> {
-                                prepareOrder(context, order)
-                            }
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(color = colorScheme.background)
+        ) {
+            NavigationHeader(
+                previousViewTitle = previousViewTitle,
+                currentViewTitle = currentViewTitle,
+                onBackPressed = onBackPressed,
+                menuItems = listOf {
+                    IconButton(
+                        enabled = !order.isComplete,
+                        onClick = {
+                            val updateOrder = order.markAsNextStep()
+                            viewModel.orders[orderIndex] = updateOrder
+                            when (updateOrder.status) {
+                                OrderStatus.PREPARING -> {
+                                    prepareOrder(context, order)
+                                }
 
-                            OrderStatus.COMPLETED -> {
-                                completeOrder(context, order)
-                            }
+                                OrderStatus.COMPLETED -> {
+                                    completeOrder(context, order)
+                                    scope.launch {
+                                        bottomSheetState.bottomSheetState.expand()
+                                        startAnimation = true
+                                    }
+                                }
 
-                            else -> {
-                                // do nothing
+                                else -> {
+                                    // do nothing
+                                }
                             }
-                        }
-                    }) {
-                    Icon(
-                        painter = order.status.iconSystemName(
-                            fill = order.isComplete
-                        ),
-                        contentDescription = null,
-                        tint = colorScheme.primary
-                    )
+                        }) {
+                        Icon(
+                            painter = order.status.iconSystemName(
+                                fill = order.isComplete
+                            ),
+                            contentDescription = null,
+                            tint = if (order.isComplete) {
+                                colorScheme.onBackground.copy(
+                                    alpha = 0.5F
+                                )
+                            } else {
+                                colorScheme.primary
+                            }
+                        )
+                    }
                 }
-            }
-        )
+            )
 
-        StatusSection(order)
-        DonutsSection(order)
-        TotalDonutsSection(order)
+            StatusSection(order)
+            DonutsSection(order)
+            TotalDonutsSection(order)
+        }
     }
 }
 
@@ -87,7 +129,7 @@ fun OrderDetailView(
 fun StatusSection(order: Order) {
     Section(title = "status",
         rows = listOf(
-            "Placed",
+            order.status.title,
             "Order Started"
         ),
         trailingViews = listOf(
@@ -96,7 +138,11 @@ fun StatusSection(order: Order) {
                     painter = order.status.iconSystemName(),
                     contentDescription = null,
                     colorFilter = ColorFilter.tint(
-                        color = colorScheme.primary
+                        color = if (order.isComplete) {
+                            colorScheme.onBackground.copy(alpha = 0.5F)
+                        } else {
+                            colorScheme.primary
+                        }
                     )
                 )
             },
