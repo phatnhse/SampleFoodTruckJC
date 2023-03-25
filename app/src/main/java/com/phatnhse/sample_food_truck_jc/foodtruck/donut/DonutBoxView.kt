@@ -26,7 +26,6 @@ import com.phatnhse.sample_food_truck_jc.foodtruck.general.boxBottomPainter
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.boxLidPainter
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.boxPainter
 import com.phatnhse.sample_food_truck_jc.ui.composable.noRippleClickable
-import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingExtraLarge
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
 
 @Composable
@@ -64,17 +63,6 @@ fun DonutBoxView(
         animationSpec = spring()
     )
 
-    val boxBouncingAnimation by animateDpAsState(
-        targetValue = when (isOpen) {
-            false -> 10.dp
-            true -> 0.dp
-        },
-        animationSpec = spring(
-            dampingRatio = 0.4f,
-            stiffness = StiffnessMedium
-        )
-    )
-
     Box(
         modifier = modifier,
         contentAlignment = Alignment.Center
@@ -85,7 +73,6 @@ fun DonutBoxView(
             contentScale = ContentScale.Fit,
             modifier = Modifier
                 .fillMaxSize()
-                .offset(y = boxBouncingAnimation)
         )
         content()
         Image(
@@ -94,7 +81,6 @@ fun DonutBoxView(
             contentScale = ContentScale.Fit,
             modifier = Modifier
                 .fillMaxSize()
-                .offset(y = boxBouncingAnimation)
         )
         Image(
             modifier = Modifier
