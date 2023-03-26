@@ -35,7 +35,7 @@ fun NavigationHeader(
     previousViewTitle: String,
     currentViewTitle: String,
     onBackPressed: () -> Unit,
-    menuItems: List<@Composable () -> Unit> = listOf(),
+    menuItems: (@Composable () -> Unit)? = null,
 ) {
     Column {
         Spacer(modifier = Modifier.height(PaddingNormal))
@@ -71,11 +71,8 @@ fun NavigationHeader(
                 )
             }
 
-            Row {
-                menuItems.map {
-                    Spacer(modifier = Modifier.width(PaddingNormal))
-                    it()
-                }
+            if (menuItems != null) {
+                menuItems()
             }
         }
 
@@ -100,22 +97,6 @@ fun NavigationBar_Preview() {
             onBackPressed = {
                 // do nothing
             },
-            menuItems = listOf({
-                IconButton(onClick = {
-
-                }) {
-                    Icon(
-                        painter = plusPainter(), contentDescription = "Add Donut"
-                    )
-                }
-            }, {
-                IconButton(onClick = {
-
-                }) {
-                    Icon(
-                        painter = plusPainter(), contentDescription = "Add Donut"
-                    )
-                }
-            }))
+            menuItems = { Text(text = "Menu Item") })
     }
 }
