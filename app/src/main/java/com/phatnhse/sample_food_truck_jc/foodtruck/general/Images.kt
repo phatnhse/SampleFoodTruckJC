@@ -99,6 +99,31 @@ fun sliderPainter(): Painter {
 }
 
 @Composable
+fun textFormatPainter(): Painter {
+    return painterResource(id = R.drawable.textformat)
+}
+
+@Composable
 fun searchPainter(): Painter {
     return painterResource(id = R.drawable.search)
+}
+
+@Composable
+fun squareGridPainter(): Painter {
+    return painterResource(id = R.drawable.square_grid_2x2)
+}
+
+@Composable
+fun plusPainter(): Painter {
+    return painterResource(id = R.drawable.plus)
+}
+
+@Composable
+fun listBulletPainter(): Painter {
+    return painterResource(id = R.drawable.list_bullet)
+}
+
+@Composable
+fun forkKnifePainter(): Painter {
+    return painterResource(id = R.drawable.fork_knife)
 }
