@@ -2,12 +2,7 @@ package com.phatnhse.sample_food_truck_jc.donut
 
 import android.inputmethodservice.Keyboard.Row
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.*
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -48,7 +43,7 @@ fun DonutGallery(
     var expanded by remember { mutableStateOf(false) }
     var layout by remember { mutableStateOf(GRID) }
     var sort by remember {
-        mutableStateOf(DonutSortOrder.SortByPopularity(Timeframe.WEEK))
+        mutableStateOf<DonutSortOrder>(DonutSortOrder.SortByPopularity(Timeframe.WEEK))
     }
     var popularityTimeframe by remember {
         mutableStateOf(Timeframe.WEEK)
@@ -57,11 +52,9 @@ fun DonutGallery(
         mutableStateOf(Flavor.Sweet)
     }
 
-    var filterDonuts = model.donuts(sort).filter {
+    val filterDonuts = model.donuts(sort).filter {
         it.matches(searchText = searchText)
     }
-
-    var selectedOption by remember { mutableStateOf("Option 1") }
 
     Column(
         modifier = Modifier
@@ -83,6 +76,8 @@ fun DonutGallery(
                         tint = colorScheme.primary
                     )
 
+                    Spacer(modifier = Modifier.width(PaddingNormal))
+
                     Box(
                         modifier = Modifier.wrapContentSize(Alignment.TopEnd)
                     ) {
@@ -93,8 +88,38 @@ fun DonutGallery(
                                 expanded = !expanded
                             })
                         DropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-                            DropdownMenuItem(text = { Text("Load") }, onClick = { })
-                            DropdownMenuItem(text = { Text("Save") }, onClick = { })
+                            BrowserLayout.values().forEach {
+                                DropdownMenuItem(text = { Text(it.title) }, onClick = {
+                                    layout = it
+                                })
+                            }
+                            DropdownMenuItem(text = { Text("Name") }, onClick = { })
+                            DropdownMenuItem(text = { Text("Popularity") }, onClick = { })
+                            DropdownMenuItem(text = { Text("Flavor") }, onClick = { })
+
+                            when (sort) {
+                                is DonutSortOrder.SortByFlavor -> {
+                                    Flavor.values().forEach {
+                                        DropdownMenuItem(
+                                            text = { Text(it.displayName) },
+                                            onClick = {
+
+                                            })
+                                    }
+                                }
+                                DonutSortOrder.SortByName -> {
+                                    // do nothing
+                                }
+                                is DonutSortOrder.SortByPopularity -> {
+                                    Timeframe.values().forEach {
+                                        DropdownMenuItem(
+                                            text = { Text(it.name) },
+                                            onClick = {
+
+                                            })
+                                    }
+                                }
+                            }
                         }
                     }
                 }

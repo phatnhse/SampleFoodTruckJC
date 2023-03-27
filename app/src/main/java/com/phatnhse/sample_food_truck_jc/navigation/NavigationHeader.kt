@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.arrowLeftPainter
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.plusPainter
+import com.phatnhse.sample_food_truck_jc.ui.composable.noRippleClickable
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
@@ -47,7 +48,7 @@ fun NavigationHeader(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
-                modifier = Modifier.clickable { onBackPressed.invoke() },
+                modifier = Modifier.noRippleClickable { onBackPressed.invoke() },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
