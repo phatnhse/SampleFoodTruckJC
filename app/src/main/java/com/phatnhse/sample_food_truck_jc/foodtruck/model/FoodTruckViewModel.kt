@@ -141,6 +141,9 @@ sealed class DonutSortOrder {
     data class SortByFlavor(val flavor: Flavor) : DonutSortOrder()
 }
 
-public enum class Timeframe {
-    TODAY, WEEK, MONTH, YEAR
+enum class Timeframe(val title: String) {
+    TODAY("Today"),
+    WEEK("Week"),
+    MONTH("Month"),
+    YEAR("Year");
 }

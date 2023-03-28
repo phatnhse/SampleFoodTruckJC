@@ -58,9 +58,13 @@ fun arrowLeftPainter(): Painter {
 
 @Composable
 fun checkmarkCirclePainter(): Painter {
-    return painterResource(id = R.drawable.checkmark)
+    return painterResource(id = R.drawable.checkmark_circle)
 }
 
+@Composable
+fun checkMarkPainter(): Painter {
+    return painterResource(id = R.drawable.checkmark)
+}
 
 @Composable
 fun paperplanePainter(): Painter {
