@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.BottomSheetScaffold
@@ -77,43 +78,45 @@ fun OrderDetailView(
                 previousViewTitle = previousViewTitle,
                 currentViewTitle = currentViewTitle,
                 onBackPressed = onBackPressed,
-                menuItems = listOf {
-                    IconButton(
-                        enabled = !order.isComplete,
-                        onClick = {
-                            val updateOrder = order.markAsNextStep()
-                            viewModel.orders[orderIndex] = updateOrder
-                            when (updateOrder.status) {
-                                OrderStatus.PREPARING -> {
-                                    prepareOrder(context, order)
-                                }
+                menuItems = {
+                    Row {
+                        IconButton(
+                            enabled = !order.isComplete,
+                            onClick = {
+                                val updateOrder = order.markAsNextStep()
+                                viewModel.orders[orderIndex] = updateOrder
+                                when (updateOrder.status) {
+                                    OrderStatus.PREPARING -> {
+                                        prepareOrder(context, order)
+                                    }
 
-                                OrderStatus.COMPLETED -> {
-                                    completeOrder(context, order)
-                                    scope.launch {
-                                        bottomSheetState.bottomSheetState.expand()
-                                        startAnimation = true
+                                    OrderStatus.COMPLETED -> {
+                                        completeOrder(context, order)
+                                        scope.launch {
+                                            bottomSheetState.bottomSheetState.expand()
+                                            startAnimation = true
+                                        }
+                                    }
+
+                                    else -> {
+                                        // do nothing
                                     }
                                 }
-
-                                else -> {
-                                    // do nothing
+                            }) {
+                            Icon(
+                                painter = order.status.iconSystemName(
+                                    fill = order.isComplete
+                                ),
+                                contentDescription = null,
+                                tint = if (order.isComplete) {
+                                    colorScheme.onBackground.copy(
+                                        alpha = 0.5F
+                                    )
+                                } else {
+                                    colorScheme.primary
                                 }
-                            }
-                        }) {
-                        Icon(
-                            painter = order.status.iconSystemName(
-                                fill = order.isComplete
-                            ),
-                            contentDescription = null,
-                            tint = if (order.isComplete) {
-                                colorScheme.onBackground.copy(
-                                    alpha = 0.5F
-                                )
-                            } else {
-                                colorScheme.primary
-                            }
-                        )
+                            )
+                        }
                     }
                 }
             )

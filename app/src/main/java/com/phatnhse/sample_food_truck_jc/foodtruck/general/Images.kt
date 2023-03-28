@@ -58,9 +58,13 @@ fun arrowLeftPainter(): Painter {
 
 @Composable
 fun checkmarkCirclePainter(): Painter {
-    return painterResource(id = R.drawable.checkmark)
+    return painterResource(id = R.drawable.checkmark_circle)
 }
 
+@Composable
+fun checkMarkPainter(): Painter {
+    return painterResource(id = R.drawable.checkmark)
+}
 
 @Composable
 fun paperplanePainter(): Painter {
@@ -99,18 +103,31 @@ fun sliderPainter(): Painter {
 }
 
 @Composable
+fun textFormatPainter(): Painter {
+    return painterResource(id = R.drawable.textformat)
+}
+
+@Composable
 fun searchPainter(): Painter {
     return painterResource(id = R.drawable.search)
 }
 
-//@Composable
-//fun flavorSymbol(flavor: Flavor): Painter {
-//    return when (flavor) {
-//        is Bitter -> painterResource(id = R.drawable.bitter)
-//        is Salty -> painterResource(id = R.drawable.salty)
-//        is Savory -> painterResource(id = R.drawable.savory)
-//        is Sour -> painterResource(id = R.drawable.sour)
-//        is Spicy -> painterResource(id = R.drawable.spicy)
-//        is Sweet -> painterResource(id = R.drawable.sweet)
-//    }
-//}
+@Composable
+fun squareGridPainter(): Painter {
+    return painterResource(id = R.drawable.square_grid_2x2)
+}
+
+@Composable
+fun plusPainter(): Painter {
+    return painterResource(id = R.drawable.plus)
+}
+
+@Composable
+fun listBulletPainter(): Painter {
+    return painterResource(id = R.drawable.list_bullet)
+}
+
+@Composable
+fun forkKnifePainter(): Painter {
+    return painterResource(id = R.drawable.fork_knife)
+}

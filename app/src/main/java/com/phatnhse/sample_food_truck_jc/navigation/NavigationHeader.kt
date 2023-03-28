@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
@@ -21,6 +23,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.arrowLeftPainter
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.plusPainter
+import com.phatnhse.sample_food_truck_jc.ui.composable.noRippleClickable
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
@@ -32,7 +36,7 @@ fun NavigationHeader(
     previousViewTitle: String,
     currentViewTitle: String,
     onBackPressed: () -> Unit,
-    menuItems: List<@Composable () -> Unit> = listOf(),
+    menuItems: (@Composable () -> Unit)? = null,
 ) {
     Column {
         Spacer(modifier = Modifier.height(PaddingNormal))
@@ -44,7 +48,7 @@ fun NavigationHeader(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
-                modifier = Modifier.clickable { onBackPressed.invoke() },
+                modifier = Modifier.noRippleClickable { onBackPressed.invoke() },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(
@@ -68,11 +72,8 @@ fun NavigationHeader(
                 )
             }
 
-            Row {
-                menuItems.map {
-                    Spacer(modifier = Modifier.width(PaddingNormal))
-                    it()
-                }
+            if (menuItems != null) {
+                menuItems()
             }
         }
 
@@ -97,10 +98,6 @@ fun NavigationBar_Preview() {
             onBackPressed = {
                 // do nothing
             },
-            menuItems = listOf({
-                Text(text = "Menu1")
-            }, {
-                Text(text = "Menu 2")
-            }))
+            menuItems = { Text(text = "Menu Item") })
     }
 }

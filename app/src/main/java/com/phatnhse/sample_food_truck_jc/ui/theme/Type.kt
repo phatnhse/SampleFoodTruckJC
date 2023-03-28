@@ -13,6 +13,7 @@ val PaddingLarge = 18.dp
 val PaddingExtraLarge = 24.dp
 
 val IconSizeTiny = 12.dp
+val IconSizeSmaller = 16.dp
 val IconSizeSmall = 20.dp
 val IconSizeNormal = 24.dp
 val IconSizeLarge = 28.dp

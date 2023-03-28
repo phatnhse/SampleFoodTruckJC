@@ -39,9 +39,10 @@ data class Donut(
 
     val flavors: FlavorProfile
         get() {
-            return ingredients.map { it.flavors }.reduce { acc, flavorProfile ->
-                acc + flavorProfile
-            }
+            return ingredients.map { it.flavors }
+                .reduce { acc, flavorProfile ->
+                    acc + flavorProfile
+                }
         }
 
     fun matches(searchText: String): Boolean {
