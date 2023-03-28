@@ -1,7 +1,6 @@
 package com.phatnhse.sample_food_truck_jc.order
 
 import android.content.Context
-import android.inputmethodservice.Keyboard.Row
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column

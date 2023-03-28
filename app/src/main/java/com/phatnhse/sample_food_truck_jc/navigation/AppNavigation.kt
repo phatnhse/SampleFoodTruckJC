@@ -12,6 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.phatnhse.sample_food_truck_jc.donut.DonutGallery
 import com.phatnhse.sample_food_truck_jc.foodtruck.city.City.Companion.getCityFromId
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.buildingPainter
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.clockPainter
@@ -95,7 +96,22 @@ fun AppNavigation(
         }
         composable(MenuItem.SocialFeed.title) { Text(text = "SocialFeed") }
         composable(MenuItem.SalesHistory.title) { Text(text = "SalesHistory") }
-        composable(MenuItem.Donuts.title) { Text(text = "Donuts") }
+        composable(MenuItem.Donuts.title) {
+            val openFromHome = selection.value == MenuItem.Donuts
+            val previous = navController.previousBackStackEntry?.destination?.route
+            DonutGallery(
+                currentViewTitle = selection.value.title,
+                previousViewTitle = previous ?: LauncherViewId,
+                onBackPressed = {
+                    if (openFromHome) {
+                        openHome()
+                    } else {
+                        navController.popBackStack()
+                    }
+                },
+                model = foodTruckViewModel
+            )
+        }
         composable(MenuItem.DonutEditor.title) { Text(text = "DonutEditor") }
         composable(MenuItem.TopFive.title) { Text(text = "TopFive") }
         composable("orders/{orderId}") {

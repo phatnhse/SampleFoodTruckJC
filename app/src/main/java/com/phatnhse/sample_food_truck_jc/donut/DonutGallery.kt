@@ -1,15 +1,25 @@
 package com.phatnhse.sample_food_truck_jc.donut
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material3.Divider
+import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -24,8 +34,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
+import androidx.compose.ui.unit.dp
 import com.phatnhse.sample_food_truck_jc.donut.BrowserLayout.GRID
 import com.phatnhse.sample_food_truck_jc.donut.BrowserLayout.LIST
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.Donut
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutView
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.Flavor
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.checkMarkPainter
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.forkKnifePainter
@@ -38,11 +51,15 @@ import com.phatnhse.sample_food_truck_jc.foodtruck.model.DonutSortOrder
 import com.phatnhse.sample_food_truck_jc.foodtruck.model.FoodTruckViewModel
 import com.phatnhse.sample_food_truck_jc.foodtruck.model.Timeframe
 import com.phatnhse.sample_food_truck_jc.navigation.NavigationHeader
+import com.phatnhse.sample_food_truck_jc.ui.composable.CustomDivider
 import com.phatnhse.sample_food_truck_jc.ui.composable.SearchView
 import com.phatnhse.sample_food_truck_jc.ui.composable.noRippleClickable
 import com.phatnhse.sample_food_truck_jc.ui.theme.IconSizeSmaller
+import com.phatnhse.sample_food_truck_jc.ui.theme.IconSizeTiny
+import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingExtraLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
+import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeCornerLarge
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
 
@@ -80,17 +97,19 @@ fun DonutGallery(
                     expanded = !expanded
                 })
 
-            DropdownMenu(
-                expanded = expanded,
-                onDismissRequest = { expanded = false }
-            ) {
-                BrowserLayout.values().forEach {
+            DropdownMenu(modifier = Modifier
+                .defaultMinSize(minWidth = 200.dp)
+                .background(
+                    color = colorScheme.background, shape = ShapeCornerLarge
+                ), expanded = expanded, onDismissRequest = { expanded = false }) {
+                BrowserLayout.values().forEachIndexed { index, browserLayout ->
                     InlineDropdownMenuIcon(
-                        isChecked = layout == it,
-                        text = it.title,
-                        painter = getPainter(layout = it),
+                        isChecked = layout == browserLayout,
+                        text = browserLayout.title,
+                        painter = getPainter(layout = browserLayout),
+                        showLargeDivider = index == BrowserLayout.values().lastIndex
                     ) {
-                        layout = it
+                        layout = browserLayout
                         expanded = false
                     }
                 }
@@ -98,7 +117,8 @@ fun DonutGallery(
                 InlineDropdownMenuIcon(
                     isChecked = sort == DonutSortOrder.SortByName,
                     text = "Name",
-                    painter = textFormatPainter()
+                    painter = textFormatPainter(),
+                    showLargeDivider = false
                 ) {
                     sort = DonutSortOrder.SortByName
                     expanded = false
@@ -107,7 +127,8 @@ fun DonutGallery(
                 InlineDropdownMenuIcon(
                     isChecked = sort == DonutSortOrder.SortByPopularity(popularityTimeframe),
                     text = "Popularity",
-                    painter = forkKnifePainter()
+                    painter = forkKnifePainter(),
+                    showLargeDivider = false
                 ) {
                     sort = DonutSortOrder.SortByPopularity(popularityTimeframe)
                     expanded = false
@@ -116,7 +137,9 @@ fun DonutGallery(
                 InlineDropdownMenuIcon(
                     isChecked = sort == DonutSortOrder.SortByFlavor(sortFlavor),
                     text = "Flavor",
-                    painter = trophyPainter()
+                    painter = trophyPainter(),
+                    showLargeDivider = true,
+                    showDivider = sort != DonutSortOrder.SortByName
                 ) {
                     sort = DonutSortOrder.SortByFlavor(sortFlavor)
                     expanded = false
@@ -124,12 +147,14 @@ fun DonutGallery(
 
                 when (sort) {
                     is DonutSortOrder.SortByFlavor -> {
-                        Flavor.values().forEach {
+                        Flavor.values().forEachIndexed { index, flavorValue ->
                             InlineDropdownMenuIcon(
-                                isChecked = sortFlavor == it,
-                                text = it.displayName
+                                isChecked = sortFlavor == flavorValue,
+                                text = flavorValue.displayName,
+                                showLargeDivider = false,
+                                showDivider = index != Flavor.values().lastIndex
                             ) {
-                                sortFlavor = it
+                                sortFlavor = flavorValue
                                 sort = DonutSortOrder.SortByFlavor(sortFlavor)
                                 expanded = false
                             }
@@ -137,12 +162,14 @@ fun DonutGallery(
                     }
 
                     is DonutSortOrder.SortByPopularity -> {
-                        Timeframe.values().forEach {
+                        Timeframe.values().forEachIndexed { index, timeframe ->
                             InlineDropdownMenuIcon(
-                                isChecked = popularityTimeframe == it,
-                                text = it.title
+                                isChecked = popularityTimeframe == timeframe,
+                                text = timeframe.title,
+                                showLargeDivider = false,
+                                showDivider = index != Timeframe.values().lastIndex
                             ) {
-                                popularityTimeframe = it
+                                popularityTimeframe = timeframe
                                 sort = DonutSortOrder.SortByPopularity(popularityTimeframe)
                                 expanded = false
                             }
@@ -174,19 +201,72 @@ fun DonutGallery(
                         tint = colorScheme.primary
                     )
 
-                    Spacer(modifier = Modifier.width(PaddingLarge))
+                    Spacer(modifier = Modifier.width(PaddingExtraLarge))
 
                     FilterMenu()
                 }
             })
-        Column {
-            SearchView(modifier = Modifier.padding(PaddingNormal), onSearch = {
-                searchText = it
-            }, onCancel = {
-                searchText = ""
-            })
 
-            DonutGalleryGrid(donuts = filterDonuts)
+        SearchView(modifier = Modifier.padding(PaddingNormal), onSearch = {
+            searchText = it
+        }, onCancel = {
+            searchText = ""
+        })
+
+        when (layout) {
+            GRID -> {
+                DonutGalleryGrid(donuts = filterDonuts)
+            }
+
+            LIST -> {
+                DonutGalleryList(donuts = filterDonuts)
+            }
+        }
+    }
+}
+
+@Composable
+fun DonutGalleryList(donuts: List<Donut>) {
+    LazyColumn(
+    ) {
+        itemsIndexed(
+            items = donuts,
+            key = { index, donut -> donut.id }
+        ) { index, donut ->
+            Row(
+                modifier = Modifier
+                    .height(IntrinsicSize.Max)
+                    .clickable {
+
+                    }
+                    .padding(horizontal = PaddingNormal),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                DonutView(modifier = Modifier.size(48.dp), donut = donut)
+
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    verticalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            modifier = Modifier.padding(PaddingLarge),
+                            text = donut.name
+                        )
+                    }
+
+                    if (index != donuts.lastIndex) {
+                        CustomDivider()
+                    }
+                }
+            }
         }
     }
 }
@@ -196,35 +276,44 @@ fun InlineDropdownMenuIcon(
     isChecked: Boolean,
     text: String,
     painter: Painter? = null,
+    showLargeDivider: Boolean = false,
+    showDivider: Boolean = true,
     onClick: () -> Unit
 ) {
     Column {
-        DropdownMenuItem(
-            leadingIcon = if (isChecked) {
-                {
+        DropdownMenuItem(trailingIcon = if (painter != null) {
+            {
+                Icon(
+                    modifier = Modifier.size(IconSizeSmaller),
+                    painter = painter,
+                    contentDescription = text,
+                    tint = colorScheme.onBackground
+                )
+            }
+        } else null, text = {
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (isChecked) {
                     Icon(
-                        modifier = Modifier.size(IconSizeSmaller),
+                        modifier = Modifier.size(IconSizeTiny),
                         painter = checkMarkPainter(),
-                        contentDescription = "$text selected",
-                        tint = colorScheme.onBackground
+                        contentDescription = "$text selected"
                     )
+                } else {
+                    Box(modifier = Modifier.size(IconSizeTiny))
                 }
-            } else null,
-            trailingIcon = if (painter != null) {
-                {
-                    Icon(
-                        modifier = Modifier.size(IconSizeSmaller),
-                        painter = painter,
-                        contentDescription = text,
-                        tint = colorScheme.onBackground
-                    )
-                }
-            } else null,
-            text = {
+
+                Spacer(modifier = Modifier.width(PaddingNormal))
+
                 Text(text = text, style = MaterialTheme.typography.titleSmall)
-            },
-            onClick = onClick
+            }
+        }, onClick = onClick
         )
+
+        if (showDivider) {
+            Divider(thickness = if (showLargeDivider) 8.dp else DividerDefaults.Thickness)
+        }
     }
 }
 

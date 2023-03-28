@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.itemsIndexed
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,9 +40,7 @@ fun DonutGalleryGrid(
         modifier = modifier,
         columns = GridCells.Adaptive(minCellSize)
     ) {
-        itemsIndexed(donuts, key = { _, item ->
-            item.id
-        }) { _, donut ->
+        items(donuts) { donut ->
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
