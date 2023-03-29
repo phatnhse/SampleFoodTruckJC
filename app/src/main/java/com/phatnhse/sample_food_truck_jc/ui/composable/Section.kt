@@ -51,9 +51,11 @@ fun Section(
     modifier: Modifier = Modifier,
     title: String,
     rows: List<String>,
-    onItemClicked: (String) -> Unit,
+    onItemClicked: ((String) -> Unit)? = null,
     leadingViews: List<@Composable () -> Unit> = emptyList(),
     trailingViews: List<@Composable () -> Unit> = emptyList(),
+    showExpandableIcon: Boolean = false,
+    useArrowTrailingViewAsDefault: Boolean = true
 ) {
     var collapsed by remember { mutableStateOf(false) }
     val animateCollapsingButton =
@@ -85,17 +87,19 @@ fun Section(
                         fontWeight = FontWeight.Normal
                     )
                 )
-                Icon(
-                    modifier = Modifier
-                        .size(IconSizeTiny)
-                        .noRippleClickable {
-                            collapsed = !collapsed
-                        }
-                        .rotate(animateRotate.value),
-                    painter = arrowRightPainter(),
-                    contentDescription = "",
-                    tint = colorScheme.primary
-                )
+                if (showExpandableIcon) {
+                    Icon(
+                        modifier = Modifier
+                            .size(IconSizeTiny)
+                            .noRippleClickable {
+                                collapsed = !collapsed
+                            }
+                            .rotate(animateRotate.value),
+                        painter = arrowRightPainter(),
+                        contentDescription = "",
+                        tint = colorScheme.primary
+                    )
+                }
             }
         }
 
@@ -111,7 +115,8 @@ fun Section(
                         showDivider = index != rows.lastIndex,
                         leadingView = leadingViews.getOrNull(index),
                         trailingView = trailingViews.getOrNull(index),
-                        onItemClicked = onItemClicked
+                        onItemClicked = onItemClicked,
+                        useArrowTrailingViewAsDefault = useArrowTrailingViewAsDefault
                     )
                 }
             }
@@ -123,15 +128,16 @@ fun Section(
 fun SectionItem(
     title: String,
     showDivider: Boolean,
-    leadingView: (@Composable () -> Unit)? = null,
-    trailingView: (@Composable () -> Unit)? = null,
-    onItemClicked: (String) -> Unit
+    leadingView: @Composable (() -> Unit)? = null,
+    trailingView: @Composable (() -> Unit)? = null,
+    onItemClicked: ((String) -> Unit)? = null,
+    useArrowTrailingViewAsDefault: Boolean = true
 ) {
     Row(
         modifier = Modifier
             .height(IntrinsicSize.Max)
             .clickable {
-                onItemClicked(title)
+                onItemClicked?.invoke(title)
             },
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -158,19 +164,23 @@ fun SectionItem(
                     text = title
                 )
 
-                if (trailingView != null) {
-                    trailingView()
-                } else {
-                    Image(
-                        modifier = Modifier
-                            .height(12.dp)
-                            .width(6.dp),
-                        painter = arrowRightPainter(),
-                        contentDescription = "Chevron Right",
-                        colorFilter = ColorFilter.tint(
-                            color = colorScheme.onBackground.copy(alpha = 0.5F)
+                when {
+                    trailingView != null -> {
+                        trailingView()
+                    }
+
+                    useArrowTrailingViewAsDefault -> {
+                        Image(
+                            modifier = Modifier
+                                .height(12.dp)
+                                .width(6.dp),
+                            painter = arrowRightPainter(),
+                            contentDescription = "Chevron Right",
+                            colorFilter = ColorFilter.tint(
+                                color = colorScheme.onBackground.copy(alpha = 0.5F)
+                            )
                         )
-                    )
+                    }
                 }
             }
 
