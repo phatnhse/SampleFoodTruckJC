@@ -3,6 +3,8 @@ package com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.FlavorProfile
@@ -19,16 +21,23 @@ sealed class Ingredient(
 
     @SuppressLint("DiscouragedApi")
     @Composable
-    fun IngredientImage(thumbnail: Boolean) {
+    fun IngredientImage(
+        modifier: Modifier = Modifier
+    ) {
         val context = LocalContext.current
-        val fileName = imageResourceName(thumbnail)
+        val fileName = imageResourceName()
         val iconResId: Int = context.resources
             .getIdentifier(fileName, "drawable", context.packageName)
 
-        Image(painter = painterResource(id = iconResId), contentDescription = name)
+        Image(
+            modifier = modifier,
+            painter = painterResource(id = iconResId),
+            contentDescription = name,
+            contentScale = ContentScale.Fit
+        )
     }
 
-    private fun imageResourceName(showThumb: Boolean): String {
-        return "${imagePrefix}_${imageAssetName}_${if (showThumb) "thumb" else "full"}"
+    private fun imageResourceName(): String {
+        return "${imagePrefix}_${imageAssetName}_full"
     }
 }
