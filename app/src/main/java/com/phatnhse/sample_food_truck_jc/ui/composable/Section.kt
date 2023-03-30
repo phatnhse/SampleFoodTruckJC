@@ -37,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.Donut
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutView
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.Flavor
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.arrowRightPainter
 import com.phatnhse.sample_food_truck_jc.order.Order
 import com.phatnhse.sample_food_truck_jc.order.formattedDate
@@ -45,17 +46,12 @@ import com.phatnhse.sample_food_truck_jc.ui.theme.IconSizeTiny
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 
-
 @Composable
-fun Section(
+fun EmptySection(
     modifier: Modifier = Modifier,
     title: String,
-    rows: List<String>,
-    onItemClicked: ((String) -> Unit)? = null,
-    leadingViews: List<@Composable () -> Unit> = emptyList(),
-    trailingViews: List<@Composable () -> Unit> = emptyList(),
     showExpandableIcon: Boolean = false,
-    useArrowTrailingViewAsDefault: Boolean = true
+    content: @Composable () -> Unit
 ) {
     var collapsed by remember { mutableStateOf(false) }
     val animateCollapsingButton =
@@ -74,7 +70,7 @@ fun Section(
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(PaddingNormal),
+                    .padding(start = PaddingNormal, bottom = PaddingNormal, end = PaddingNormal),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -82,44 +78,58 @@ fun Section(
                     text = title.uppercase(), style = typography.titleSmall.copy(
                         color = colorScheme.onSurface.copy(
                             alpha = 0.5f
-                        ),
-                        fontSize = 13.sp,
-                        fontWeight = FontWeight.Normal
+                        ), fontSize = 13.sp, fontWeight = FontWeight.Normal
                     )
                 )
                 if (showExpandableIcon) {
-                    Icon(
-                        modifier = Modifier
-                            .size(IconSizeTiny)
-                            .noRippleClickable {
-                                collapsed = !collapsed
-                            }
-                            .rotate(animateRotate.value),
+                    Icon(modifier = Modifier
+                        .size(IconSizeTiny)
+                        .noRippleClickable {
+                            collapsed = !collapsed
+                        }
+                        .rotate(animateRotate.value),
                         painter = arrowRightPainter(),
                         contentDescription = "",
-                        tint = colorScheme.primary
-                    )
+                        tint = colorScheme.primary)
                 }
             }
         }
 
         if (!collapsed) {
             Card(
-                colors = CardDefaults.cardColors(
+                modifier = Modifier.fillMaxWidth(), colors = CardDefaults.cardColors(
                     containerColor = colorScheme.surface
                 )
             ) {
-                List(rows.size) { index ->
-                    SectionItem(
-                        title = rows.get(index),
-                        showDivider = index != rows.lastIndex,
-                        leadingView = leadingViews.getOrNull(index),
-                        trailingView = trailingViews.getOrNull(index),
-                        onItemClicked = onItemClicked,
-                        useArrowTrailingViewAsDefault = useArrowTrailingViewAsDefault
-                    )
-                }
+                content()
             }
+        }
+    }
+}
+
+@Composable
+fun Section(
+    modifier: Modifier = Modifier,
+    title: String,
+    rows: List<String>,
+    onItemClicked: ((String) -> Unit)? = null,
+    leadingViews: List<@Composable () -> Unit> = emptyList(),
+    trailingViews: List<@Composable () -> Unit> = emptyList(),
+    showExpandableIcon: Boolean = false,
+    useArrowTrailingViewAsDefault: Boolean = true
+) {
+    EmptySection(
+        modifier = modifier, title = title, showExpandableIcon = showExpandableIcon
+    ) {
+        List(rows.size) { index ->
+            SectionItem(
+                title = rows.get(index),
+                showDivider = index != rows.lastIndex,
+                leadingView = leadingViews.getOrNull(index),
+                trailingView = trailingViews.getOrNull(index),
+                onItemClicked = onItemClicked,
+                useArrowTrailingViewAsDefault = useArrowTrailingViewAsDefault
+            )
         }
     }
 }
@@ -138,8 +148,7 @@ fun SectionItem(
             .height(IntrinsicSize.Max)
             .clickable {
                 onItemClicked?.invoke(title)
-            },
-        verticalAlignment = Alignment.CenterVertically
+            }, verticalAlignment = Alignment.CenterVertically
     ) {
         if (leadingView != null) {
             Spacer(modifier = Modifier.width(PaddingNormal))
@@ -147,9 +156,7 @@ fun SectionItem(
         }
 
         Column(
-            modifier = Modifier
-                .fillMaxSize(),
-            verticalArrangement = Arrangement.SpaceBetween
+            modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.SpaceBetween
         ) {
             Row(
                 modifier = Modifier
@@ -160,8 +167,7 @@ fun SectionItem(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    modifier = Modifier.padding(PaddingNormal),
-                    text = title
+                    modifier = Modifier.padding(PaddingNormal), text = title
                 )
 
                 when {
@@ -195,32 +201,36 @@ fun SectionItem(
 @Composable
 fun Section_Preview() {
     PreviewSurface {
-        Column {
-            Section(title = "status",
-                rows = listOf(
-                    "Placed", "Order Started"
-                ),
-                trailingViews = listOf(
-                    {
-                        Icon(
-                            painter = Order.preview.status.iconSystemName(),
-                            contentDescription = null
-                        )
-                    },
-                    {
-                        Text(text = Order.preview.creationDate.formattedDate)
+        Column(
+            modifier = Modifier.fillMaxSize()
+        ) {
+            EmptySection(
+                title = "Empty Section"
+            ) {
+                Column {
+                    Flavor.values().map {
+                        Text(text = it.displayName)
                     }
-                ),
-                onItemClicked = {})
+                }
+            }
 
-            Section(
-                title = "",
+            Section(title = "status", rows = listOf(
+                "Placed", "Order Started"
+            ), trailingViews = listOf({
+                Icon(
+                    painter = Order.preview.status.iconSystemName(),
+                    contentDescription = null
+                )
+            }, {
+                Text(text = Order.preview.creationDate.formattedDate)
+            }), onItemClicked = {})
+
+            Section(title = "",
                 rows = listOf("Classic", "Sprinkles", "Blueberry Frosted"),
                 leadingViews = listOf(
                     {
                         DonutView(
-                            modifier = Modifier.size(IconSizeLarge),
-                            donut = Donut.classic
+                            modifier = Modifier.size(IconSizeLarge), donut = Donut.classic
                         )
                     },
                     {
@@ -231,15 +241,13 @@ fun Section_Preview() {
                     },
                     {
                         DonutView(
-                            modifier = Modifier.size(IconSizeLarge),
-                            donut = Donut.blueberryFrosted
+                            modifier = Modifier.size(IconSizeLarge), donut = Donut.blueberryFrosted
                         )
                     },
                 ),
                 onItemClicked = { item ->
                     Log.i("nhp", "$item clicked")
-                }
-            )
+                })
         }
     }
 }

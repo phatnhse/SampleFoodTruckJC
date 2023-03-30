@@ -13,12 +13,13 @@ import androidx.compose.ui.unit.dp
 fun CustomDivider(
     modifier: Modifier = Modifier,
     paddingStart: Dp = 0.dp,
+    thickness: Dp = (0.5F).dp
 ) {
     Divider(
         modifier = modifier
             .fillMaxWidth()
             .padding(start = paddingStart),
-        thickness = (0.5F).dp,
+        thickness = thickness,
         color = MaterialTheme.colorScheme.surfaceVariant
     )
 }

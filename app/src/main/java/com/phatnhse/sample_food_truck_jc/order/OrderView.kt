@@ -151,7 +151,7 @@ fun OrderView_Preview() {
             previousViewTitle = "Food Truck",
             currentViewTitle = "Order",
             onBackPressed = {},
-            model = FoodTruckViewModel(),
+            model = FoodTruckViewModel.preview,
             orderClicked = {}
         )
     }

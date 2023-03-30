@@ -71,7 +71,7 @@ fun TruckView_Preview() {
             onNavigateToDonuts = { /*TODO*/ },
             onNavigateToSocialFeed = { /*TODO*/ },
             onBackPressed = { /*TODO*/ },
-            viewModel = FoodTruckViewModel()
+            viewModel = FoodTruckViewModel.preview
         )
     }
 }

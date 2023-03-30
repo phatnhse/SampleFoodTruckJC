@@ -18,8 +18,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material3.Divider
-import androidx.compose.material3.DividerDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -59,7 +57,7 @@ import com.phatnhse.sample_food_truck_jc.ui.theme.IconSizeTiny
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingExtraLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
-import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeCornerLarge
+import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeRoundedLarge
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
 
@@ -68,6 +66,7 @@ fun DonutGallery(
     previousViewTitle: String,
     currentViewTitle: String,
     onBackPressed: () -> Unit,
+    onDonutClicked: (Donut) -> Unit,
     model: FoodTruckViewModel
 ) {
     // filter
@@ -100,14 +99,16 @@ fun DonutGallery(
             DropdownMenu(modifier = Modifier
                 .defaultMinSize(minWidth = 200.dp)
                 .background(
-                    color = colorScheme.background, shape = ShapeCornerLarge
-                ), expanded = expanded, onDismissRequest = { expanded = false }) {
+                    color = colorScheme.background, shape = ShapeRoundedLarge
+                ),
+                expanded = expanded,
+                onDismissRequest = { expanded = false }
+            ) {
                 BrowserLayout.values().forEachIndexed { index, browserLayout ->
                     InlineDropdownMenuIcon(
                         isChecked = layout == browserLayout,
                         text = browserLayout.title,
-                        painter = getPainter(layout = browserLayout),
-                        showLargeDivider = index == BrowserLayout.values().lastIndex
+                        painter = getPainter(layout = browserLayout)
                     ) {
                         layout = browserLayout
                         expanded = false
@@ -117,8 +118,7 @@ fun DonutGallery(
                 InlineDropdownMenuIcon(
                     isChecked = sort == DonutSortOrder.SortByName,
                     text = "Name",
-                    painter = textFormatPainter(),
-                    showLargeDivider = false
+                    painter = textFormatPainter()
                 ) {
                     sort = DonutSortOrder.SortByName
                     expanded = false
@@ -127,8 +127,7 @@ fun DonutGallery(
                 InlineDropdownMenuIcon(
                     isChecked = sort == DonutSortOrder.SortByPopularity(popularityTimeframe),
                     text = "Popularity",
-                    painter = forkKnifePainter(),
-                    showLargeDivider = false
+                    painter = forkKnifePainter()
                 ) {
                     sort = DonutSortOrder.SortByPopularity(popularityTimeframe)
                     expanded = false
@@ -138,7 +137,6 @@ fun DonutGallery(
                     isChecked = sort == DonutSortOrder.SortByFlavor(sortFlavor),
                     text = "Flavor",
                     painter = trophyPainter(),
-                    showLargeDivider = true,
                     showDivider = sort != DonutSortOrder.SortByName
                 ) {
                     sort = DonutSortOrder.SortByFlavor(sortFlavor)
@@ -151,7 +149,6 @@ fun DonutGallery(
                             InlineDropdownMenuIcon(
                                 isChecked = sortFlavor == flavorValue,
                                 text = flavorValue.displayName,
-                                showLargeDivider = false,
                                 showDivider = index != Flavor.values().lastIndex
                             ) {
                                 sortFlavor = flavorValue
@@ -166,7 +163,6 @@ fun DonutGallery(
                             InlineDropdownMenuIcon(
                                 isChecked = popularityTimeframe == timeframe,
                                 text = timeframe.title,
-                                showLargeDivider = false,
                                 showDivider = index != Timeframe.values().lastIndex
                             ) {
                                 popularityTimeframe = timeframe
@@ -215,7 +211,10 @@ fun DonutGallery(
 
         when (layout) {
             GRID -> {
-                DonutGalleryGrid(donuts = filterDonuts)
+                DonutGalleryGrid(
+                    donuts = filterDonuts,
+                    onDonutClicked = onDonutClicked
+                )
             }
 
             LIST -> {
@@ -276,7 +275,6 @@ fun InlineDropdownMenuIcon(
     isChecked: Boolean,
     text: String,
     painter: Painter? = null,
-    showLargeDivider: Boolean = false,
     showDivider: Boolean = true,
     onClick: () -> Unit
 ) {
@@ -312,7 +310,7 @@ fun InlineDropdownMenuIcon(
         )
 
         if (showDivider) {
-            Divider(thickness = if (showLargeDivider) 8.dp else DividerDefaults.Thickness)
+            CustomDivider()
         }
     }
 }
@@ -341,7 +339,8 @@ fun DonutGallery_Preview() {
             previousViewTitle = "Food Truck",
             currentViewTitle = "Donuts",
             onBackPressed = {},
-            model = FoodTruckViewModel(),
+            onDonutClicked = {},
+            model = FoodTruckViewModel.preview,
         )
     }
 }

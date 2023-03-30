@@ -23,7 +23,7 @@ import java.time.LocalDateTime
 class FoodTruckViewModel : ViewModel() {
     var orders = mutableStateListOf<Order>()
     var orderAdded = mutableStateOf(false)
-    var donuts by mutableStateOf(Donut.all)
+    var donuts = mutableStateListOf<Donut>()
 
     var newDonut by mutableStateOf(
         Donut(
@@ -39,7 +39,9 @@ class FoodTruckViewModel : ViewModel() {
     private var monthlyOrderSummaries: Map<String, List<OrderSummary>> = emptyMap()
 
     init {
-        val orderGenerator = OrderGenerator(knownDonuts = donuts)
+        donuts.addAll(Donut.all)
+
+        val orderGenerator = OrderGenerator(knownDonuts = donuts.toList())
         orders.addAll(orderGenerator.todaysOrders())
         dailyOrderSummaries = City.all.associate { city ->
             city.id to orderGenerator.historicalDailyOrders(
@@ -84,11 +86,31 @@ class FoodTruckViewModel : ViewModel() {
         }
     }
 
+    fun findDonutIndex(donutId: Int): Int {
+        if (donutId < 0) {
+            throw Exception("Donut id can't smaller than 0")
+        }
+
+        val donutIndex = donuts.indexOfFirst {
+            donutId == it.id
+        }
+
+        if (donutIndex < 0) {
+            throw Exception("Donut not found")
+        } else {
+            return donutIndex
+        }
+    }
+
+
     fun donuts(sortedBy: DonutSortOrder = DonutSortOrder.SortByPopularity(Timeframe.MONTH)): List<Donut> {
         return when (sortedBy) {
             is DonutSortOrder.SortByPopularity -> donutsSortedByPopularity(timeframe = sortedBy.timeframe)
-            is DonutSortOrder.SortByName -> donuts.sortedWith(compareBy { it.name })
-            is DonutSortOrder.SortByFlavor -> donuts.sortedByDescending { it.flavors[sortedBy.flavor] }
+            is DonutSortOrder.SortByName -> donuts
+                .sortedWith(compareBy { it.name })
+
+            is DonutSortOrder.SortByFlavor -> donuts
+                .sortedByDescending { it.flavors[sortedBy.flavor] }
         }
     }
 

@@ -91,7 +91,7 @@ enum class Flavor(val displayName: String) {
 }
 
 @Composable
-fun flavorPainter(flavor: Flavor): Painter {
+fun FlavorPainter(flavor: Flavor): Painter {
     return when (flavor) {
         Flavor.Bitter -> painterResource(id = R.drawable.bitter)
         Flavor.Salty -> painterResource(id = R.drawable.salty)

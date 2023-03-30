@@ -23,7 +23,7 @@ import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutView
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.buildingPainter
 import com.phatnhse.sample_food_truck_jc.truck.SocialFeedTag.Companion.tags
 import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
-import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeCornerSmall
+import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeRoundedSmall
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
 import java.util.Calendar
 import java.util.Date
@@ -122,7 +122,7 @@ sealed class SocialFeedTag(
 @Composable
 fun SocialFeedTagView(modifier: Modifier = Modifier, socialFeedTag: SocialFeedTag) {
     Card(
-        modifier = modifier, shape = ShapeCornerSmall, colors = CardDefaults.cardColors(
+        modifier = modifier, shape = ShapeRoundedSmall, colors = CardDefaults.cardColors(
             containerColor = colorScheme.secondaryContainer
         )
     ) {

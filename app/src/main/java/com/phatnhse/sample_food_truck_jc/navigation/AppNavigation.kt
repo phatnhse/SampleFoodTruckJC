@@ -12,6 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.phatnhse.sample_food_truck_jc.donut.DonutEditor
 import com.phatnhse.sample_food_truck_jc.donut.DonutGallery
 import com.phatnhse.sample_food_truck_jc.foodtruck.city.City.Companion.getCityFromId
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.buildingPainter
@@ -109,10 +110,28 @@ fun AppNavigation(
                         navController.popBackStack()
                     }
                 },
+                onDonutClicked = {
+                    val donutId = it.id
+                    navController.navigate("donuts/${donutId}")
+                },
                 model = foodTruckViewModel
             )
         }
-        composable(MenuItem.DonutEditor.title) { Text(text = "DonutEditor") }
+        composable(MenuItem.DonutEditor.title) {
+            val openFromHome = selection.value == MenuItem.Donuts
+            DonutEditor(
+                onBackPressed = {
+                    if (openFromHome) {
+                        openHome()
+                    } else {
+                        navController.popBackStack()
+                    }
+                },
+                donutId = foodTruckViewModel.newDonut.id,
+                createNewDonut = true,
+                model = foodTruckViewModel
+            )
+        }
         composable(MenuItem.TopFive.title) { Text(text = "TopFive") }
         composable("orders/{orderId}") {
             val orderId = it.arguments?.getString("orderId")
@@ -125,6 +144,17 @@ fun AppNavigation(
                 },
                 orderId = orderId ?: "",
                 viewModel = foodTruckViewModel
+            )
+        }
+        composable("donuts/{donutId}") {
+            val donutId = it.arguments?.getString("donutId")
+            DonutEditor(
+                onBackPressed = {
+                    navController.popBackStack()
+                },
+                createNewDonut = false,
+                donutId = donutId?.toIntOrNull() ?: -1,
+                model = foodTruckViewModel
             )
         }
     }

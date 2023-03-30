@@ -336,7 +336,7 @@ fun TruckOrdersCard_Preview() {
     PreviewSurface {
         TruckOrdersCard(
             onNavigateToOrders = { /*TODO*/ },
-            viewModel = FoodTruckViewModel()
+            viewModel = FoodTruckViewModel.preview
         )
     }
 }
