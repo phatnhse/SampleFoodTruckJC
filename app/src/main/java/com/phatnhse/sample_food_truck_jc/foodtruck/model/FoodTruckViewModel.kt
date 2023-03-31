@@ -108,7 +108,6 @@ class FoodTruckViewModel : ViewModel() {
             is DonutSortOrder.SortByPopularity -> donutsSortedByPopularity(timeframe = sortedBy.timeframe)
             is DonutSortOrder.SortByName -> donuts
                 .sortedWith(compareBy { it.name })
-
             is DonutSortOrder.SortByFlavor -> donuts
                 .sortedByDescending { it.flavors[sortedBy.flavor] }
         }

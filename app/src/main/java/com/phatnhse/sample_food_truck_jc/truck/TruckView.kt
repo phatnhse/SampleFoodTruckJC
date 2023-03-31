@@ -54,7 +54,10 @@ fun TruckView(
                 onNavigateToOrders = onNavigateToOrders,
                 viewModel = viewModel
             )
-            TruckDonutCards(onNavigateToDonuts = onNavigateToDonuts)
+            TruckDonutCards(
+                onNavigateToDonuts = onNavigateToDonuts,
+                viewModel = viewModel
+            )
             TruckSocialFeedCard(onNavigateToSocialFeed = onNavigateToSocialFeed)
         }
     }
@@ -67,10 +70,10 @@ fun TruckView_Preview() {
         TruckView(
             previousViewTitle = "Food Truck",
             currentViewTitle = "Truck",
-            onNavigateToOrders = { /*TODO*/ },
-            onNavigateToDonuts = { /*TODO*/ },
-            onNavigateToSocialFeed = { /*TODO*/ },
-            onBackPressed = { /*TODO*/ },
+            onNavigateToOrders = { },
+            onNavigateToDonuts = { },
+            onNavigateToSocialFeed = { },
+            onBackPressed = { },
             viewModel = FoodTruckViewModel.preview
         )
     }

@@ -72,15 +72,13 @@ fun DonutEditor(
     donutId: Int,
     model: FoodTruckViewModel
 ) {
-    var donutIndex: Int = -1
-
     var donut by remember {
-        if (createNewDonut) {
-            mutableStateOf(model.newDonut)
+        val current = if (createNewDonut) {
+            model.newDonut
         } else {
-            donutIndex = model.findDonutIndex(donutId)
-            mutableStateOf(model.donuts[donutIndex])
+            model.donut(donutId)
         }
+        mutableStateOf(current)
     }
 
     var actionExpanded by remember {
@@ -91,6 +89,7 @@ fun DonutEditor(
 
     LaunchedEffect(donut) {
         if (!createNewDonut) {
+            val donutIndex = model.findDonutIndex(donutId)
             model.donuts[donutIndex] = donut
         }
     }
@@ -359,7 +358,8 @@ fun IngredientRow(
         Row(
             modifier = Modifier.noRippleClickable {
                 expanded = !expanded
-            }, verticalAlignment = Alignment.CenterVertically
+            },
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Text(
                 modifier = Modifier.padding(PaddingNormal),
