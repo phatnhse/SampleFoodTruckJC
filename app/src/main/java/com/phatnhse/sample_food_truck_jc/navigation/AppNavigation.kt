@@ -4,14 +4,11 @@ import android.net.Uri
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import com.phatnhse.sample_food_truck_jc.donut.DonutEditor
 import com.phatnhse.sample_food_truck_jc.donut.DonutGallery
 import com.phatnhse.sample_food_truck_jc.foodtruck.city.City.Companion.getCityFromId
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.buildingPainter
@@ -27,17 +24,15 @@ import com.phatnhse.sample_food_truck_jc.home.HomeView
 import com.phatnhse.sample_food_truck_jc.order.OrderDetailView
 import com.phatnhse.sample_food_truck_jc.order.OrderView
 import com.phatnhse.sample_food_truck_jc.truck.TruckView
-import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 
 const val LauncherViewId = "Food Truck"
 
 @Composable
 fun AppNavigation(
-    navController: NavHostController = rememberNavController(),
-    selection: MutableState<MenuItem> = remember { mutableStateOf(MenuItem.Truck) }
+    navController: NavHostController,
+    appLaunchEntry: MutableState<MenuItem>,
+    viewModel: FoodTruckViewModel
 ) {
-    val foodTruckViewModel = FoodTruckViewModel()
-
     fun openHome() {
         navController.navigate(LauncherViewId) {
             launchSingleTop = true
@@ -45,18 +40,18 @@ fun AppNavigation(
     }
 
     NavHost(
-        navController = navController, startDestination = selection.value.title
+        navController = navController, startDestination = appLaunchEntry.value.title
     ) {
         composable(LauncherViewId) {
             HomeView(onMenuItemClicked = {
-                selection.value = it
+                appLaunchEntry.value = it
                 navController.navigate(it.title)
             })
         }
         composable(MenuItem.Truck.title) {
             val previous = navController.previousBackStackEntry?.destination?.route
             TruckView(
-                currentViewTitle = selection.value.title,
+                currentViewTitle = appLaunchEntry.value.title,
                 previousViewTitle = previous ?: LauncherViewId, // should be open from home page
                 onNavigateToDonuts = {
                     navController.navigate(MenuItem.Donuts.title)
@@ -70,14 +65,13 @@ fun AppNavigation(
                 onBackPressed = {
                     openHome()
                 },
-                viewModel = foodTruckViewModel
+                viewModel = viewModel
             )
         }
         composable(MenuItem.Orders.title) {
-            val openFromHome = selection.value == MenuItem.Orders
+            val openFromHome = appLaunchEntry.value == MenuItem.Orders
             val previous = navController.previousBackStackEntry?.destination?.route
-            OrderView(
-                currentViewTitle = selection.value.title,
+            OrderView(currentViewTitle = appLaunchEntry.value.title,
                 previousViewTitle = previous ?: LauncherViewId,
                 onBackPressed = {
                     if (openFromHome) {
@@ -86,21 +80,20 @@ fun AppNavigation(
                         navController.popBackStack()
                     }
                 },
-                model = foodTruckViewModel,
+                model = viewModel,
                 orderClicked = {
                     val orderId = it.id
                     val encodedOrderId = Uri.encode(orderId)
                     navController.navigate("orders/${encodedOrderId}")
-                }
-            )
+                })
         }
         composable(MenuItem.SocialFeed.title) { Text(text = "SocialFeed") }
         composable(MenuItem.SalesHistory.title) { Text(text = "SalesHistory") }
         composable(MenuItem.Donuts.title) {
-            val openFromHome = selection.value == MenuItem.Donuts
+            val openFromHome = appLaunchEntry.value == MenuItem.Donuts
             val previous = navController.previousBackStackEntry?.destination?.route
             DonutGallery(
-                currentViewTitle = selection.value.title,
+                currentViewTitle = appLaunchEntry.value.title,
                 previousViewTitle = previous ?: LauncherViewId,
                 onBackPressed = {
                     if (openFromHome) {
@@ -109,22 +102,51 @@ fun AppNavigation(
                         navController.popBackStack()
                     }
                 },
-                model = foodTruckViewModel
+                onDonutClicked = {
+                    val donutId = it.id
+                    navController.navigate("donuts/${donutId}")
+                },
+                model = viewModel
             )
         }
-        composable(MenuItem.DonutEditor.title) { Text(text = "DonutEditor") }
+        composable(MenuItem.DonutEditor.title) {
+            val openFromHome = appLaunchEntry.value == MenuItem.Donuts
+            DonutEditor(
+                onBackPressed = {
+                    if (openFromHome) {
+                        openHome()
+                    } else {
+                        navController.popBackStack()
+                    }
+                },
+                donutId = viewModel.newDonut.id,
+                createNewDonut = true,
+                model = viewModel
+            )
+        }
         composable(MenuItem.TopFive.title) { Text(text = "TopFive") }
         composable("orders/{orderId}") {
             val orderId = it.arguments?.getString("orderId")
             val previous = navController.previousBackStackEntry?.destination?.route
             OrderDetailView(
-                currentViewTitle = selection.value.title,
+                currentViewTitle = appLaunchEntry.value.title,
                 previousViewTitle = previous ?: LauncherViewId,
                 onBackPressed = {
                     navController.popBackStack()
                 },
                 orderId = orderId ?: "",
-                viewModel = foodTruckViewModel
+                viewModel = viewModel
+            )
+        }
+        composable("donuts/{donutId}") {
+            val donutId = it.arguments?.getString("donutId")
+            DonutEditor(
+                onBackPressed = {
+                    navController.popBackStack()
+                },
+                createNewDonut = false,
+                donutId = donutId?.toIntOrNull() ?: -1,
+                model = viewModel
             )
         }
     }
@@ -144,11 +166,9 @@ sealed class MenuItem(val title: String) {
 
     companion object {
         fun valueOf(title: String): MenuItem {
-            return MenuItem::class.sealedSubclasses
-                .mapNotNull { it.objectInstance }
-                .first {
-                    it.title == title
-                }
+            return MenuItem::class.sealedSubclasses.mapNotNull { it.objectInstance }.first {
+                it.title == title
+            }
         }
     }
 }
@@ -171,13 +191,5 @@ fun MenuItem.getTitle(): String {
     return when (this) {
         is MenuItem.City -> getCityFromId(id)?.name ?: ""
         else -> this.title
-    }
-}
-
-@Preview
-@Composable
-fun NavigationDrawer_Preview() {
-    PreviewSurface {
-        AppNavigation(rememberNavController())
     }
 }

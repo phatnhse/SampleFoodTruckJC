@@ -224,7 +224,7 @@ fun OrderDetailViewPreview() {
             currentViewTitle = "Order#1223",
             onBackPressed = {},
             orderId = Order.preview.id,
-            viewModel = FoodTruckViewModel()
+            viewModel = FoodTruckViewModel.preview
         )
     }
 }

@@ -19,6 +19,6 @@ val IconSizeNormal = 24.dp
 val IconSizeLarge = 28.dp
 val IconSizeExtraLarge = 32.dp
 
-val ShapeCornerSmall = RoundedCornerShape(4.dp)
-val ShapeCornerNormal = RoundedCornerShape(8.dp)
-val ShapeCornerLarge = RoundedCornerShape(12.dp)
+val ShapeRoundedSmall = RoundedCornerShape(4.dp)
+val ShapeRoundedNormal = RoundedCornerShape(8.dp)
+val ShapeRoundedLarge = RoundedCornerShape(12.dp)

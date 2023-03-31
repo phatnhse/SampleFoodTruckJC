@@ -113,6 +113,21 @@ fun searchPainter(): Painter {
 }
 
 @Composable
+fun arrowUpDownPainter(): Painter {
+    return painterResource(id = R.drawable.chevron_up_down)
+}
+
+@Composable
+fun arrowDownPainter(): Painter {
+    return painterResource(id = R.drawable.chevron_down)
+}
+
+@Composable
+fun starPainter(): Painter {
+    return painterResource(id = R.drawable.star)
+}
+
+@Composable
 fun squareGridPainter(): Painter {
     return painterResource(id = R.drawable.square_grid_2x2)
 }

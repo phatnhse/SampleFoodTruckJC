@@ -1,7 +1,6 @@
 package com.phatnhse.sample_food_truck_jc.navigation
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -10,11 +9,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,7 +21,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.arrowLeftPainter
-import com.phatnhse.sample_food_truck_jc.foodtruck.general.plusPainter
 import com.phatnhse.sample_food_truck_jc.ui.composable.noRippleClickable
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
@@ -48,7 +45,9 @@ fun NavigationHeader(
             verticalAlignment = Alignment.CenterVertically
         ) {
             Row(
-                modifier = Modifier.noRippleClickable { onBackPressed.invoke() },
+                modifier = Modifier
+                    .minimumInteractiveComponentSize()
+                    .noRippleClickable { onBackPressed.invoke() },
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Image(

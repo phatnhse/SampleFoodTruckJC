@@ -22,7 +22,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.Donut
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutView
-import com.phatnhse.sample_food_truck_jc.foodtruck.donut.flavorPainter
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.FlavorPainter
+import com.phatnhse.sample_food_truck_jc.ui.composable.noRippleClickable
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
 import com.phatnhse.sample_food_truck_jc.utils.MultipleDevices
@@ -31,7 +32,8 @@ import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 @Composable
 fun DonutGalleryGrid(
     modifier: Modifier = Modifier,
-    donuts: List<Donut>
+    donuts: List<Donut>,
+    onDonutClicked: (Donut) -> Unit
 ) {
     val minCellSize = 130.dp
     val minThumbnailSize = 60.dp
@@ -45,6 +47,9 @@ fun DonutGalleryGrid(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .fillMaxWidth()
+                    .noRippleClickable {
+                        onDonutClicked(donut)
+                    }
             ) {
                 DonutView(
                     modifier = Modifier
@@ -68,7 +73,7 @@ fun DonutGalleryGrid(
                 ) {
                     val flavor = donut.flavors.mostPotentFlavor
                     Image(
-                        painter = flavorPainter(flavor = flavor),
+                        painter = FlavorPainter(flavor = flavor),
                         contentDescription = "Flavor Image",
                         modifier = Modifier.size(16.dp),
                         colorFilter = ColorFilter.tint(
@@ -96,7 +101,10 @@ fun DonutGalleryGrid(
 fun DonutGalleryGrid_Preview() {
     PreviewSurface {
         DonutGalleryGrid(
-            donuts = Donut.all
+            donuts = Donut.all,
+            onDonutClicked = {
+
+            }
         )
     }
 }

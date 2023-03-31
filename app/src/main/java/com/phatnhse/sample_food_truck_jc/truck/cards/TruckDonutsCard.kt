@@ -14,6 +14,7 @@ import androidx.compose.ui.unit.IntSize
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.Donut
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutView
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.donutPainter
+import com.phatnhse.sample_food_truck_jc.foodtruck.model.FoodTruckViewModel
 import com.phatnhse.sample_food_truck_jc.navigation.CardNavigationHeader
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
@@ -24,7 +25,7 @@ import java.lang.Integer.min
 fun TruckDonutCards(
     modifier: Modifier = Modifier,
     onNavigateToDonuts: () -> Unit,
-    donuts: List<Donut> = Donut.all
+    viewModel: FoodTruckViewModel
 ) {
     Card(
         modifier = modifier,
@@ -39,7 +40,7 @@ fun TruckDonutCards(
         )
 
         DonutLatticeLayout(
-            donuts = donuts.take(14)
+            donuts = viewModel.donuts.take(14)
         )
     }
 }
@@ -119,8 +120,8 @@ fun DonutLatticeLayout(
 fun TruckDonutCards_Preview() {
     PreviewSurface {
         TruckDonutCards(
-            donuts = Donut.all,
-            onNavigateToDonuts = {}
+            onNavigateToDonuts = {},
+            viewModel = FoodTruckViewModel.preview,
         )
     }
 }

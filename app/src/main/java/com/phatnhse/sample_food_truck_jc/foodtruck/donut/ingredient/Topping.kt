@@ -157,7 +157,7 @@ data class Topping(
             powderedSugar, sprinkles, starSprinkles
         )
 
-        val lattices = listOf(
+        private val lattices = listOf(
             blueberryLattice,
             chocolateLattice,
             sourAppleLattice,
@@ -167,7 +167,7 @@ data class Topping(
             lemonLattice
         )
 
-        val lines = listOf(
+        private val lines = listOf(
             blueberryLines,
             chocolateLines,
             sourAppleLines,
@@ -177,7 +177,7 @@ data class Topping(
             lemonLines
         )
 
-        val drizzles = listOf(
+        private val drizzles = listOf(
             blueberryDrizzle,
             chocolateDrizzle,
             sourAppleDrizzle,
@@ -188,7 +188,10 @@ data class Topping(
         )
 
         val all = listOf(
-            other + lattices + lines + drizzles
+            other,
+            lattices,
+            lines,
+            drizzles
         )
     }
 }
