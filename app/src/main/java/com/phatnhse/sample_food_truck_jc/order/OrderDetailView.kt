@@ -139,7 +139,7 @@ fun StatusSection(order: Order) {
             {
                 Image(
                     painter = order.status.iconSystemName(),
-                    contentDescription = null,
+                    contentDescription = "Order status ${order.status.title}",
                     colorFilter = ColorFilter.tint(
                         color = if (order.isComplete) {
                             colorScheme.onBackground.copy(alpha = 0.5F)

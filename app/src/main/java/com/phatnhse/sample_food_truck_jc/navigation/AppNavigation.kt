@@ -95,7 +95,7 @@ fun AppNavigation(
             DonutGallery(
                 currentViewTitle = appLaunchEntry.value.title,
                 previousViewTitle = previous ?: LauncherViewId,
-                onBackPressed = {
+                onBackClicked = {
                     if (openFromHome) {
                         openHome()
                     } else {
@@ -105,6 +105,9 @@ fun AppNavigation(
                 onDonutClicked = {
                     val donutId = it.id
                     navController.navigate("donuts/${donutId}")
+                },
+                onNewDonutClicked = {
+                    navController.navigate(MenuItem.DonutEditor.title)
                 },
                 model = viewModel
             )

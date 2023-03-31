@@ -163,13 +163,13 @@ fun DonutEditor(
                                     horizontalArrangement = Arrangement.SpaceBetween
                                 ) {
                                     Text(
-                                        text = "My action",
+                                        text = "My Action",
                                         fontSize = 14.sp,
                                     )
                                     Icon(
                                         modifier = Modifier.size(IconSizeSmall),
                                         painter = starPainter(),
-                                        contentDescription = "More"
+                                        contentDescription = "My Action"
                                     )
                                 }
                             }
@@ -227,7 +227,7 @@ fun DonutEditor(
                             painter = FlavorPainter(
                                 flavor = flavor
                             ),
-                            contentDescription = "More",
+                            contentDescription = "Flavor ${flavor.displayName}",
                             tint = colorScheme.onBackground.copy(
                                 alpha = if (isTopFlavor) {
                                     1F
@@ -372,7 +372,7 @@ fun IngredientRow(
 
             Icon(
                 painter = arrowUpDownPainter(),
-                contentDescription = "More",
+                contentDescription = "Open dropdown menu",
                 tint = colorScheme.onBackground.copy(
                     alpha = 0.5F
                 )

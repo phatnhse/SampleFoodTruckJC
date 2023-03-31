@@ -64,7 +64,7 @@ fun SearchView(
                     Modifier.padding(horizontal = PaddingNormal),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Icon(painter = searchPainter(), contentDescription = "Leading Icon")
+                    Icon(painter = searchPainter(), contentDescription = "Search Icon")
                     Spacer(modifier = Modifier.width(PaddingNormal))
                     Box(
                         modifier = Modifier

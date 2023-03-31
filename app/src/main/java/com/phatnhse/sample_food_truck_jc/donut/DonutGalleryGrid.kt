@@ -74,7 +74,7 @@ fun DonutGalleryGrid(
                     val flavor = donut.flavors.mostPotentFlavor
                     Image(
                         painter = FlavorPainter(flavor = flavor),
-                        contentDescription = "Flavor Image",
+                        contentDescription = "Flavor $flavor",
                         modifier = Modifier.size(16.dp),
                         colorFilter = ColorFilter.tint(
                             colorScheme.onBackground.copy(

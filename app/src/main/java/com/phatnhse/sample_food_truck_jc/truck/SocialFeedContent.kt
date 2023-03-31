@@ -151,7 +151,7 @@ private fun TagIcon(socialFeedTag: SocialFeedTag) {
             Image(
                 modifier = defaultModifier,
                 painter = buildingPainter(),
-                contentDescription = "",
+                contentDescription = "City Icon",
                 colorFilter = ColorFilter.tint(color = colorScheme.secondary)
             )
         }
@@ -166,7 +166,7 @@ private fun TagIcon(socialFeedTag: SocialFeedTag) {
             Image(
                 modifier = defaultModifier,
                 painter = buildingPainter(),
-                contentDescription = "",
+                contentDescription = "City Icon",
                 colorFilter = ColorFilter.tint(color = colorScheme.secondary)
             )
         }

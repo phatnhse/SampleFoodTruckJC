@@ -24,6 +24,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.minimumInteractiveComponentSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,7 +55,6 @@ import com.phatnhse.sample_food_truck_jc.ui.composable.SearchView
 import com.phatnhse.sample_food_truck_jc.ui.composable.noRippleClickable
 import com.phatnhse.sample_food_truck_jc.ui.theme.IconSizeSmaller
 import com.phatnhse.sample_food_truck_jc.ui.theme.IconSizeTiny
-import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingExtraLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeRoundedLarge
@@ -65,8 +65,9 @@ import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
 fun DonutGallery(
     previousViewTitle: String,
     currentViewTitle: String,
-    onBackPressed: () -> Unit,
+    onBackClicked: () -> Unit,
     onDonutClicked: (Donut) -> Unit,
+    onNewDonutClicked: () -> Unit,
     model: FoodTruckViewModel
 ) {
     // filter
@@ -90,11 +91,13 @@ fun DonutGallery(
             modifier = modifier
         ) {
             Icon(painter = squareGridPainter(),
-                contentDescription = "More",
+                contentDescription = "Filter donuts",
                 tint = colorScheme.primary,
-                modifier = Modifier.noRippleClickable {
-                    expanded = !expanded
-                })
+                modifier = Modifier
+                    .minimumInteractiveComponentSize()
+                    .noRippleClickable {
+                        expanded = !expanded
+                    })
 
             DropdownMenu(modifier = Modifier
                 .defaultMinSize(minWidth = 200.dp)
@@ -183,21 +186,22 @@ fun DonutGallery(
             .fillMaxSize()
             .background(color = colorScheme.background)
     ) {
-        NavigationHeader(previousViewTitle = previousViewTitle,
+        NavigationHeader(
+            previousViewTitle = previousViewTitle,
             currentViewTitle = currentViewTitle,
-            onBackPressed = onBackPressed,
+            onBackPressed = onBackClicked,
             menuItems = {
                 Row {
                     Icon(
-                        modifier = Modifier.noRippleClickable {
-                            // TODO Add new donut here
-                        },
+                        modifier = Modifier
+                            .minimumInteractiveComponentSize()
+                            .noRippleClickable {
+                                onNewDonutClicked()
+                            },
                         painter = plusPainter(),
                         contentDescription = "Add Donut",
                         tint = colorScheme.primary
                     )
-
-                    Spacer(modifier = Modifier.width(PaddingExtraLarge))
 
                     FilterMenu()
                 }
@@ -338,8 +342,9 @@ fun DonutGallery_Preview() {
         DonutGallery(
             previousViewTitle = "Food Truck",
             currentViewTitle = "Donuts",
-            onBackPressed = {},
+            onBackClicked = {},
             onDonutClicked = {},
+            onNewDonutClicked = {},
             model = FoodTruckViewModel.preview,
         )
     }
