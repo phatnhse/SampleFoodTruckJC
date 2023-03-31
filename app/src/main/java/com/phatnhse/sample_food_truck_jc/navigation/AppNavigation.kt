@@ -95,7 +95,7 @@ fun AppNavigation(
             DonutGallery(
                 currentViewTitle = appLaunchEntry.value.title,
                 previousViewTitle = previous ?: LauncherViewId,
-                onBackPressed = {
+                onBackClicked = {
                     if (openFromHome) {
                         openHome()
                     } else {

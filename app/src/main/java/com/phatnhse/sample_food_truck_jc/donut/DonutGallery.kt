@@ -65,7 +65,7 @@ import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
 fun DonutGallery(
     previousViewTitle: String,
     currentViewTitle: String,
-    onBackPressed: () -> Unit,
+    onBackClicked: () -> Unit,
     onDonutClicked: (Donut) -> Unit,
     onNewDonutClicked: () -> Unit,
     model: FoodTruckViewModel
@@ -189,7 +189,7 @@ fun DonutGallery(
         NavigationHeader(
             previousViewTitle = previousViewTitle,
             currentViewTitle = currentViewTitle,
-            onBackPressed = onBackPressed,
+            onBackPressed = onBackClicked,
             menuItems = {
                 Row {
                     Icon(
@@ -342,7 +342,7 @@ fun DonutGallery_Preview() {
         DonutGallery(
             previousViewTitle = "Food Truck",
             currentViewTitle = "Donuts",
-            onBackPressed = {},
+            onBackClicked = {},
             onDonutClicked = {},
             onNewDonutClicked = {},
             model = FoodTruckViewModel.preview,

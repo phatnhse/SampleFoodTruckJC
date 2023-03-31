@@ -138,7 +138,7 @@ fun DonutEditor(
                                 modifier = Modifier
                                     .size(IconSizeTiny),
                                 painter = arrowDownPainter(),
-                                contentDescription = null,
+                                contentDescription = "More",
                                 tint = colorScheme.onBackground.copy(alpha = 0.6F)
                             )
                         }
