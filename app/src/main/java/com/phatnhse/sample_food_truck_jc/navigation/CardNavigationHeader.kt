@@ -46,7 +46,7 @@ fun CardNavigationHeader(
                 modifier = Modifier
                     .size(20.dp),
                 painter = it,
-                contentDescription = "Header Symbol",
+                contentDescription = "Header Icon",
                 colorFilter = ColorFilter.tint(
                     color = color ?: colorScheme.primary
                 )
@@ -65,7 +65,7 @@ fun CardNavigationHeader(
                 .height(12.dp)
                 .width(6.dp),
             painter = arrowRightPainter(),
-            contentDescription = "Chevron Right",
+            contentDescription = "Navigation Icon",
             colorFilter = ColorFilter.tint(
                 color = colorScheme.onBackground.copy(alpha = 0.5F)
             )

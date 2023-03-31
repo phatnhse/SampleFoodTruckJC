@@ -26,7 +26,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
@@ -34,8 +33,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.phatnhse.sample_food_truck_jc.R
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutStackView
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.donutPainter
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.shippingPainter
 import com.phatnhse.sample_food_truck_jc.foodtruck.model.FoodTruckViewModel
 import com.phatnhse.sample_food_truck_jc.navigation.CardNavigationHeader
@@ -315,8 +314,8 @@ fun LatestOrder(
             modifier = Modifier
                 .height((animateFontSize.value + 9).dp)
                 .width(((animateFontSize.value + 9)).dp),
-            painter = painterResource(id = R.drawable.donut),
-            contentDescription = "Donut",
+            painter = donutPainter(),
+            contentDescription = "Donut Icon",
             colorFilter = ColorFilter.tint(color = colorScheme.onBackground)
         )
 

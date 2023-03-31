@@ -106,6 +106,9 @@ fun AppNavigation(
                     val donutId = it.id
                     navController.navigate("donuts/${donutId}")
                 },
+                onNewDonutClicked = {
+                    navController.navigate(MenuItem.DonutEditor.title)
+                },
                 model = viewModel
             )
         }

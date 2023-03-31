@@ -55,7 +55,7 @@ fun NavigationHeader(
                         .height(12.dp)
                         .width(6.dp),
                     painter = arrowLeftPainter(),
-                    contentDescription = "Chevron Left",
+                    contentDescription = "Back Icon",
                     colorFilter = ColorFilter.tint(
                         color = colorScheme.primary
                     )

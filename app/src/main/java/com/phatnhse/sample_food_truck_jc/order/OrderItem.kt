@@ -72,7 +72,7 @@ fun OrderRow(
                             .height(12.dp)
                             .width(6.dp),
                         painter = arrowRightPainter(),
-                        contentDescription = "Arrow right",
+                        contentDescription = "Access Order Details",
                         colorFilter = ColorFilter.tint(
                             color = colorScheme.onBackground.copy(alpha = 0.5F)
                         )

@@ -89,7 +89,7 @@ fun EmptySection(
                         }
                         .rotate(animateRotate.value),
                         painter = arrowRightPainter(),
-                        contentDescription = "",
+                        contentDescription = "Expand and collapse icon",
                         tint = colorScheme.primary)
                 }
             }
@@ -181,7 +181,7 @@ fun SectionItem(
                                 .height(12.dp)
                                 .width(6.dp),
                             painter = arrowRightPainter(),
-                            contentDescription = "Chevron Right",
+                            contentDescription = "Access detail page",
                             colorFilter = ColorFilter.tint(
                                 color = colorScheme.onBackground.copy(alpha = 0.5F)
                             )
@@ -216,14 +216,15 @@ fun Section_Preview() {
 
             Section(title = "status", rows = listOf(
                 "Placed", "Order Started"
-            ), trailingViews = listOf({
-                Icon(
-                    painter = Order.preview.status.iconSystemName(),
-                    contentDescription = null
-                )
-            }, {
-                Text(text = Order.preview.creationDate.formattedDate)
-            }), onItemClicked = {})
+            ),
+                trailingViews = listOf({
+                    Icon(
+                        painter = Order.preview.status.iconSystemName(),
+                        contentDescription = "Order status"
+                    )
+                }, {
+                    Text(text = Order.preview.creationDate.formattedDate)
+                }), onItemClicked = {})
 
             Section(title = "",
                 rows = listOf("Classic", "Sprinkles", "Blueberry Frosted"),
