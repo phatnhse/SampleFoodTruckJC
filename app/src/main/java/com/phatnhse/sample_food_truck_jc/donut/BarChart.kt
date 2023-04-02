@@ -26,6 +26,7 @@ import com.phatnhse.sample_food_truck_jc.foodtruck.donut.Donut
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutSales
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutView
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
+import com.phatnhse.sample_food_truck_jc.ui.theme.bottomBarColor
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 
 
@@ -33,8 +34,17 @@ import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 fun TopDonutSalesChart(
     sales: List<DonutSales>
 ) {
+    val totalSales = sales.sumOf { it.sales }
     DonutChart(
-        donutCount = 5
+        modifier = Modifier.height(300.dp),
+        donutCount = 5,
+        donutBar = {
+            println("nhp" + sales[it].sales / totalSales)
+            DonutBar(
+                value = (sales[it].sales.toFloat() / totalSales),
+                text = sales[it].sales.toString()
+            )
+        }
     )
 }
 
@@ -57,43 +67,33 @@ fun DonutChart(
     donutCount: Int,
 //    saleCount: Int,
 //    donutFooter: @Composable (index: Int) -> Unit,
-//    saleGridLine: @Composable (index: Int) -> Unit,
-//    donutBar: @Composable (index: Int) -> Unit
+    donutBar: @Composable (index: Int) -> Unit
 ) {
-
-    val bars = @Composable {
-        repeat(donutCount) {
-            DonutBar(text = "25")
-        }
-    }
+    val donutBars = @Composable { repeat(donutCount) { donutBar(it) } }
 
     Layout(
-        contents = listOf(bars),
-        modifier = modifier
-    ) {
-            (barMeasurables),
-            constraints,
-        ->
-
-
+        modifier = modifier,
+        contents = listOf(donutBars)
+    ) { (barMeasurables), constraints ->
         val totalWidth = constraints.maxWidth
         val totalHeight = constraints.maxHeight
+
+        val barWidth = totalWidth / 9
 
         val barPlaceables = barMeasurables.map {
             it.measure(
                 Constraints.fixed(
-                    width = 48.dp.roundToPx(),
-                    height = 280.dp.roundToPx()
+                    width = barWidth,
+                    height = totalHeight
                 )
             )
         }
 
         layout(totalWidth, totalHeight) {
+//            val xPosition = barPlaceables.first().width
+
             barPlaceables.forEachIndexed { index, placeable ->
-                placeable.place(
-                    x = 0 + index * placeable.width,
-                    y = 0
-                )
+                placeable.place(x = 0 + index * (placeable.width + barWidth), y = 0)
             }
         }
     }
@@ -101,8 +101,11 @@ fun DonutChart(
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
-fun DonutBar(text: String) {
-    val skyGradient = listOf(colorScheme.primary, colorScheme.background)
+fun DonutBar(
+    value: Float,
+    text: String
+) {
+    val skyGradient = listOf(colorScheme.primary, bottomBarColor)
     val textMeasure = rememberTextMeasurer()
     val paddingValue = PaddingNormal
     val textStyle = typography.labelLarge
@@ -113,11 +116,12 @@ fun DonutBar(text: String) {
         .drawWithCache {
             onDrawBehind {
                 val topLeft = Offset(
-                    x = 0f, y = (size.height - 120.dp.toPx())
+                    x = 0f, y = size.height - (size.height * value)
                 )
 
                 val textSize = Size(
-                    width = textSize.toPx(), height = textSize.toPx()
+                    width = textSize.toPx(),
+                    height = textSize.toPx()
                 )
 
                 val padding = paddingValue.toPx()
@@ -129,7 +133,7 @@ fun DonutBar(text: String) {
 
                 clipRect {
                     drawRoundRect(
-                        brush = Brush.radialGradient(colors = skyGradient, radius = 600f),
+                        brush = Brush.linearGradient(colors = skyGradient),
                         size = size,
                         topLeft = topLeft,
                         cornerRadius = CornerRadius(corner.toPx())
@@ -150,6 +154,8 @@ fun DonutBar(text: String) {
 @Composable
 fun Chart_Prev() {
     PreviewSurface {
-        TopDonutSalesChart(sales = listOf())
+        TopDonutSalesChart(
+            sales = DonutSales.preview.take(5)
+        )
     }
 }

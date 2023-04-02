@@ -67,6 +67,8 @@ val md_theme_dark_scrim = Color(0xFF000000)
 val SkyStart = Color(0xFF7ACFED)
 val SkyEnd = Color(0xFF7897EC)
 
+val bottomBarColor = Color(0xFFCCE0FF)
+
 // Donut
 val donutSugarDark = Color(0xFFCEF9FF)
 val donutSugarLight = Color(0xFFD9EEFF)
