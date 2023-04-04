@@ -3,6 +3,7 @@ package com.phatnhse.sample_food_truck_jc.donut
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
@@ -36,7 +37,7 @@ fun TopDonutSalesChart(
 ) {
     val totalSales = sales.sumOf { it.sales }
     DonutChart(
-        modifier = Modifier.height(300.dp),
+        modifier = Modifier.height(300.dp).padding(horizontal = PaddingNormal),
         donutCount = 5,
         donutBar = {
             println("nhp" + sales[it].sales / totalSales)
