@@ -10,6 +10,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.geometry.Size
@@ -48,10 +50,12 @@ fun BrandHeader(
     val backgroundLayers = backgroundLayers.map {
         val backgroundLayer = it.toCanvasLayer(resources)
         val transition = if (animated) {
-            rememberInfiniteTransition().animateFloat(
-                initialValue = 0F, targetValue = 360F, animationSpec = infiniteRepeatable(
+            rememberInfiniteTransition(label = "background").animateFloat(
+                initialValue = 0F, targetValue = 360F,
+                animationSpec = infiniteRepeatable(
                     animation = tween(it.duration, easing = LinearEasing)
-                )
+                ),
+                label = ""
             )
         } else null
 
@@ -62,19 +66,23 @@ fun BrandHeader(
 
     val truckLayer = truckFrames.map { it.toCanvasLayer(resources) }
     val truckTransition = if (animated) {
-        rememberInfiniteTransition().animateFloat(
-            initialValue = 1F, targetValue = 12F, animationSpec = infiniteRepeatable(
+        rememberInfiniteTransition(label = "truck").animateFloat(
+            initialValue = 1F, targetValue = 12F,
+            animationSpec = infiniteRepeatable(
                 animation = tween(1000, easing = LinearEasing)
-            )
+            ),
+            label = ""
         )
     } else null
 
     val foregroundLayer = foreground.toCanvasLayer(resources)
     val foregroundTransition = if (animated) {
-        rememberInfiniteTransition().animateFloat(
-            initialValue = 0F, targetValue = 360F, animationSpec = infiniteRepeatable(
+        rememberInfiniteTransition(label = "foreground").animateFloat(
+            initialValue = 0F,
+            targetValue = 360F,
+            animationSpec = infiniteRepeatable(
                 animation = tween(foreground.duration, easing = LinearEasing)
-            )
+            ), label = ""
         )
     } else null
 
@@ -84,17 +92,21 @@ fun BrandHeader(
             .clipToBounds()
             .height(160.dp * headerSize.value)
     ) {
-        Canvas(
-            modifier = Modifier.fillMaxSize()
-        ) {
-            drawRect(
-                brush = Brush.radialGradient(
-                    colors = skyGradient, center = Offset(
-                        x = size.center.x * 0.5F, y = 400F * scale
-                    ), radius = 600F
-                )
-            )
-        }
+        Spacer(
+            Modifier
+                .fillMaxSize()
+                .drawWithCache {
+                    onDrawBehind {
+                        drawRect(
+                            brush = Brush.radialGradient(
+                                colors = skyGradient, center = Offset(
+                                    x = size.center.x * 0.5F, y = 400F * scale
+                                ), radius = 600F
+                            )
+                        )
+                    }
+                }
+        )
 
         val canvasSize = (-160).dp * headerSize.value
         Canvas(
@@ -107,10 +119,10 @@ fun BrandHeader(
                 }
         ) {
             val centerX = size.width * 0.5F
-            val yOffsetBackground = if (density < 3.0F) 420.dp.toPx() else 460.dp.toPx()
+            val yOffsetBackground = if (density < 3.0F) 365.dp.toPx() else 360.dp.toPx()
             val yOffsetRoad = if (density < 3.0F) 280.dp.toPx() else 295.dp.toPx()
             val yOffsetTruck = if (density < 3.0F) 265.dp.toPx() else 275.dp.toPx()
-            val yOffsetForeground = if (density < 3.0F) 440.dp.toPx() else 480.dp.toPx()
+            val yOffsetForeground = if (density < 3.0F) 385.dp.toPx() else 375.dp.toPx()
 
             // draw background
             backgroundLayers.map { (layer, rotation) ->
