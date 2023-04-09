@@ -35,7 +35,7 @@ fun TruckView(
             .verticalScroll(rememberScrollState())
     ) {
         Box {
-            BrandHeader(animated = false)
+            BrandHeader(animated = true)
             NavigationHeader(
                 previousViewTitle = previousViewTitle,
                 currentViewTitle = currentViewTitle,
