@@ -27,7 +27,6 @@ import androidx.compose.ui.graphics.drawscope.clipRect
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.layout.ParentDataModifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.dp
@@ -40,6 +39,7 @@ import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
 import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeRoundedLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.bottomBarColor
+import com.phatnhse.sample_food_truck_jc.utils.MultipleDevices
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 import kotlin.math.ceil
 import kotlin.math.pow
@@ -55,9 +55,10 @@ fun generateSimpleYValues(
     lowerBound: Int,
     upperBound: Int,
     count: Int
-): List<Int> {
-    val interval = (roundUpToNearest(upperBound).toFloat() - lowerBound) / (count - 1)
-    return List(count) {
+): Pair<Int, List<Int>> {
+    val maxY = roundUpToNearest(upperBound) * 3 / 2
+    val interval = (maxY.toFloat() - lowerBound) / (count - 1)
+    return maxY to List(count) {
         (interval * it).roundToInt()
     }
 }
@@ -68,14 +69,15 @@ fun TopDonutSalesChart(
 ) {
     val totalSales = sales.sumOf { it.sales }
     val sortedSales = sales.sorted().take(5)
-    val totalSortedSale = sortedSales.sumOf { it.sales }
     val yValueCount = 4
 
-    val yValues = generateSimpleYValues(
+    val yTicks = generateSimpleYValues(
         lowerBound = 0,
         upperBound = sortedSales.maxOf { it.sales },
         count = yValueCount
-    ).asReversed()
+    )
+
+    val (yMaxTick, yValues) = yTicks
 
     Column(
         Modifier.padding(PaddingNormal)
@@ -89,7 +91,7 @@ fun TopDonutSalesChart(
             donutCount = sortedSales.size,
             yValueCount = yValueCount,
             donutBar = {
-                val offset = (sortedSales[it].sales.toFloat() / totalSortedSale)
+                val offset = (sortedSales[it].sales.toFloat() / yMaxTick)
                 DonutBar(
                     modifier = Modifier.bar(fraction = offset), fraction = offset
                 )
@@ -98,7 +100,7 @@ fun TopDonutSalesChart(
                 DonutFooter(donut = sortedSales[it].donut)
             },
             yAxisGridLine = {
-                YAxisGridLine(text = yValues[it].toString())
+                YAxisGridLine(text = yValues.asReversed()[it].toString())
             },
             xAxisValueText = {
                 XAxisValueText(text = sortedSales[it].sales.toString())
@@ -123,7 +125,8 @@ fun DonutChart(
     val saleNumbers = @Composable { repeat(yValueCount) { yAxisGridLine(it) } }
 
     Layout(
-        modifier = modifier, contents = listOf(donutBars, donuts, xAxisValues, saleNumbers)
+        modifier = modifier,
+        contents = listOf(donutBars, donuts, xAxisValues, saleNumbers)
     ) { (barMeasurables, donutMeasurables, xAxisValueMeasurables, yAxisLineMeasurables), constraints ->
         val totalWidth = constraints.maxWidth
         val totalHeight = constraints.maxHeight
@@ -135,17 +138,27 @@ fun DonutChart(
 
         val xValueTextPadding = PaddingSmall.roundToPx()
 
-        val barPlaceables = barMeasurables.map { measurable ->
-            measurable.measure(
-                constraints.copy(
-                    minWidth = barWidth, maxWidth = barWidth
-                )
-            )
-        }
-
         val donutPlaceables = donutMeasurables.map { measurable ->
             measurable.measure(
                 Constraints.fixedWidth(barWidth)
+            )
+        }
+
+        val yGridLine = yAxisLineMeasurables.map {
+            it.measure(constraints.copy(minHeight = 10.sp.roundToPx()))
+        }
+
+        val donutViewHeight = donutPlaceables.first().height
+        val yGridLineHeight = yGridLine.first().height
+
+        val barPlaceables = barMeasurables.map { measurable ->
+            measurable.measure(
+                constraints.copy(
+                    minWidth = barWidth,
+                    maxWidth = barWidth,
+                    minHeight = totalHeight - donutViewHeight - yGridLineHeight / 2,
+                    maxHeight = totalHeight - donutViewHeight - yGridLineHeight / 2
+                )
             )
         }
 
@@ -153,22 +166,16 @@ fun DonutChart(
             measurable.measure(Constraints.fixedWidth(barWidth))
         }
 
-        val yGridLine = yAxisLineMeasurables.map {
-            it.measure(constraints.copy(minHeight = 10.sp.roundToPx()))
-        }
-
         layout(totalWidth, totalHeight) {
-            val donutViewHeight = donutPlaceables.first().height
-            val yGridLineHeight = yGridLine.first().height
             val yGridLineOffset =
-                (totalHeight - donutViewHeight - yGridLineHeight / 2) / (yValueCount - 1)
+                (totalHeight - donutViewHeight - yValueCount * yGridLineHeight) / (yValueCount - 1)
 
             var xPosition = 0
             var yPosition = 0
 
             yGridLine.forEach { placeable ->
                 placeable.place(x = 0, y = yPosition)
-                yPosition += yGridLineOffset
+                yPosition += yGridLineOffset + yGridLineHeight
             }
 
             barPlaceables.forEachIndexed { index, barPlaceable ->
@@ -177,7 +184,7 @@ fun DonutChart(
 
                 barPlaceable.place(
                     x = xPosition + barPaddingBetweenItems,
-                    y = 0 - donutViewHeight
+                    y = 0
                 )
                 donutPlaceables[index].place(
                     x = xPosition + barPaddingBetweenItems,
@@ -187,7 +194,7 @@ fun DonutChart(
                 xAxisValuePlaceables[index].let {
                     it.place(
                         x = xPosition + barPaddingBetweenItems,
-                        y = totalHeight - donutViewHeight - barHeight - it.height - xValueTextPadding
+                        y = totalHeight - donutViewHeight - barHeight - it.height - xValueTextPadding - yGridLineHeight / 2
                     )
                 }
 
@@ -220,7 +227,8 @@ fun YAxisGridLine(
     text: String
 ) {
     Row(
-        Modifier.wrapContentSize(Alignment.TopCenter),
+        Modifier
+            .wrapContentSize(Alignment.TopCenter),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Divider(
@@ -231,7 +239,7 @@ fun YAxisGridLine(
         Text(
             text = text,
             color = colorScheme.onBackground.copy(alpha = 0.5F),
-            fontSize = 10.sp
+            fontSize = 8.sp
         )
     }
 }
@@ -244,6 +252,7 @@ fun DonutFooter(donut: Donut) {
         DonutView(Modifier.padding(PaddingSmall), donut = donut)
         Text(
             donut.name,
+            maxLines = 2,
             fontSize = 9.sp,
             textAlign = TextAlign.Center,
             lineHeight = 12.sp,
@@ -273,14 +282,16 @@ class BarData(
 
 @Composable
 fun DonutBar(
-    modifier: Modifier = Modifier, fraction: Float
+    modifier: Modifier = Modifier,
+    fraction: Float
 ) {
     val gradientColor = listOf(colorScheme.primary, bottomBarColor)
 
     Spacer(modifier = modifier.drawWithCache {
         onDrawBehind {
             val topLeft = Offset(
-                x = 0f, y = size.height - (size.height * fraction)
+                x = 0f,
+                y = size.height - (size.height * fraction)
             )
 
             clipRect {
@@ -288,7 +299,8 @@ fun DonutBar(
                     brush = Brush.linearGradient(
                         colors = gradientColor, start = topLeft
                     ),
-                    size = size, topLeft = topLeft,
+                    size = size,
+                    topLeft = topLeft,
                     cornerRadius = CornerRadius(4.dp.toPx())
                 )
             }
@@ -296,7 +308,7 @@ fun DonutBar(
     })
 }
 
-@Preview
+@MultipleDevices
 @Composable
 fun Chart_Prev() {
     PreviewSurface {
