@@ -31,7 +31,7 @@ fun App(viewModel: FoodTruckViewModel) {
         AppNavigation(
             navController = navController,
             appLaunchEntry = defaultMenu,
-            viewModel = viewModel
+            foodTruckViewModel = viewModel
         )
     }
 }

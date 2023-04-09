@@ -15,7 +15,7 @@ private val mostPopularDonutCountPerDayCount = 80.0..120.0
 data class RandomInfo(val multiplier: Double, val seed: Int)
 
 class OrderGenerator(private val knownDonuts: List<Donut>) {
-    val seeds: Map<String, RandomInfo> = mapOf(
+    private val seeds: Map<String, RandomInfo> = mapOf(
         City.cupertino.id to RandomInfo(multiplier = 0.5, seed = 1),
         City.sanFrancisco.id to RandomInfo(multiplier = 1.0, seed = 2),
         City.london.id to RandomInfo(multiplier = 0.75, seed = 3)
@@ -65,7 +65,7 @@ class OrderGenerator(private val knownDonuts: List<Donut>) {
         )
     }
 
-    fun historicalDailyOrders(since: LocalDateTime, citiId: String): List<OrderSummary> {
+    fun historicalDailyOrders(citiId: String): List<OrderSummary> {
         val randomInfo = seeds[citiId] ?: error("No random info found for City ID $citiId")
         val generator = SeededRandomGenerator(randomInfo.seed)
         var previousSales: MutableMap<Int, Int>? = null
@@ -103,7 +103,7 @@ class OrderGenerator(private val knownDonuts: List<Donut>) {
         }
     }
 
-    fun historicalMonthlyOrders(since: LocalDateTime, cityId: String): List<OrderSummary> {
+    fun historicalMonthlyOrders(cityId: String): List<OrderSummary> {
         val randomInfo = seeds[cityId] ?: error("No random info found for City ID $cityId")
         val generator = SeededRandomGenerator(randomInfo.seed)
         var previousSales: MutableMap<Int, Int>? = null

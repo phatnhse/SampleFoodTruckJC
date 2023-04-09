@@ -1,43 +1,54 @@
 package com.phatnhse.sample_food_truck_jc.order
 
 data class OrderSummary(
-    val sales: MutableMap<Int, Int>,
+    var sales: MutableMap<Int, Int>,
     var totalSales: Int
 ) {
     constructor(sales: MutableMap<Int, Int>) : this(
         sales,
         sales.values.sum()
     )
+}
 
-    fun union(other: OrderSummary): OrderSummary {
-        val newSales = sales.toMutableMap()
-        for (donutID in (sales.keys + other.sales.keys)) {
-            newSales[donutID] = (sales[donutID] ?: 0) + (other.sales[donutID] ?: 0)
+fun List<List<OrderSummary>>.toOrderSummary(days: Int): OrderSummary {
+    val newSales = mutableMapOf<Int, Int>()
+    var newTotalSales = 0
+    forEach { orderSummaries ->
+        val summary = orderSummaries.take(days).unionOrderSummaries()
+        for (donutId in summary.sales.keys) {
+            newSales[donutId] =
+                newSales.getOrDefault(donutId, 0) + (summary.sales[donutId] ?: 0)
         }
-        val newTotalSales = totalSales + other.totalSales
-        return OrderSummary(newSales, newTotalSales)
+
+        newTotalSales += summary.totalSales
     }
 
-    fun formUnion(other: OrderSummary) {
-        this.sales.putAll(other.sales)
-        this.totalSales += other.totalSales
-    }
+    return OrderSummary(newSales, newTotalSales)
+}
 
-    fun union(order: Order): OrderSummary {
-        val newSales = sales.toMutableMap()
-        for (donutID in (sales.keys + order.sales.keys)) {
-            newSales[donutID] = (sales[donutID] ?: 0) + (order.sales[donutID] ?: 0)
+private fun List<OrderSummary>.unionOrderSummaries(): OrderSummary {
+    val newSales = mutableMapOf<Int, Int>()
+    var newTotalSales = 0
+    forEach { orderSummary ->
+        for (donutId in orderSummary.sales.keys) {
+            newSales[donutId] =
+                newSales.getOrDefault(donutId, 0) + (orderSummary.sales[donutId] ?: 0)
         }
-        val newTotalSales = totalSales + order.totalSales
-        return OrderSummary(newSales, newTotalSales)
+        newTotalSales += orderSummary.totalSales
     }
 
-    fun formUnion(order: Order) {
-        this.sales.putAll(order.sales)
-        this.totalSales += order.totalSales
+    return OrderSummary(newSales, newTotalSales)
+}
+
+fun List<Order>.unionOrders(): OrderSummary {
+    val newSales = mutableMapOf<Int, Int>()
+    var newTotalSales = 0
+    forEach { order ->
+        for (donutId in order.sales.keys) {
+            newSales[donutId] = newSales.getOrDefault(donutId, 0) + (order.sales[donutId] ?: 0)
+        }
+        newTotalSales += order.totalSales
     }
 
-    companion object {
-        val empty = OrderSummary(mutableMapOf())
-    }
+    return OrderSummary(newSales, newTotalSales)
 }
