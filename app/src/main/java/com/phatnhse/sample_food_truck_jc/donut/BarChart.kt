@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.Divider
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.Immutable
@@ -63,38 +64,47 @@ fun generateSimpleYValues(
 
 @Composable
 fun TopDonutSalesChart(
-    sales: List<DonutSales>,
-    yValueCount: Int = sales.size - 1
+    sales: List<DonutSales>
 ) {
     val totalSales = sales.sumOf { it.sales }
+    val sortedSales = sales.sorted().take(5)
+    val totalSortedSale = sortedSales.sumOf { it.sales }
+    val yValueCount = 4
 
     val yValues = generateSimpleYValues(
         lowerBound = 0,
-        upperBound = sales.maxOf { it.sales },
+        upperBound = sortedSales.maxOf { it.sales },
         count = yValueCount
     ).asReversed()
 
-    DonutChart(
-        Modifier
-            .height(320.dp)
-            .padding(PaddingNormal),
-        donutCount = 5,
-        yValueCount = yValueCount,
-        donutBar = {
-            val offset = (sales[it].sales.toFloat() / totalSales)
-            DonutBar(
-                modifier = Modifier.bar(fraction = offset), fraction = offset
-            )
-        },
-        donutView = {
-            DonutFooter(donut = sales[it].donut)
-        },
-        yAxisGridLine = {
-            YAxisGridLine(text = yValues[it].toString())
-        },
-        xAxisValueText = {
-            XAxisValueText(text = sales[it].sales.toString())
-        })
+    Column(
+        Modifier.padding(PaddingNormal)
+    ) {
+        Text(text = "Total Sales", style = typography.titleSmall)
+        Text(text = "$totalSales donuts", style = typography.titleMedium)
+        Spacer(modifier = Modifier.height(PaddingLarge))
+        DonutChart(
+            Modifier
+                .height(320.dp),
+            donutCount = sortedSales.size,
+            yValueCount = yValueCount,
+            donutBar = {
+                val offset = (sortedSales[it].sales.toFloat() / totalSortedSale)
+                DonutBar(
+                    modifier = Modifier.bar(fraction = offset), fraction = offset
+                )
+            },
+            donutView = {
+                DonutFooter(donut = sortedSales[it].donut)
+            },
+            yAxisGridLine = {
+                YAxisGridLine(text = yValues[it].toString())
+            },
+            xAxisValueText = {
+                XAxisValueText(text = sortedSales[it].sales.toString())
+            }
+        )
+    }
 }
 
 @Composable
@@ -219,7 +229,9 @@ fun YAxisGridLine(
                 .padding(end = PaddingSmall), thickness = 0.5.dp
         )
         Text(
-            text = text, color = colorScheme.onBackground.copy(alpha = 0.5F), fontSize = 10.sp
+            text = text,
+            color = colorScheme.onBackground.copy(alpha = 0.5F),
+            fontSize = 10.sp
         )
     }
 }

@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.phatnhse.sample_food_truck_jc.foodtruck.city.City
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.Donut
+import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutSales
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.Flavor
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Dough
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Glaze
@@ -15,6 +16,8 @@ import com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient.Topping
 import com.phatnhse.sample_food_truck_jc.order.Order
 import com.phatnhse.sample_food_truck_jc.order.OrderGenerator
 import com.phatnhse.sample_food_truck_jc.order.OrderSummary
+import com.phatnhse.sample_food_truck_jc.order.toOrderSummary
+import com.phatnhse.sample_food_truck_jc.order.unionOrders
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -23,7 +26,7 @@ import java.time.LocalDateTime
 class FoodTruckViewModel : ViewModel() {
     var orders = mutableStateListOf<Order>()
     var orderAdded = mutableStateOf(false)
-    var donuts = mutableStateListOf<Donut>()
+    var donuts = mutableStateListOf(*Donut.all.toTypedArray())
 
     var newDonut by mutableStateOf(
         Donut(
@@ -39,18 +42,16 @@ class FoodTruckViewModel : ViewModel() {
     private var monthlyOrderSummaries: Map<String, List<OrderSummary>> = emptyMap()
 
     init {
-        donuts.addAll(Donut.all)
-
         val orderGenerator = OrderGenerator(knownDonuts = donuts.toList())
         orders.addAll(orderGenerator.todaysOrders())
         dailyOrderSummaries = City.all.associate { city ->
             city.id to orderGenerator.historicalDailyOrders(
-                since = LocalDateTime.now(), citiId = city.id
+                citiId = city.id
             )
         }
         monthlyOrderSummaries = City.all.associate { city ->
             city.id to orderGenerator.historicalMonthlyOrders(
-                since = LocalDateTime.now(), cityId = city.id
+                cityId = city.id
             )
         }
 
@@ -106,17 +107,15 @@ class FoodTruckViewModel : ViewModel() {
     fun donuts(sortedBy: DonutSortOrder = DonutSortOrder.SortByPopularity(Timeframe.MONTH)): List<Donut> {
         return when (sortedBy) {
             is DonutSortOrder.SortByPopularity -> donutsSortedByPopularity(timeframe = sortedBy.timeframe)
-            is DonutSortOrder.SortByName -> donuts
-                .sortedWith(compareBy { it.name })
-            is DonutSortOrder.SortByFlavor -> donuts
-                .sortedByDescending { it.flavors[sortedBy.flavor] }
+            is DonutSortOrder.SortByName -> donuts.sortedWith(compareBy { it.name })
+
+            is DonutSortOrder.SortByFlavor -> donuts.sortedByDescending { it.flavors[sortedBy.flavor] }
         }
     }
 
 
     private fun donutsSortedByPopularity(timeframe: Timeframe): List<Donut> {
-        return combinedOrderSummary(timeframe).sales
-            .entries
+        return combinedOrderSummary(timeframe).sales.entries
             .sortedWith(compareByDescending<Map.Entry<Int, Int>> { it.value }.thenBy { it.key })
             .map { donut(id = it.key) }
     }
@@ -127,27 +126,23 @@ class FoodTruckViewModel : ViewModel() {
         }
     }
 
+    fun donutSales(timeframe: Timeframe): List<DonutSales> {
+        return combinedOrderSummary(timeframe)
+            .sales.map { (id, count) ->
+                DonutSales(
+                    donut = donut(id),
+                    sales = count
+                )
+            }
+    }
+
+
     private fun combinedOrderSummary(timeframe: Timeframe): OrderSummary {
         return when (timeframe) {
-            Timeframe.TODAY -> orders.fold(OrderSummary.empty) { partialResult, order ->
-                partialResult.formUnion(order)
-                partialResult
-            }
-
-            Timeframe.WEEK -> dailyOrderSummaries.values.fold(OrderSummary.empty) { partialResult, summaries ->
-                summaries.take(7).forEach { day -> partialResult.formUnion(day) }
-                partialResult
-            }
-
-            Timeframe.MONTH -> dailyOrderSummaries.values.fold(OrderSummary.empty) { partialResult, summaries ->
-                summaries.take(30).forEach { day -> partialResult.formUnion(day) }
-                partialResult
-            }
-
-            Timeframe.YEAR -> monthlyOrderSummaries.values.fold(OrderSummary.empty) { partialResult, summaries ->
-                summaries.forEach { month -> partialResult.formUnion(month) }
-                partialResult
-            }
+            Timeframe.TODAY -> orders.toList().unionOrders()
+            Timeframe.WEEK -> dailyOrderSummaries.values.toList().toOrderSummary(7)
+            Timeframe.MONTH -> dailyOrderSummaries.values.toList().toOrderSummary(30)
+            Timeframe.YEAR -> monthlyOrderSummaries.values.toList().toOrderSummary(365)
         }
     }
 
@@ -163,8 +158,5 @@ sealed class DonutSortOrder {
 }
 
 enum class Timeframe(val title: String) {
-    TODAY("Today"),
-    WEEK("Week"),
-    MONTH("Month"),
-    YEAR("Year");
+    TODAY("Today"), WEEK("Week"), MONTH("Month"), YEAR("Year");
 }

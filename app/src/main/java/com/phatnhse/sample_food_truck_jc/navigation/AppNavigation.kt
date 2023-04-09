@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.phatnhse.sample_food_truck_jc.donut.DonutEditor
 import com.phatnhse.sample_food_truck_jc.donut.DonutGallery
+import com.phatnhse.sample_food_truck_jc.donut.TopFiveDonutsView
 import com.phatnhse.sample_food_truck_jc.foodtruck.city.City.Companion.getCityFromId
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.buildingPainter
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.clockPainter
@@ -31,7 +32,7 @@ const val LauncherViewId = "Food Truck"
 fun AppNavigation(
     navController: NavHostController,
     appLaunchEntry: MutableState<MenuItem>,
-    viewModel: FoodTruckViewModel
+    foodTruckViewModel: FoodTruckViewModel
 ) {
     fun openHome() {
         navController.navigate(LauncherViewId) {
@@ -40,11 +41,11 @@ fun AppNavigation(
     }
 
     NavHost(
-        navController = navController, startDestination = appLaunchEntry.value.title
+        navController = navController,
+        startDestination = appLaunchEntry.value.title
     ) {
         composable(LauncherViewId) {
             HomeView(onMenuItemClicked = {
-                appLaunchEntry.value = it
                 navController.navigate(it.title)
             })
         }
@@ -65,7 +66,7 @@ fun AppNavigation(
                 onBackPressed = {
                     openHome()
                 },
-                viewModel = viewModel
+                viewModel = foodTruckViewModel
             )
         }
         composable(MenuItem.Orders.title) {
@@ -80,7 +81,7 @@ fun AppNavigation(
                         navController.popBackStack()
                     }
                 },
-                model = viewModel,
+                model = foodTruckViewModel,
                 orderClicked = {
                     val orderId = it.id
                     val encodedOrderId = Uri.encode(orderId)
@@ -109,7 +110,7 @@ fun AppNavigation(
                 onNewDonutClicked = {
                     navController.navigate(MenuItem.DonutEditor.title)
                 },
-                model = viewModel
+                model = foodTruckViewModel
             )
         }
         composable(MenuItem.DonutEditor.title) {
@@ -122,12 +123,21 @@ fun AppNavigation(
                         navController.popBackStack()
                     }
                 },
-                donutId = viewModel.newDonut.id,
+                donutId = foodTruckViewModel.newDonut.id,
                 createNewDonut = true,
-                model = viewModel
+                model = foodTruckViewModel
             )
         }
-        composable(MenuItem.TopFive.title) { Text(text = "TopFive") }
+        composable(MenuItem.TopFive.title) {
+            val previous = navController.previousBackStackEntry?.destination?.route
+            TopFiveDonutsView(
+                previousViewTitle = previous ?: LauncherViewId,
+                model = foodTruckViewModel,
+                onBackPressed = {
+                    navController.popBackStack()
+                }
+            )
+        }
         composable("orders/{orderId}") {
             val orderId = it.arguments?.getString("orderId")
             val previous = navController.previousBackStackEntry?.destination?.route
@@ -138,7 +148,7 @@ fun AppNavigation(
                     navController.popBackStack()
                 },
                 orderId = orderId ?: "",
-                viewModel = viewModel
+                viewModel = foodTruckViewModel
             )
         }
         composable("donuts/{donutId}") {
@@ -149,7 +159,7 @@ fun AppNavigation(
                 },
                 createNewDonut = false,
                 donutId = donutId?.toIntOrNull() ?: -1,
-                model = viewModel
+                model = foodTruckViewModel
             )
         }
     }
