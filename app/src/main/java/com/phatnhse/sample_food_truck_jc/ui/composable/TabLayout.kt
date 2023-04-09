@@ -27,6 +27,8 @@ fun TabLayout(
 //        FancyAnimatedIndicator(tabPositions = tabPositions, selectedTabIndex = state)
 //    }
 
+
+    // TODO work on the animated tab layout
     var state by remember { mutableStateOf(defaultSelected) }
 
     Column(modifier) {
