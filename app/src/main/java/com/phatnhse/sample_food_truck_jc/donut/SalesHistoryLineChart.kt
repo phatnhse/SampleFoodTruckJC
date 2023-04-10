@@ -4,7 +4,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme.colorScheme
@@ -15,8 +15,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.drawText
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -73,46 +78,79 @@ fun SalesHistoryLineChart(
     }
 }
 
+@OptIn(ExperimentalTextApi::class)
 @Composable
 fun DonutSaleLine(
     modifier: Modifier = Modifier,
     sales: List<Int> = listOf(
-        20, 40, 20, 40, 20, 20, 40, 20, 40, 20, 20, 40, 20, 40, 20
+        20, 30, 40, 30, 20, 10, 20, 30, 40, 30, 20, 10, 20
     ),
     maxValue: Int,
+    xGridLineText: List<Int>,
+    bottomText: String,
     graphColor: Color = Color.Green
 ) {
-    Box {
-        Canvas(
-            modifier = modifier
-                .fillMaxWidth()
-                .height(200.dp)
-        ) {
-            val spacePerHour = (size.width) / (sales.size - 1)
-            val xAxisIndicators = mutableListOf<Float>()
-            val yAxisIndicators = mutableListOf<Float>()
+    require(sales.size > 2) {
+        "The input array should have more than 2 items"
+    }
 
-            val yAxisValues = sales.map {
-                size.height - it.toFloat() / maxValue * size.height
+    require(xGridLineText.size == 4) {
+        "The grid is by default has 4 ticks"
+    }
+
+    val textMeasurer = rememberTextMeasurer()
+    val textPadding = PaddingLarge
+    val xGriLinesCount = xGridLineText.size
+    val textStyle = typography.labelSmall.copy(
+        color = colorScheme.onBackground.copy(alpha = 0.5F),
+        fontWeight = FontWeight.Normal
+    )
+
+    Box(
+        Modifier
+            .height(300.dp)
+    ) {
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            val totalHeight = size.height - 2 * textPadding.toPx()
+            val totalWidth = size.width - textPadding.times(2).toPx()
+            val yTopOffset = textPadding.toPx()
+
+            val tickWidth = (totalWidth) / (sales.size - 1)
+            val yAxisOffset = sales.map {
+                totalHeight - it.toFloat() / maxValue * totalHeight
             }
+
+            val xyAxisIndicators = mutableListOf<Offset>()
 
             val strokePath = Path().apply {
                 for (i in sales.indices) {
-                    val currentX = i * spacePerHour
+                    val currentX = i * tickWidth
                     if (i == 0) {
-                        moveTo(currentX, yAxisValues[i])
+                        moveTo(currentX, yAxisOffset[i])
                     } else {
-                        lineTo(
-                            currentX,
-                            yAxisValues[i]
+                        val previousX = (i - 1) * tickWidth
+
+                        val conX1 = (previousX + currentX) / 2f
+                        val conX2 = (previousX + currentX) / 2f
+
+                        val conY1 = yAxisOffset[i - 1]
+                        val conY2 = yAxisOffset[i]
+
+                        cubicTo(
+                            x1 = conX1,
+                            y1 = conY1,
+                            x2 = conX2,
+                            y2 = conY2,
+                            x3 = currentX,
+                            y3 = yAxisOffset[i]
                         )
                     }
 
-                    xAxisIndicators.add(currentX)
-                    yAxisIndicators.add(yAxisValues[i])
+                    xyAxisIndicators.add(Offset(currentX, yAxisOffset[i]))
                 }
             }
 
+            // draw line chart
             drawPath(
                 path = strokePath,
                 color = graphColor,
@@ -121,13 +159,92 @@ fun DonutSaleLine(
                 )
             )
 
-            (xAxisIndicators.indices).forEach {
+            // draw indicators
+            xyAxisIndicators.forEach {
                 drawCircle(
-                    Color.Black,
+                    Color.Black.copy(alpha = 0.5F),
                     radius = 3.dp.toPx(),
-                    center = Offset(xAxisIndicators[it], yAxisIndicators[it])
+                    center = it
                 )
             }
+
+            // draw y axis grid
+            val xGridLines: MutableList<Pair<Offset, Offset>> = mutableListOf()
+            val yGridLines: MutableList<Pair<Offset, Offset>> = mutableListOf()
+
+            // draw x axis grid
+            val heightPerXGrid = totalHeight / (xGriLinesCount - 1)
+            (0 until xGriLinesCount).forEach { index ->
+                val startingPoint = Offset(0f, yTopOffset + heightPerXGrid * index)
+                val endingPoint = Offset(totalWidth, yTopOffset + heightPerXGrid * index)
+                xGridLines.add(
+                    startingPoint to endingPoint
+                )
+
+                drawText(
+                    textMeasurer = textMeasurer,
+                    text = xGridLineText[index].toString(),
+                    topLeft = endingPoint.copy(
+                        x = endingPoint.x + textPadding.div(2).toPx(),
+                        y = endingPoint.y - yTopOffset / 2
+                    ),
+                    style = textStyle
+                )
+            }
+
+            val xGridPath = Path().apply {
+                xGridLines.forEach { (startingPoint, endPoint) ->
+                    moveTo(startingPoint.x, startingPoint.y)
+                    lineTo(endPoint.x, endPoint.y)
+                }
+            }
+
+            drawPath(
+                path = xGridPath,
+                color = Color.Black.copy(alpha = 0.5F),
+                style = Stroke()
+            )
+
+
+            // draw y grid - dotted lines
+            val yMiddlePoint = xyAxisIndicators[xyAxisIndicators.size / 2 - 1]
+            val yEndPoint = xyAxisIndicators[xyAxisIndicators.lastIndex - 1]
+            yGridLines.add(
+                Offset(yMiddlePoint.x, yTopOffset) to
+                        Offset(yMiddlePoint.x, yTopOffset + totalHeight + textPadding.toPx())
+            )
+            yGridLines.add(
+                Offset(yEndPoint.x, yTopOffset) to Offset(yEndPoint.x, yTopOffset + totalHeight)
+            )
+
+            val yGridPath = Path().apply {
+                yGridLines.forEachIndexed { index, (startingPoint, endingPoint) ->
+                    moveTo(startingPoint.x, startingPoint.y)
+                    lineTo(endingPoint.x, endingPoint.y)
+
+                    if (index != yGridLines.lastIndex) {
+                        drawText(
+                            textMeasurer = textMeasurer,
+                            text = bottomText,
+                            topLeft = endingPoint.copy(
+                                x = endingPoint.x + textPadding.div(2).toPx(),
+                                y = endingPoint.y - textPadding.toPx()
+                            ),
+                            style = textStyle
+                        )
+                    }
+                }
+            }
+
+            val stroke = Stroke(
+                width = 2f,
+                pathEffect = PathEffect.dashPathEffect(floatArrayOf(5f, 5f), 0f)
+            )
+            drawPath(
+                path = yGridPath,
+                color = Color.Black.copy(alpha = 0.5F),
+                style = stroke
+            )
         }
     }
 }
@@ -237,7 +354,9 @@ fun SalesHistoryLineChart_Preview() {
 
         DonutSaleLine(
             graphColor = colorScheme.primary,
-            maxValue = 100
+            maxValue = 100,
+            bottomText = "Hello world",
+            xGridLineText = listOf(400, 300, 200, 100)
         )
     }
 }
