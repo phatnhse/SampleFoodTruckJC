@@ -13,6 +13,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
@@ -41,9 +42,7 @@ fun SalesHistoryLineChart(
     val yValueCount = 4
 
     val yTicks = generateSimpleYValues(
-        lowerBound = 0,
-        upperBound = sortedSales.maxOf { it.sales },
-        count = yValueCount
+        lowerBound = 0, upperBound = sortedSales.maxOf { it.sales }, count = yValueCount
     )
 
     val (yMaxTick, yValues) = yTicks
@@ -54,9 +53,7 @@ fun SalesHistoryLineChart(
         Text(text = "Total Sales", style = typography.titleSmall)
         Text(text = "$totalSales donuts", style = typography.titleMedium)
         Spacer(modifier = Modifier.height(PaddingLarge))
-        DonutLineChart(
-            Modifier
-                .height(320.dp),
+        DonutLineChart(Modifier.height(320.dp),
             donutCount = sortedSales.size,
             yValueCount = yValueCount,
             donutBar = {
@@ -73,99 +70,134 @@ fun SalesHistoryLineChart(
             },
             xAxisValueText = {
                 XAxisValueText(text = sortedSales[it].sales.toString())
-            }
-        )
+            })
     }
 }
+
+enum class IndicatorType {
+    CIRCLE, SQUARE, TRIANGLE
+}
+
+data class LineMark(
+    val values: List<Int>,
+    val color: Color,
+    val indicatorColor: Color,
+    val indicatorType: IndicatorType
+)
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
 fun DonutSaleLine(
-    modifier: Modifier = Modifier,
-    sales: List<Int> = listOf(
-        20, 30, 40, 30, 20, 10, 20, 30, 40, 30, 20, 10, 20
-    ),
-    maxValue: Int,
-    xGridLineText: List<Int>,
-    bottomText: String,
-    graphColor: Color = Color.Green
+    lineMarks: List<LineMark>,
+    yTextValues: List<Int>,
+    xTextValues: List<String>,
+    hideChartContent: Boolean = false
 ) {
-    require(sales.size > 2) {
-        "The input array should have more than 2 items"
-    }
-
-    require(xGridLineText.size == 4) {
-        "The grid is by default has 4 ticks"
-    }
+    val upperbound = yTextValues.max()
+    val tickHeight = yTextValues.size
 
     val textMeasurer = rememberTextMeasurer()
     val textPadding = PaddingLarge
-    val xGriLinesCount = xGridLineText.size
     val textStyle = typography.labelSmall.copy(
-        color = colorScheme.onBackground.copy(alpha = 0.5F),
-        fontWeight = FontWeight.Normal
+        color = colorScheme.onBackground.copy(alpha = 0.5F), fontWeight = FontWeight.Normal
     )
 
+    val countIndicator = lineMarks.first().values.size
+
     Box(
-        Modifier
-            .height(300.dp)
+        Modifier.height(300.dp)
     ) {
         Canvas(modifier = Modifier.fillMaxSize()) {
-            val totalHeight = size.height - 2 * textPadding.toPx()
-            val totalWidth = size.width - textPadding.times(2).toPx()
-            val yTopOffset = textPadding.toPx()
+            val padding = textPadding.toPx()
+            val totalHeight = size.height - 2 * padding
+            val totalWidth = size.width - padding * 2
 
-            val tickWidth = (totalWidth) / (sales.size - 1)
-            val yAxisOffset = sales.map {
-                totalHeight - it.toFloat() / maxValue * totalHeight
-            }
-
-            val xyAxisIndicators = mutableListOf<Offset>()
-
-            val strokePath = Path().apply {
-                for (i in sales.indices) {
-                    val currentX = i * tickWidth
-                    if (i == 0) {
-                        moveTo(currentX, yAxisOffset[i])
-                    } else {
-                        val previousX = (i - 1) * tickWidth
-
-                        val conX1 = (previousX + currentX) / 2f
-                        val conX2 = (previousX + currentX) / 2f
-
-                        val conY1 = yAxisOffset[i - 1]
-                        val conY2 = yAxisOffset[i]
-
-                        cubicTo(
-                            x1 = conX1,
-                            y1 = conY1,
-                            x2 = conX2,
-                            y2 = conY2,
-                            x3 = currentX,
-                            y3 = yAxisOffset[i]
-                        )
-                    }
-
-                    xyAxisIndicators.add(Offset(currentX, yAxisOffset[i]))
+            val tickWidth = (totalWidth) / (countIndicator - 1)
+            lineMarks.forEach { line ->
+                val yAxisOffset = line.values.map { value ->
+                    totalHeight - value.toFloat() / upperbound * totalHeight + padding
                 }
-            }
 
-            // draw line chart
-            drawPath(
-                path = strokePath,
-                color = graphColor,
-                style = Stroke(
-                    width = 2.dp.toPx()
-                )
-            )
+                val xyAxisIndicators = mutableListOf<Offset>()
+                val strokePath = Path().apply {
+                    for (i in line.values.indices) {
+                        val currentX = i * tickWidth
+                        if (i == 0) {
+                            moveTo(currentX, yAxisOffset[i])
+                        } else {
+                            val previousX = (i - 1) * tickWidth
 
-            // draw indicators
-            xyAxisIndicators.forEach {
-                drawCircle(
-                    Color.Black.copy(alpha = 0.5F),
-                    radius = 3.dp.toPx(),
-                    center = it
+                            val conX1 = previousX + tickWidth / 4f
+                            val conY1 = yAxisOffset[i - 1]
+
+                            val conX2 = currentX - tickWidth / 4f
+                            val conY2 = yAxisOffset[i]
+
+                            cubicTo(
+                                x1 = conX1,
+                                y1 = conY1,
+                                x2 = conX2,
+                                y2 = conY2,
+                                x3 = currentX,
+                                y3 = yAxisOffset[i]
+                            )
+                        }
+
+                        xyAxisIndicators.add(Offset(currentX, yAxisOffset[i]))
+                    }
+                }
+
+                // draw line chart
+                drawPath(
+                    path = strokePath, color = line.color, style = Stroke(
+                        width = 1.dp.toPx()
+                    )
                 )
+
+                // draw indicators
+                xyAxisIndicators.forEach {
+                    when (line.indicatorType) {
+                        IndicatorType.CIRCLE -> {
+                            drawCircle(
+                                line.indicatorColor, radius = 4.dp.toPx(), center = it
+                            )
+                        }
+
+                        IndicatorType.SQUARE -> {
+                            drawRect(
+                                color = line.indicatorColor, topLeft = it.copy(
+                                    x = it.x - 4.dp.toPx(), y = it.y - 4.dp.toPx()
+                                ), size = Size(8.dp.toPx(), 8.dp.toPx())
+                            )
+                        }
+
+                        IndicatorType.TRIANGLE -> {
+                            val path = Path()
+                            val width = 8.dp.toPx()
+                            val height = 8.dp.toPx()
+
+                            val topLeft = it.copy(
+                                x = it.x - 4.dp.toPx(), y = it.y - 4.dp.toPx()
+                            )
+
+                            // Define the three points of the triangle
+                            val point1 = Offset(x = topLeft.x + width / 2, y = topLeft.y)
+                            val point2 = Offset(x = topLeft.x + width, y = topLeft.y + height)
+                            val point3 = Offset(x = topLeft.x, y = topLeft.y)
+
+                            // Draw the triangle path
+                            path.moveTo(point1.x, point1.y)
+                            path.lineTo(point2.x, point2.y)
+                            path.lineTo(point3.x, point3.y)
+                            path.close()
+
+                            // Draw the triangle on the canvas
+                            drawPath(
+                                path = path, color = line.indicatorColor
+                            )
+                        }
+                    }
+                }
             }
 
             // draw y axis grid
@@ -173,20 +205,20 @@ fun DonutSaleLine(
             val yGridLines: MutableList<Pair<Offset, Offset>> = mutableListOf()
 
             // draw x axis grid
-            val heightPerXGrid = totalHeight / (xGriLinesCount - 1)
-            (0 until xGriLinesCount).forEach { index ->
-                val startingPoint = Offset(0f, yTopOffset + heightPerXGrid * index)
-                val endingPoint = Offset(totalWidth, yTopOffset + heightPerXGrid * index)
+            val heightPerXGrid = totalHeight / (tickHeight - 1)
+            (0 until tickHeight).forEach { index ->
+                val startingPoint = Offset(0f, padding + heightPerXGrid * index)
+                val endingPoint = Offset(totalWidth, padding + heightPerXGrid * index)
                 xGridLines.add(
                     startingPoint to endingPoint
                 )
 
                 drawText(
                     textMeasurer = textMeasurer,
-                    text = xGridLineText[index].toString(),
+                    text = yTextValues[index].toString(),
                     topLeft = endingPoint.copy(
                         x = endingPoint.x + textPadding.div(2).toPx(),
-                        y = endingPoint.y - yTopOffset / 2
+                        y = endingPoint.y - padding / 2
                     ),
                     style = textStyle
                 )
@@ -200,21 +232,21 @@ fun DonutSaleLine(
             }
 
             drawPath(
-                path = xGridPath,
-                color = Color.Black.copy(alpha = 0.5F),
-                style = Stroke()
+                path = xGridPath, color = Color.Black.copy(alpha = 0.5F), style = Stroke()
             )
 
 
             // draw y grid - dotted lines
-            val yMiddlePoint = xyAxisIndicators[xyAxisIndicators.size / 2 - 1]
-            val yEndPoint = xyAxisIndicators[xyAxisIndicators.lastIndex - 1]
+            val middleX = (countIndicator / 2 - 1) * tickWidth
+            val middleY = padding + totalHeight + textPadding.toPx()
+
+            val endX = totalWidth - tickWidth
+
             yGridLines.add(
-                Offset(yMiddlePoint.x, yTopOffset) to
-                        Offset(yMiddlePoint.x, yTopOffset + totalHeight + textPadding.toPx())
+                Offset(middleX, padding) to Offset(middleX, middleY)
             )
             yGridLines.add(
-                Offset(yEndPoint.x, yTopOffset) to Offset(yEndPoint.x, yTopOffset + totalHeight)
+                Offset(endX, padding) to Offset(endX, padding + totalHeight)
             )
 
             val yGridPath = Path().apply {
@@ -222,10 +254,10 @@ fun DonutSaleLine(
                     moveTo(startingPoint.x, startingPoint.y)
                     lineTo(endingPoint.x, endingPoint.y)
 
-                    if (index != yGridLines.lastIndex) {
+                    if (index < xTextValues.size - 1) {
                         drawText(
                             textMeasurer = textMeasurer,
-                            text = bottomText,
+                            text = xTextValues[index],
                             topLeft = endingPoint.copy(
                                 x = endingPoint.x + textPadding.div(2).toPx(),
                                 y = endingPoint.y - textPadding.toPx()
@@ -237,13 +269,10 @@ fun DonutSaleLine(
             }
 
             val stroke = Stroke(
-                width = 2f,
-                pathEffect = PathEffect.dashPathEffect(floatArrayOf(5f, 5f), 0f)
+                width = 2f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(5f, 5f), 0f)
             )
             drawPath(
-                path = yGridPath,
-                color = Color.Black.copy(alpha = 0.5F),
-                style = stroke
+                path = yGridPath, color = Color.Black.copy(alpha = 0.5F), style = stroke
             )
         }
     }
@@ -265,8 +294,7 @@ fun DonutLineChart(
     val saleNumbers = @Composable { repeat(yValueCount) { yAxisGridLine(it) } }
 
     Layout(
-        modifier = modifier,
-        contents = listOf(donutBars, donuts, xAxisValues, saleNumbers)
+        modifier = modifier, contents = listOf(donutBars, donuts, xAxisValues, saleNumbers)
     ) { (barMeasurables, donutMeasurables, xAxisValueMeasurables, yAxisLineMeasurables), constraints ->
         val totalWidth = constraints.maxWidth
         val totalHeight = constraints.maxHeight
@@ -323,12 +351,10 @@ fun DonutLineChart(
                 val barHeight = (barPlaceable.height * barOffset).toInt()
 
                 barPlaceable.place(
-                    x = xPosition + barPaddingBetweenItems,
-                    y = 0
+                    x = xPosition + barPaddingBetweenItems, y = 0
                 )
                 donutPlaceables[index].place(
-                    x = xPosition + barPaddingBetweenItems,
-                    y = totalHeight - donutViewHeight
+                    x = xPosition + barPaddingBetweenItems, y = totalHeight - donutViewHeight
                 )
 
                 xAxisValuePlaceables[index].let {
@@ -353,10 +379,26 @@ fun SalesHistoryLineChart_Preview() {
 //        )
 
         DonutSaleLine(
-            graphColor = colorScheme.primary,
-            maxValue = 100,
-            bottomText = "Hello world",
-            xGridLineText = listOf(400, 300, 200, 100)
+            yTextValues = listOf(400, 300, 200, 100),
+            xTextValues = listOf("Hello world", "Hello world 1"),
+            lineMarks = listOf(
+                LineMark(
+                    values = listOf(120, 80, 40, 56, 23, 160, 80, 90, 40, 56, 23, 160),
+                    color = Color.Green,
+                    indicatorColor = Color.Green,
+                    indicatorType = IndicatorType.SQUARE
+                ), LineMark(
+                    values = listOf(160, 120, 40, 78, 99, 112, 30, 16, 204, 240, 78, 99),
+                    color = Color.Red,
+                    indicatorColor = Color.Red,
+                    indicatorType = IndicatorType.TRIANGLE
+                ), LineMark(
+                    values = listOf(384, 320, 120, 120, 400, 281, 150, 300, 120, 400, 281, 150),
+                    color = Color.Blue,
+                    indicatorColor = Color.Blue,
+                    indicatorType = IndicatorType.CIRCLE
+                )
+            )
         )
     }
 }
