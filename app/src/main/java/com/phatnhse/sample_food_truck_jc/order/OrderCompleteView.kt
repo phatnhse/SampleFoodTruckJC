@@ -39,7 +39,7 @@ import com.phatnhse.sample_food_truck_jc.ui.composable.noRippleClickable
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
-import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 import kotlinx.coroutines.delay
 import java.time.LocalDateTime
 
@@ -183,7 +183,7 @@ fun rememberReviewTask(reviewManager: ReviewManager): ReviewInfo? {
     return reviewInfo
 }
 
-@SingleDevice
+@SingleDevicePreview
 @Composable
 fun OrderCompleteView_Preview() {
     SampleFoodTruckJCTheme {

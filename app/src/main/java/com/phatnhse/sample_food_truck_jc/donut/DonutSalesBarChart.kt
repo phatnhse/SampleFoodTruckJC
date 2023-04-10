@@ -39,8 +39,8 @@ import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
 import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeRoundedLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.bottomBarColor
-import com.phatnhse.sample_food_truck_jc.utils.MultipleDevices
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 import kotlin.math.ceil
 import kotlin.math.pow
 import kotlin.math.roundToInt
@@ -64,7 +64,7 @@ fun generateSimpleYValues(
 }
 
 @Composable
-fun TopDonutSalesChart(
+fun DonutSalesBarChart(
     sales: List<DonutSales>
 ) {
     val totalSales = sales.sumOf { it.sales }
@@ -308,11 +308,11 @@ fun DonutBar(
     })
 }
 
-@MultipleDevices
+@SingleDevicePreview
 @Composable
-fun Chart_Prev() {
+fun DonutSalesBarChart_Preview() {
     PreviewSurface {
-        TopDonutSalesChart(
+        DonutSalesBarChart(
             sales = DonutSales.preview
         )
     }

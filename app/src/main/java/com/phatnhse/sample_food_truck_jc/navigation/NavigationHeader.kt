@@ -25,7 +25,7 @@ import com.phatnhse.sample_food_truck_jc.ui.composable.noRippleClickable
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
-import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 
 @Composable
 fun NavigationHeader(
@@ -88,7 +88,7 @@ fun NavigationHeader(
     }
 }
 
-@SingleDevice
+@SingleDevicePreview
 @Composable
 fun NavigationBar_Preview() {
     PreviewSurface {

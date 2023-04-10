@@ -24,7 +24,7 @@ import com.phatnhse.sample_food_truck_jc.foodtruck.general.buildingPainter
 import com.phatnhse.sample_food_truck_jc.truck.SocialFeedTag.Companion.tags
 import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
 import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeRoundedSmall
-import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 import java.util.Calendar
 import java.util.Date
 import java.util.UUID
@@ -173,7 +173,7 @@ private fun TagIcon(socialFeedTag: SocialFeedTag) {
     }
 }
 
-@SingleDevice
+@SingleDevicePreview
 @Composable
 fun TagView_Preview() {
     SampleFoodTruckJCTheme {
