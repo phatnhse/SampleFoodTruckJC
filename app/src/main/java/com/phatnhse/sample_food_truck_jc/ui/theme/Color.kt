@@ -69,6 +69,10 @@ val SkyEnd = Color(0xFF7897EC)
 
 val bottomBarColor = Color(0xFFCCE0FF)
 
+val chartColorGreen = Color(0xFF3478F6)
+val chartColorBlue = Color(0xFF65C466)
+val chartColorOrange = Color(0xFFF19A37)
+
 // Donut
 val donutSugarDark = Color(0xFFCEF9FF)
 val donutSugarLight = Color(0xFFD9EEFF)
