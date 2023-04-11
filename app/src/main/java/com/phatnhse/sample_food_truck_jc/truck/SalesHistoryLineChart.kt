@@ -1,4 +1,4 @@
-package com.phatnhse.sample_food_truck_jc.donut
+package com.phatnhse.sample_food_truck_jc.truck
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -25,19 +25,27 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutSales
+import com.phatnhse.sample_food_truck_jc.foodtruck.city.City
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.chartColorBlue
 import com.phatnhse.sample_food_truck_jc.ui.theme.chartColorGreen
 import com.phatnhse.sample_food_truck_jc.ui.theme.chartColorOrange
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
+import java.time.LocalDateTime
 
-@Composable
-fun SalesHistoryLineChart(
-    sales: List<DonutSales>
+data class SalesByCity(
+    val city: City,
+    val entries: List<Entry>
 ) {
+    val id: String get() = city.id
 
+    data class Entry(
+        val date: LocalDateTime,
+        val sales: Int
+    ) {
+        val id: LocalDateTime get() = date
+    }
 }
 
 enum class IndicatorType {
@@ -56,15 +64,12 @@ data class LineMark(
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
-fun DonutSaleLine(
+fun SalesHistoryLineChart(
     lineMarks: List<LineMark>,
     yAxisTextValues: List<Int>,
     xAxisTextValues: List<String>,
     hideChartContent: Boolean = false
 ) {
-    val upperBoundValue = yAxisTextValues.max()
-    val tickHeight = yAxisTextValues.size
-
     val textMeasurer = rememberTextMeasurer()
     val textPadding = PaddingLarge
     val gridLineColor = colorScheme.onBackground.copy(alpha = 0.5F)
@@ -72,6 +77,8 @@ fun DonutSaleLine(
         color = gridLineColor, fontWeight = FontWeight.Normal
     )
 
+    val upperBoundValue = yAxisTextValues.max()
+    val tickHeight = yAxisTextValues.size
     val indicatorCount = lineMarks.first().values.size
 
     Box(
@@ -373,11 +380,7 @@ fun DrawScope.drawIndicator(
 @Composable
 fun SalesHistoryLineChart_Preview() {
     PreviewSurface {
-//        SalesHistoryLineChart(
-//            sales = DonutSales.preview
-//        )
-
-        DonutSaleLine(
+        SalesHistoryLineChart(
             yAxisTextValues = listOf(400, 300, 200, 100),
             xAxisTextValues = listOf("Hello world", "Hello world 1"),
             lineMarks = listOf(
