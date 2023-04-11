@@ -17,11 +17,14 @@ import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.text.ExperimentalTextApi
+import androidx.compose.ui.text.TextMeasurer
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.drawText
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutSales
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.chartColorBlue
@@ -84,11 +87,13 @@ fun DonutSaleLine(
             val defaultStroke = Stroke()
 
             this.drawLineMarks(
+                textMeasurer = textMeasurer,
+                textStyle = textStyle,
                 lineMarks = lineMarks,
                 chartHeight = totalHeight,
                 tickWidth = tickWidth,
                 upperBoundValue = upperBoundValue,
-                topOffset = topPadding
+                padding = topPadding
             )
 
             // draw y axis grid
@@ -166,17 +171,21 @@ fun DonutSaleLine(
     }
 }
 
+@OptIn(ExperimentalTextApi::class)
 private fun DrawScope.drawLineMarks(
+    textMeasurer: TextMeasurer,
+    textStyle: TextStyle,
     lineMarks: List<LineMark>,
     upperBoundValue: Int,
     chartHeight: Float,
     tickWidth: Float,
-    topOffset: Float
+    padding: Float
 ) {
+    var xAxisCurIndicator = padding / 2
 
     lineMarks.forEach { lineMark ->
         val yAxisOffset = lineMark.values.map { value ->
-            chartHeight - value.toFloat() / upperBoundValue * chartHeight + topOffset
+            chartHeight - value.toFloat() / upperBoundValue * chartHeight + padding
         }
 
         val xyAxisIndicators = mutableListOf<Offset>()
@@ -226,7 +235,8 @@ private fun DrawScope.drawLineMarks(
                 solidColor = lineMark.indicatorSolidColor,
                 indicatorSize = indicatorSize,
                 centerOffset = centerOffset,
-                stroke = stroke
+                stroke = stroke,
+                filled = false
             )
         }
 
@@ -235,11 +245,29 @@ private fun DrawScope.drawLineMarks(
             borderColor = lineMark.lineColor,
             solidColor = lineMark.indicatorSolidColor,
             indicatorSize = indicatorSize,
-            centerOffset = Offset(topOffset / 2, topOffset / 2),
-            stroke = stroke
+            centerOffset = Offset(xAxisCurIndicator, padding / 2),
+            stroke = stroke,
+            filled = true
         )
 
+        xAxisCurIndicator += padding / 2
 
+        val paint = androidx.compose.ui.graphics.Paint().asFrameworkPaint().apply {
+            textSize = 8.sp.toPx()
+            // set other text style properties if needed
+        }
+        val textWidth = paint.measureText(lineMark.indicatorText)
+
+        drawText(
+            textMeasurer = textMeasurer,
+            text = lineMark.indicatorText,
+            topLeft = Offset(xAxisCurIndicator, (padding - 11.sp.toPx()) / 2),
+            style = textStyle.copy(
+                fontSize = 8.sp
+            )
+        )
+
+        xAxisCurIndicator += textWidth + padding
     }
 }
 
@@ -249,36 +277,60 @@ fun DrawScope.drawIndicator(
     solidColor: Color,
     indicatorSize: Float,
     centerOffset: Offset,
-    stroke: Stroke
+    stroke: Stroke,
+    filled: Boolean
 ) {
     when (indicator) {
         IndicatorType.CIRCLE -> {
-            drawCircle(
-                color = borderColor,
-                radius = indicatorSize / 2,
-                center = centerOffset,
-                style = stroke
-            )
+            if (filled) {
+                drawCircle(
+                    color = borderColor,
+                    radius = indicatorSize / 2,
+                    center = centerOffset
+                )
+            } else {
+                drawCircle(
+                    color = borderColor,
+                    radius = indicatorSize / 2,
+                    center = centerOffset,
+                    style = stroke
+                )
 
-            drawCircle(
-                color = solidColor, radius = indicatorSize / 2, center = centerOffset
-            )
+                drawCircle(
+                    color = solidColor,
+                    radius = indicatorSize / 2,
+                    center = centerOffset
+                )
+            }
         }
 
         IndicatorType.SQUARE -> {
-            drawRect(
-                color = borderColor, topLeft = centerOffset.copy(
-                    x = centerOffset.x - indicatorSize / 2, y = centerOffset.y - indicatorSize / 2
-                ), size = Size(indicatorSize, indicatorSize), style = stroke
-            )
+            if (filled) {
+                drawRect(
+                    color = borderColor,
+                    topLeft = centerOffset.copy(
+                        x = centerOffset.x - indicatorSize / 2,
+                        y = centerOffset.y - indicatorSize / 2
+                    ),
+                    size = Size(indicatorSize, indicatorSize),
+                )
+            } else {
+                drawRect(
+                    color = borderColor, topLeft = centerOffset.copy(
+                        x = centerOffset.x - indicatorSize / 2,
+                        y = centerOffset.y - indicatorSize / 2
+                    ), size = Size(indicatorSize, indicatorSize), style = stroke
+                )
 
-            drawRect(
-                color = solidColor,
-                topLeft = centerOffset.copy(
-                    x = centerOffset.x - indicatorSize / 2, y = centerOffset.y - indicatorSize / 2
-                ),
-                size = Size(indicatorSize, indicatorSize),
-            )
+                drawRect(
+                    color = solidColor,
+                    topLeft = centerOffset.copy(
+                        x = centerOffset.x - indicatorSize / 2,
+                        y = centerOffset.y - indicatorSize / 2
+                    ),
+                    size = Size(indicatorSize, indicatorSize),
+                )
+            }
         }
 
         IndicatorType.TRIANGLE -> {
@@ -300,13 +352,19 @@ fun DrawScope.drawIndicator(
             trianglePath.close()
 
             // Draw the triangle on the canvas
-            drawPath(
-                path = trianglePath, color = borderColor, style = stroke
-            )
+            if (filled) {
+                drawPath(
+                    path = trianglePath, color = borderColor
+                )
+            } else {
+                drawPath(
+                    path = trianglePath, color = borderColor, style = stroke
+                )
 
-            drawPath(
-                path = trianglePath, color = solidColor
-            )
+                drawPath(
+                    path = trianglePath, color = solidColor
+                )
+            }
         }
     }
 }
