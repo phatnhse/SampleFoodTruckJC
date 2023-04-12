@@ -51,12 +51,12 @@ fun roundUpToNearest(n: Int): Int {
     return (ceil(n.toDouble() / multipleOfTen) * multipleOfTen).toInt()
 }
 
-fun generateSimpleYValues(
+fun generateYAxisValues(
     lowerBound: Int,
     upperBound: Int,
     count: Int
 ): Pair<Int, List<Int>> {
-    val maxY = roundUpToNearest(upperBound) * 3 / 2
+    val maxY = roundUpToNearest(upperBound)
     val interval = (maxY.toFloat() - lowerBound) / (count - 1)
     return maxY to List(count) {
         (interval * it).roundToInt()
@@ -71,9 +71,9 @@ fun DonutSalesBarChart(
     val sortedSales = sales.sorted().take(5)
     val yValueCount = 4
 
-    val yTicks = generateSimpleYValues(
+    val yTicks = generateYAxisValues(
         lowerBound = 0,
-        upperBound = sortedSales.maxOf { it.sales },
+        upperBound = sortedSales.maxOf { it.sales } * 3 / 2,
         count = yValueCount
     )
 
@@ -82,7 +82,11 @@ fun DonutSalesBarChart(
     Column(
         Modifier.padding(PaddingNormal)
     ) {
-        Text(text = "Total Sales", style = typography.titleSmall)
+        Text(
+            text = "Total Sales",
+            style = typography.titleSmall,
+            color = colorScheme.onBackground.copy(alpha = 0.5F)
+        )
         Text(text = "$totalSales donuts", style = typography.titleMedium)
         Spacer(modifier = Modifier.height(PaddingLarge))
         DonutChart(

@@ -35,7 +35,6 @@ fun TopFiveDonutsView(
     Column(
         modifier = Modifier
             .background(MaterialTheme.colorScheme.background)
-            .verticalScroll(rememberScrollState())
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

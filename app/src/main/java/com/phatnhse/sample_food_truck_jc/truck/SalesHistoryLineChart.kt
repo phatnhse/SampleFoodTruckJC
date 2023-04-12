@@ -1,20 +1,30 @@
 package com.phatnhse.sample_food_truck_jc.truck
 
 import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.Paint
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.DrawScope
@@ -28,8 +38,12 @@ import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.phatnhse.sample_food_truck_jc.donut.generateYAxisValues
 import com.phatnhse.sample_food_truck_jc.foodtruck.city.City
+import com.phatnhse.sample_food_truck_jc.foodtruck.general.lockPainter
+import com.phatnhse.sample_food_truck_jc.ui.theme.IconSizeSmaller
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingLarge
+import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.chartColorBlue
 import com.phatnhse.sample_food_truck_jc.ui.theme.chartColorGreen
 import com.phatnhse.sample_food_truck_jc.ui.theme.chartColorOrange
@@ -38,14 +52,12 @@ import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 import java.time.LocalDateTime
 
 data class SalesByCity(
-    val city: City,
-    val entries: List<Entry>
+    val city: City, val entries: List<Entry>
 ) {
     val id: String get() = city.id
 
     data class Entry(
-        val date: LocalDateTime,
-        val sales: Int
+        val date: LocalDateTime, val sales: Int
     ) {
         val id: LocalDateTime get() = date
     }
@@ -68,8 +80,12 @@ data class LineMark(
 @OptIn(ExperimentalTextApi::class)
 @Composable
 fun SalesHistoryLineChart(
+    modifier: Modifier = Modifier,
+    totalSales: Int,
+    yAxisTickCount: Int,
+    xAxisInitialIndex: Int,
+    xAxisSpacing: Int,
     lineMarks: List<LineMark>,
-    yAxisTextValues: List<Int>,
     xAxisTextValues: List<String>,
     hideChartContent: Boolean = false
 ) {
@@ -80,23 +96,25 @@ fun SalesHistoryLineChart(
         color = gridLineColor, fontWeight = FontWeight.Normal
     )
 
-    val upperBoundValue = yAxisTextValues.max()
-    val tickHeight = yAxisTextValues.size
+    val (yUpperbound, yAxisValues) = generateYAxisValues(
+        lowerBound = 0, upperBound = lineMarks.flatMap { it.values }.max(), count = yAxisTickCount
+    )
     val indicatorCount = lineMarks.first().values.size
+    val hideChartContentBg = colorScheme.primary.copy(alpha = 0.25f)
 
-    val totalSales = 100
-
-    Column {
-        Text(text = "Total Sales", style = typography.titleSmall)
+    Column(modifier) {
+        Text(
+            text = "Total Sales",
+            style = typography.titleSmall,
+            color = colorScheme.onBackground.copy(alpha = 0.5F)
+        )
         Text(text = "$totalSales donuts", style = typography.titleMedium)
-        Spacer(modifier = Modifier.height(PaddingLarge))
-
-        Text(text = "Hide chart content $hideChartContent", style = typography.titleSmall)
-
+        Spacer(modifier = Modifier.height(PaddingNormal))
         Box(
             Modifier
                 .height(300.dp)
-                .background(color = colorScheme.background)
+                .clipToBounds(),
+            contentAlignment = Alignment.Center
         ) {
             Canvas(modifier = Modifier.fillMaxSize()) {
                 val topPadding = textPadding.toPx()
@@ -105,23 +123,32 @@ fun SalesHistoryLineChart(
                 val tickWidth = (totalWidth) / (indicatorCount - 1)
                 val defaultStroke = Stroke()
 
-                this.drawLineMarks(
+                if (hideChartContent) {
+                    drawRect(
+                        color = hideChartContentBg,
+                        topLeft = Offset(0f, topPadding),
+                        size = Size(totalWidth, totalHeight)
+
+                    )
+                }
+
+                val xyAxis = this.drawLineMarks(
                     textMeasurer = textMeasurer,
                     textStyle = textStyle,
                     lineMarks = lineMarks,
                     chartHeight = totalHeight,
                     tickWidth = tickWidth,
-                    upperBoundValue = upperBoundValue,
-                    padding = topPadding
+                    upperBoundValue = yUpperbound,
+                    padding = topPadding,
+                    opacity = if (hideChartContent) 0f else 1f
                 )
 
                 // draw y axis grid
                 val xGridLines: MutableList<Pair<Offset, Offset>> = mutableListOf()
-                val yGridLines: MutableList<Pair<Offset, Offset>> = mutableListOf()
 
                 // draw x axis grid
-                val heightPerXGrid = totalHeight / (tickHeight - 1)
-                (0 until tickHeight).forEach { index ->
+                val heightPerXGrid = totalHeight / (yAxisTickCount - 1)
+                (0 until yAxisTickCount).forEach { index ->
                     val startingPoint = Offset(0f, topPadding + heightPerXGrid * index)
                     val endingPoint = Offset(totalWidth, topPadding + heightPerXGrid * index)
                     xGridLines.add(
@@ -130,7 +157,7 @@ fun SalesHistoryLineChart(
 
                     drawText(
                         textMeasurer = textMeasurer,
-                        text = yAxisTextValues[index].toString(),
+                        text = yAxisValues.asReversed()[index].toString(),
                         topLeft = endingPoint.copy(
                             x = endingPoint.x + topPadding / 2, y = endingPoint.y - topPadding / 2
                         ),
@@ -150,27 +177,28 @@ fun SalesHistoryLineChart(
                 )
 
                 // draw y grid - dotted lines
-                val middleX = (indicatorCount / 2 - 1) * tickWidth
-                val middleY = topPadding + totalHeight + topPadding
-
-                val endX = totalWidth - tickWidth
-
-                yGridLines.add(
-                    Offset(middleX, topPadding) to Offset(middleX, middleY)
-                )
-                yGridLines.add(
-                    Offset(endX, topPadding) to Offset(endX, topPadding + totalHeight)
-                )
+                val yGridLines: MutableList<Triple<Offset, Offset, Int>> = mutableListOf()
+                var curIndex = xAxisInitialIndex
+                while (curIndex < xyAxis.size) {
+                    val startingPoint = Offset(xyAxis[curIndex].x, topPadding)
+                    val endingPoint = Offset(xyAxis[curIndex].x, topPadding * 2 + totalHeight)
+                    yGridLines.add(Triple(startingPoint, endingPoint, curIndex))
+                    curIndex += xAxisSpacing
+                }
 
                 val yGridPath = Path().apply {
-                    yGridLines.forEachIndexed { index, (startingPoint, endingPoint) ->
+                    yGridLines.forEachIndexed { index, (startingPoint, endingPoint, xAxisIndex) ->
                         moveTo(startingPoint.x, startingPoint.y)
-                        lineTo(endingPoint.x, endingPoint.y)
+                        if (xAxisIndex == xAxisInitialIndex) {
+                            lineTo(endingPoint.x, endingPoint.y)
+                        } else {
+                            lineTo(endingPoint.x, endingPoint.y - topPadding)
+                        }
 
-                        if (index < xAxisTextValues.size - 1) {
+                        if (index != yGridLines.lastIndex) {
                             drawText(
                                 textMeasurer = textMeasurer,
-                                text = xAxisTextValues[index],
+                                text = xAxisTextValues[xAxisIndex],
                                 topLeft = endingPoint.copy(
                                     x = endingPoint.x + topPadding / 2,
                                     y = endingPoint.y - topPadding
@@ -188,6 +216,38 @@ fun SalesHistoryLineChart(
                     path = yGridPath, color = gridLineColor, style = dottedLine
                 )
             }
+            if (hideChartContent) {
+                Button(
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorScheme.background,
+                        contentColor = colorScheme.onBackground
+                    ),
+                    contentPadding = PaddingValues(15.dp),
+                    onClick = { }
+                ) {
+                    Row {
+                        Image(
+                            modifier = Modifier.size(IconSizeSmaller),
+                            painter = lockPainter(),
+                            contentDescription = "Lock",
+                            colorFilter = ColorFilter.tint(
+                                color = colorScheme.onBackground.copy(
+                                    alpha = 0.5F
+                                )
+                            )
+                        )
+                        Spacer(modifier = Modifier.width(PaddingNormal))
+                        Text(
+                            text = "Premium Feature", style = typography.titleSmall.copy(
+                                fontWeight = FontWeight.Normal,
+                                color = colorScheme.onBackground.copy(
+                                    alpha = 0.5F
+                                )
+                            )
+                        )
+                    }
+                }
+            }
         }
     }
 }
@@ -200,16 +260,18 @@ private fun DrawScope.drawLineMarks(
     upperBoundValue: Int,
     chartHeight: Float,
     tickWidth: Float,
-    padding: Float
-) {
+    padding: Float,
+    opacity: Float
+): List<Offset> {
     var xAxisCurIndicator = padding / 2
+    val xyAxisIndicators = mutableListOf<Offset>()
 
     lineMarks.forEach { lineMark ->
+        xyAxisIndicators.clear()
         val yAxisOffset = lineMark.values.map { value ->
             chartHeight - value.toFloat() / upperBoundValue * chartHeight + padding
         }
 
-        val xyAxisIndicators = mutableListOf<Offset>()
         val path = Path().apply {
             for (i in lineMark.values.indices) {
                 val currentX = i * tickWidth
@@ -245,15 +307,15 @@ private fun DrawScope.drawLineMarks(
             width = indicatorBorderSize
         )
         drawPath(
-            path = path, color = lineMark.lineColor, style = stroke
+            path = path, color = lineMark.lineColor.copy(alpha = opacity), style = stroke
         )
 
         // draw indicators
         xyAxisIndicators.forEach { centerOffset ->
             drawIndicator(
                 indicator = lineMark.indicatorType,
-                borderColor = lineMark.lineColor,
-                solidColor = lineMark.indicatorSolidColor,
+                borderColor = lineMark.lineColor.copy(alpha = opacity),
+                solidColor = lineMark.indicatorSolidColor.copy(alpha = opacity),
                 indicatorSize = indicatorSize,
                 centerOffset = centerOffset,
                 stroke = stroke,
@@ -273,7 +335,7 @@ private fun DrawScope.drawLineMarks(
 
         xAxisCurIndicator += padding / 2
 
-        val paint = androidx.compose.ui.graphics.Paint().asFrameworkPaint().apply {
+        val paint = Paint().asFrameworkPaint().apply {
             textSize = 8.sp.toPx()
             // set other text style properties if needed
         }
@@ -282,14 +344,16 @@ private fun DrawScope.drawLineMarks(
         drawText(
             textMeasurer = textMeasurer,
             text = lineMark.indicatorText,
-            topLeft = Offset(xAxisCurIndicator, (padding - 11.sp.toPx()) / 2),
+            topLeft = Offset(xAxisCurIndicator, (padding - 14.sp.toPx()) / 2),
             style = textStyle.copy(
-                fontSize = 8.sp
+                fontSize = 11.sp
             )
         )
 
-        xAxisCurIndicator += textWidth + padding
+        xAxisCurIndicator += textWidth + padding * 2
     }
+
+    return xyAxisIndicators
 }
 
 fun DrawScope.drawIndicator(
@@ -305,9 +369,7 @@ fun DrawScope.drawIndicator(
         IndicatorType.CIRCLE -> {
             if (filled) {
                 drawCircle(
-                    color = borderColor,
-                    radius = indicatorSize / 2,
-                    center = centerOffset
+                    color = borderColor, radius = indicatorSize / 2, center = centerOffset
                 )
             } else {
                 drawCircle(
@@ -318,9 +380,7 @@ fun DrawScope.drawIndicator(
                 )
 
                 drawCircle(
-                    color = solidColor,
-                    radius = indicatorSize / 2,
-                    center = centerOffset
+                    color = solidColor, radius = indicatorSize / 2, center = centerOffset
                 )
             }
         }
@@ -395,8 +455,12 @@ fun DrawScope.drawIndicator(
 fun SalesHistoryLineChart_Preview() {
     PreviewSurface {
         SalesHistoryLineChart(
-            yAxisTextValues = listOf(400, 300, 200, 100),
-            xAxisTextValues = listOf("Hello world", "Hello world 1"),
+            hideChartContent = true,
+            yAxisTickCount = 4,
+            xAxisTextValues = listOf("a", "b", "c", "d", "e", "f", "g", "h", "z", "x", "y", "m"),
+            totalSales = 100,
+            xAxisInitialIndex = 1,
+            xAxisSpacing = 4,
             lineMarks = listOf(
                 LineMark(
                     values = listOf(120, 80, 32, 56, 23, 160, 80, 90, 40, 56, 23, 160),

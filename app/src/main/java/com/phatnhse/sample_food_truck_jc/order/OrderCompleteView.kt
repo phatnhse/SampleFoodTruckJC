@@ -160,7 +160,7 @@ fun OrderCompleteView(
             )
 
             Text(
-                "${order.totalSales} donuts • ${LocalDateTime.now()?.formattedDate}",
+                "${order.totalSales} donuts • ${LocalDateTime.now()?.formattedDate()}",
                 color = colorScheme.onSurface,
                 style = typography.bodySmall
             )

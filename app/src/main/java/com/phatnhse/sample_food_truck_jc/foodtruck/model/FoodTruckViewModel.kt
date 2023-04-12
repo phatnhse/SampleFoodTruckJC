@@ -138,19 +138,17 @@ class FoodTruckViewModel : ViewModel() {
     }
 
     fun getSalesByCity(timeframe: Timeframe): List<SalesByCity> {
-        fun dateComponents(offset: Int): Pair<LocalDateTime, LocalDateTime> {
+        fun dateComponents(offset: Int): LocalDateTime {
             return when (timeframe) {
                 Timeframe.TODAY -> throw UnsupportedOperationException("Today timeframe is not supported.")
                 Timeframe.WEEK, Timeframe.MONTH -> {
                     val endDate = LocalDateTime.now()
-                    val startDate = endDate.minusDays(offset.toLong())
-                    Pair(startDate, endDate)
+                    endDate.minusDays(offset.toLong())
                 }
 
                 Timeframe.YEAR -> {
                     val endDate = LocalDateTime.now()
-                    val startDate = endDate.minusMonths(offset.toLong())
-                    Pair(startDate, endDate)
+                    endDate.minusMonths(offset.toLong())
                 }
             }
         }
@@ -162,10 +160,9 @@ class FoodTruckViewModel : ViewModel() {
                 Timeframe.MONTH -> dailyOrderSummaries[city.id]?.take(30) ?: emptyList()
                 Timeframe.YEAR -> monthlyOrderSummaries[city.id] ?: emptyList()
             }
-            val entries = summaries.mapIndexed { index, summary ->
-                val (startDate, _) = dateComponents(index)
-                val date = startDate.plusDays(index.toLong())
-                SalesByCity.Entry(date = date, sales = summary.totalSales)
+            val entries = summaries.mapIndexed { offset, summary ->
+                val startDate = dateComponents(offset)
+                SalesByCity.Entry(date = startDate, sales = summary.totalSales)
             }
             SalesByCity(city = city, entries = entries)
         }
