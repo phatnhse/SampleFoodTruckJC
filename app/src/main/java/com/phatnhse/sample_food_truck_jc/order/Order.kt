@@ -10,8 +10,8 @@ import com.phatnhse.sample_food_truck_jc.foodtruck.general.shippingPainter
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.timerPainter
 import java.math.BigDecimal
 import java.time.LocalDateTime
-import java.time.temporal.ChronoUnit
 import java.time.format.DateTimeFormatter
+import java.time.temporal.ChronoUnit
 
 data class Order(
     val id: String,
@@ -127,21 +127,23 @@ data class Order(
     }
 }
 
-val LocalDateTime.formattedDate: String
-    get() {
-        val currentDate = LocalDateTime.now()
-        val today = currentDate.truncatedTo(ChronoUnit.DAYS)
-        val yesterday = today.minusDays(1)
-        val date: String = when {
-            truncatedTo(ChronoUnit.DAYS).isEqual(today) -> "Today"
-            truncatedTo(ChronoUnit.DAYS).isEqual(yesterday) -> "Yesterday"
-            else -> format(DateTimeFormatter.ofPattern("M/d/yyyy"))
-        }
-        val time = format(DateTimeFormatter.ofPattern("h:mm a"))
-        return "$date, $time"
+fun LocalDateTime.formattedDate(
+    pattern: String = "M/d/yyyy",
+    withTime: Boolean = true
+): String {
+    val currentDate = LocalDateTime.now()
+    val today = currentDate.truncatedTo(ChronoUnit.DAYS)
+    val yesterday = today.minusDays(1)
+    val date: String = when {
+        truncatedTo(ChronoUnit.DAYS).isEqual(today) -> "Today"
+        truncatedTo(ChronoUnit.DAYS).isEqual(yesterday) -> "Yesterday"
+        else -> format(DateTimeFormatter.ofPattern(pattern))
     }
+    val time = format(DateTimeFormatter.ofPattern("h:mm a"))
+    return "$date ${if (withTime) ",$time" else ""}"
+}
 
-enum class OrderStatus() : Comparable<OrderStatus> {
+enum class OrderStatus : Comparable<OrderStatus> {
     PLACED, PREPARING, READY, COMPLETED;
 
     val title: String

@@ -1,6 +1,7 @@
 package com.phatnhse.sample_food_truck_jc.navigation
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.runtime.Composable
@@ -9,8 +10,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import com.phatnhse.sample_food_truck_jc.ui.composable.Section
 import com.phatnhse.sample_food_truck_jc.ui.theme.IconSizeLarge
+import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
 import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
-import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 
 @Composable
 fun HomeMenuNavigationSection(
@@ -27,7 +29,7 @@ fun HomeMenuNavigationSection(
         leadingViews = menuItems.map { menuItem ->
             {
                 Image(
-                    modifier = Modifier.size(IconSizeLarge),
+                    modifier = Modifier.size(IconSizeLarge).padding(start = PaddingSmall),
                     painter = menuItem.getSymbol(),
                     contentDescription = menuItem.getTitle(),
                     colorFilter = ColorFilter.tint(
@@ -42,7 +44,7 @@ fun HomeMenuNavigationSection(
     )
 }
 
-@SingleDevice
+@SingleDevicePreview
 @Composable
 fun HomeMenuNavigationHeader_Preview() {
     SampleFoodTruckJCTheme {

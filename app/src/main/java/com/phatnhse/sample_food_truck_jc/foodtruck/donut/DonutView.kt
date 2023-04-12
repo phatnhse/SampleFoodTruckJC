@@ -7,7 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.min
-import com.phatnhse.sample_food_truck_jc.utils.MultipleDevices
+import com.phatnhse.sample_food_truck_jc.utils.MultipleDevicesPreview
 
 @Composable
 fun DonutView(
@@ -44,7 +44,7 @@ fun DonutView(
     }
 }
 
-@MultipleDevices
+@MultipleDevicesPreview
 @Composable
 fun DonutView_Preview() {
     DonutView(

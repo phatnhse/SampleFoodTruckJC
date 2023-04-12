@@ -20,7 +20,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
-import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 
 class OrderDetail()
 
@@ -68,7 +68,7 @@ fun DonutStackView(
     }
 }
 
-@SingleDevice
+@SingleDevicePreview
 @Composable
 fun DonutStackView_Preview() {
     Column {

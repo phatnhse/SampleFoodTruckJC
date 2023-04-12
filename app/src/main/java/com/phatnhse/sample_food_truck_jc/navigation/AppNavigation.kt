@@ -24,6 +24,7 @@ import com.phatnhse.sample_food_truck_jc.foodtruck.model.FoodTruckViewModel
 import com.phatnhse.sample_food_truck_jc.home.HomeView
 import com.phatnhse.sample_food_truck_jc.order.OrderDetailView
 import com.phatnhse.sample_food_truck_jc.order.OrderView
+import com.phatnhse.sample_food_truck_jc.truck.SalesHistoryView
 import com.phatnhse.sample_food_truck_jc.truck.TruckView
 
 const val LauncherViewId = "Food Truck"
@@ -89,7 +90,16 @@ fun AppNavigation(
                 })
         }
         composable(MenuItem.SocialFeed.title) { Text(text = "SocialFeed") }
-        composable(MenuItem.SalesHistory.title) { Text(text = "SalesHistory") }
+        composable(MenuItem.SalesHistory.title) {
+            val previous = navController.previousBackStackEntry?.destination?.route
+            SalesHistoryView(
+                previousViewTitle = previous ?: LauncherViewId,
+                model = foodTruckViewModel,
+                onBackPressed = {
+                    navController.popBackStack()
+                }
+            )
+        }
         composable(MenuItem.Donuts.title) {
             val openFromHome = appLaunchEntry.value == MenuItem.Donuts
             val previous = navController.previousBackStackEntry?.destination?.route
@@ -167,12 +177,12 @@ fun AppNavigation(
 
 sealed class MenuItem(val title: String) {
     object Truck : MenuItem("Truck")
-    object SocialFeed : MenuItem("SocialFeed")
+    object SocialFeed : MenuItem("Social Feed")
     object Orders : MenuItem("Orders")
-    object SalesHistory : MenuItem("SalesHistory")
+    object SalesHistory : MenuItem("Sales History")
     object Donuts : MenuItem("Donuts")
-    object DonutEditor : MenuItem("DonutEditor")
-    object TopFive : MenuItem("TopFive")
+    object DonutEditor : MenuItem("Donut Editor")
+    object TopFive : MenuItem("Top 5")
     data class City(
         val id: String
     ) : MenuItem("City")

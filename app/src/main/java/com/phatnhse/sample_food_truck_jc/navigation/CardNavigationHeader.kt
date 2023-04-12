@@ -22,7 +22,7 @@ import com.phatnhse.sample_food_truck_jc.foodtruck.general.arrowRightPainter
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.shippingPainter
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
-import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 
 @Composable
 fun CardNavigationHeader(
@@ -73,7 +73,7 @@ fun CardNavigationHeader(
     }
 }
 
-@SingleDevice
+@SingleDevicePreview
 @Composable
 fun HeaderNavigation_Preview() {
     SampleFoodTruckJCTheme {

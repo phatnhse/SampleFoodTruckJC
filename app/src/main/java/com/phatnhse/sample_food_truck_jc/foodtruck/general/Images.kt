@@ -26,6 +26,11 @@ fun boxPainter(): Painter {
 }
 
 @Composable
+fun lockPainter(): Painter {
+    return painterResource(id = R.drawable.lock)
+}
+
+@Composable
 fun boxBottomPainter(): Painter {
     return painterResource(id = R.drawable.box_bottom)
 }

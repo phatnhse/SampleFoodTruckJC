@@ -16,7 +16,6 @@ import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -29,7 +28,7 @@ import com.phatnhse.sample_food_truck_jc.ui.composable.SearchView
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingZero
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
-import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 
 @Composable
 fun OrderView(
@@ -143,7 +142,7 @@ fun List<Order>.search(status: OrderStatus, searchText: String): List<Order> {
     }
 }
 
-@SingleDevice
+@SingleDevicePreview
 @Composable
 fun OrderView_Preview() {
     PreviewSurface {

@@ -8,7 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.dp
-import com.phatnhse.sample_food_truck_jc.utils.MultipleDevices
+import com.phatnhse.sample_food_truck_jc.utils.MultipleDevicesPreview
 import kotlin.math.min
 
 @Composable
@@ -72,7 +72,7 @@ fun DiagonalDonutStackLayout(
     }
 }
 
-@MultipleDevices
+@MultipleDevicesPreview
 @Composable
 fun DiagonalDonutStackLayout_Preview() {
     Column {

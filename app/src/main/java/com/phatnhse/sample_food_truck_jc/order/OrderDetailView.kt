@@ -151,7 +151,7 @@ fun StatusSection(order: Order) {
             },
             {
                 Text(
-                    text = order.creationDate.formattedDate,
+                    text = order.creationDate.formattedDate(),
                     color = colorScheme.onBackground.copy(alpha = 0.5F)
                 )
             }

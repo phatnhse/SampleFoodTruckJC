@@ -41,7 +41,7 @@ import com.phatnhse.sample_food_truck_jc.navigation.CardNavigationHeader
 import com.phatnhse.sample_food_truck_jc.order.Order
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
-import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -329,7 +329,7 @@ fun LatestOrder(
     }
 }
 
-@SingleDevice
+@SingleDevicePreview
 @Composable
 fun TruckOrdersCard_Preview() {
     PreviewSurface {

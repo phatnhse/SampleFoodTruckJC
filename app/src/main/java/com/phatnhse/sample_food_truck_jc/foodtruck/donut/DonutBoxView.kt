@@ -1,6 +1,5 @@
 package com.phatnhse.sample_food_truck_jc.foodtruck.donut
 
-import androidx.compose.animation.core.Spring.StiffnessMedium
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.spring
@@ -26,7 +25,7 @@ import com.phatnhse.sample_food_truck_jc.foodtruck.general.boxBottomPainter
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.boxLidPainter
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.boxPainter
 import com.phatnhse.sample_food_truck_jc.ui.composable.noRippleClickable
-import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 
 @Composable
 fun DonutBoxView(
@@ -95,7 +94,7 @@ fun DonutBoxView(
     }
 }
 
-@SingleDevice
+@SingleDevicePreview
 @Composable
 fun DonutBoxView_Preview() {
     var open by remember {

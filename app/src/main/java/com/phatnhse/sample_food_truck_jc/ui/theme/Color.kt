@@ -18,7 +18,7 @@ val md_theme_light_error = Color(0xFFBA1A1A)
 val md_theme_light_errorContainer = Color(0xFFFFDAD6)
 val md_theme_light_onError = Color(0xFFFFFFFF)
 val md_theme_light_onErrorContainer = Color(0xFF410002)
-val md_theme_light_background = Color(0xFFF2F2F7)
+val md_theme_light_background = Color(0xFFF5F5FA)
 val md_theme_light_onBackground = Color(0xFF1C1B1F)
 val md_theme_light_surface = Color(0xFFFFFBFF)
 val md_theme_light_onSurface = Color(0xFF1C1B1F)
@@ -68,6 +68,10 @@ val SkyStart = Color(0xFF7ACFED)
 val SkyEnd = Color(0xFF7897EC)
 
 val bottomBarColor = Color(0xFFCCE0FF)
+
+val chartColorGreen = Color(0xFF3478F6)
+val chartColorBlue = Color(0xFF65C466)
+val chartColorOrange = Color(0xFFF19A37)
 
 // Donut
 val donutSugarDark = Color(0xFFCEF9FF)

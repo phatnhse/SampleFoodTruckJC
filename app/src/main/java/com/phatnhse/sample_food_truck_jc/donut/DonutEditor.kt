@@ -62,7 +62,7 @@ import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
 import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeRoundedLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeRoundedNormal
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
-import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
@@ -425,7 +425,7 @@ fun IngredientRow(
     }
 }
 
-@SingleDevice
+@SingleDevicePreview
 @Composable
 fun DonutEditor_Preview() {
     PreviewSurface {

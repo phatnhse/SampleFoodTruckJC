@@ -58,7 +58,8 @@ fun HomeView(
                 menuItems = listOf(
                     MenuItem.Truck,
                     MenuItem.Orders,
-                    MenuItem.SocialFeed
+                    MenuItem.SocialFeed,
+                    MenuItem.SalesHistory
                 ),
                 onClicked = { menuItem ->
                     onMenuItemClicked(menuItem)

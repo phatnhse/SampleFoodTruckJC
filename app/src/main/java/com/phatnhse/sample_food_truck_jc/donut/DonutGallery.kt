@@ -59,7 +59,7 @@ import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeRoundedLarge
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
-import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 
 @Composable
 fun DonutGallery(
@@ -335,7 +335,7 @@ fun getPainter(layout: BrowserLayout): Painter {
 }
 
 
-@SingleDevice
+@SingleDevicePreview
 @Composable
 fun DonutGallery_Preview() {
     PreviewSurface {

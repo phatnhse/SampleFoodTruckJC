@@ -13,7 +13,7 @@ fun TopFiveDonutChart(
 ) {
     val topSales = model.donutSales(timeframe)
 
-    TopDonutSalesChart(
+    DonutSalesBarChart(
         sales = topSales
     )
 }

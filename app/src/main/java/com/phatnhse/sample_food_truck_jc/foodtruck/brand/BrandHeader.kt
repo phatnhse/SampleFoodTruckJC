@@ -35,7 +35,7 @@ import com.phatnhse.sample_food_truck_jc.foodtruck.brand.HeaderSize.REDUCE
 import com.phatnhse.sample_food_truck_jc.foodtruck.brand.HeaderSize.STANDARD
 import com.phatnhse.sample_food_truck_jc.ui.theme.SkyEnd
 import com.phatnhse.sample_food_truck_jc.ui.theme.SkyStart
-import com.phatnhse.sample_food_truck_jc.utils.MultipleDevices
+import com.phatnhse.sample_food_truck_jc.utils.MultipleDevicesPreview
 
 @Composable
 fun BrandHeader(
@@ -265,7 +265,7 @@ val truckFrames = listOf(
 )
 
 
-@MultipleDevices
+@MultipleDevicesPreview
 @Composable
 fun Preview() {
     Column {

@@ -26,7 +26,7 @@ import com.phatnhse.sample_food_truck_jc.foodtruck.donut.FlavorPainter
 import com.phatnhse.sample_food_truck_jc.ui.composable.noRippleClickable
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
-import com.phatnhse.sample_food_truck_jc.utils.MultipleDevices
+import com.phatnhse.sample_food_truck_jc.utils.MultipleDevicesPreview
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 
 @Composable
@@ -96,7 +96,7 @@ fun DonutGalleryGrid(
     }
 }
 
-@MultipleDevices
+@MultipleDevicesPreview
 @Composable
 fun DonutGalleryGrid_Preview() {
     PreviewSurface {

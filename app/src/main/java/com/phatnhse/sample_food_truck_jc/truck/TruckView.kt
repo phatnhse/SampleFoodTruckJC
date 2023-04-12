@@ -17,7 +17,7 @@ import com.phatnhse.sample_food_truck_jc.truck.cards.TruckOrdersCard
 import com.phatnhse.sample_food_truck_jc.truck.cards.TruckSocialFeedCard
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
-import com.phatnhse.sample_food_truck_jc.utils.SingleDevice
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 
 @Composable
 fun TruckView(
@@ -63,7 +63,7 @@ fun TruckView(
     }
 }
 
-@SingleDevice
+@SingleDevicePreview
 @Composable
 fun TruckView_Preview() {
     PreviewSurface {

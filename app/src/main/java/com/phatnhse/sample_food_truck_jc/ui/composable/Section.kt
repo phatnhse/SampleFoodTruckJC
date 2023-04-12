@@ -223,7 +223,7 @@ fun Section_Preview() {
                         contentDescription = "Order status"
                     )
                 }, {
-                    Text(text = Order.preview.creationDate.formattedDate)
+                    Text(text = Order.preview.creationDate.formattedDate())
                 }), onItemClicked = {})
 
             Section(title = "",
