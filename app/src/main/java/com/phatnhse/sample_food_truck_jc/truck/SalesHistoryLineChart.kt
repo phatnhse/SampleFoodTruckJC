@@ -3,10 +3,13 @@ package com.phatnhse.sample_food_truck_jc.truck
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.MaterialTheme.typography
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
@@ -81,99 +84,110 @@ fun SalesHistoryLineChart(
     val tickHeight = yAxisTextValues.size
     val indicatorCount = lineMarks.first().values.size
 
-    Box(
-        Modifier
-            .height(300.dp)
-            .background(color = colorScheme.background)
-    ) {
-        Canvas(modifier = Modifier.fillMaxSize()) {
-            val topPadding = textPadding.toPx()
-            val totalHeight = size.height - 2 * topPadding
-            val totalWidth = size.width - topPadding * 2
-            val tickWidth = (totalWidth) / (indicatorCount - 1)
-            val defaultStroke = Stroke()
+    val totalSales = 100
 
-            this.drawLineMarks(
-                textMeasurer = textMeasurer,
-                textStyle = textStyle,
-                lineMarks = lineMarks,
-                chartHeight = totalHeight,
-                tickWidth = tickWidth,
-                upperBoundValue = upperBoundValue,
-                padding = topPadding
-            )
+    Column {
+        Text(text = "Total Sales", style = typography.titleSmall)
+        Text(text = "$totalSales donuts", style = typography.titleMedium)
+        Spacer(modifier = Modifier.height(PaddingLarge))
 
-            // draw y axis grid
-            val xGridLines: MutableList<Pair<Offset, Offset>> = mutableListOf()
-            val yGridLines: MutableList<Pair<Offset, Offset>> = mutableListOf()
+        Text(text = "Hide chart content $hideChartContent", style = typography.titleSmall)
 
-            // draw x axis grid
-            val heightPerXGrid = totalHeight / (tickHeight - 1)
-            (0 until tickHeight).forEach { index ->
-                val startingPoint = Offset(0f, topPadding + heightPerXGrid * index)
-                val endingPoint = Offset(totalWidth, topPadding + heightPerXGrid * index)
-                xGridLines.add(
-                    startingPoint to endingPoint
-                )
+        Box(
+            Modifier
+                .height(300.dp)
+                .background(color = colorScheme.background)
+        ) {
+            Canvas(modifier = Modifier.fillMaxSize()) {
+                val topPadding = textPadding.toPx()
+                val totalHeight = size.height - 2 * topPadding
+                val totalWidth = size.width - topPadding * 2
+                val tickWidth = (totalWidth) / (indicatorCount - 1)
+                val defaultStroke = Stroke()
 
-                drawText(
+                this.drawLineMarks(
                     textMeasurer = textMeasurer,
-                    text = yAxisTextValues[index].toString(),
-                    topLeft = endingPoint.copy(
-                        x = endingPoint.x + topPadding / 2, y = endingPoint.y - topPadding / 2
-                    ),
-                    style = textStyle
+                    textStyle = textStyle,
+                    lineMarks = lineMarks,
+                    chartHeight = totalHeight,
+                    tickWidth = tickWidth,
+                    upperBoundValue = upperBoundValue,
+                    padding = topPadding
                 )
-            }
 
-            val xGridPath = Path().apply {
-                xGridLines.forEach { (startingPoint, endPoint) ->
-                    moveTo(startingPoint.x, startingPoint.y)
-                    lineTo(endPoint.x, endPoint.y)
+                // draw y axis grid
+                val xGridLines: MutableList<Pair<Offset, Offset>> = mutableListOf()
+                val yGridLines: MutableList<Pair<Offset, Offset>> = mutableListOf()
+
+                // draw x axis grid
+                val heightPerXGrid = totalHeight / (tickHeight - 1)
+                (0 until tickHeight).forEach { index ->
+                    val startingPoint = Offset(0f, topPadding + heightPerXGrid * index)
+                    val endingPoint = Offset(totalWidth, topPadding + heightPerXGrid * index)
+                    xGridLines.add(
+                        startingPoint to endingPoint
+                    )
+
+                    drawText(
+                        textMeasurer = textMeasurer,
+                        text = yAxisTextValues[index].toString(),
+                        topLeft = endingPoint.copy(
+                            x = endingPoint.x + topPadding / 2, y = endingPoint.y - topPadding / 2
+                        ),
+                        style = textStyle
+                    )
                 }
-            }
 
-            drawPath(
-                path = xGridPath, color = gridLineColor, style = defaultStroke
-            )
-
-            // draw y grid - dotted lines
-            val middleX = (indicatorCount / 2 - 1) * tickWidth
-            val middleY = topPadding + totalHeight + topPadding
-
-            val endX = totalWidth - tickWidth
-
-            yGridLines.add(
-                Offset(middleX, topPadding) to Offset(middleX, middleY)
-            )
-            yGridLines.add(
-                Offset(endX, topPadding) to Offset(endX, topPadding + totalHeight)
-            )
-
-            val yGridPath = Path().apply {
-                yGridLines.forEachIndexed { index, (startingPoint, endingPoint) ->
-                    moveTo(startingPoint.x, startingPoint.y)
-                    lineTo(endingPoint.x, endingPoint.y)
-
-                    if (index < xAxisTextValues.size - 1) {
-                        drawText(
-                            textMeasurer = textMeasurer,
-                            text = xAxisTextValues[index],
-                            topLeft = endingPoint.copy(
-                                x = endingPoint.x + topPadding / 2, y = endingPoint.y - topPadding
-                            ),
-                            style = textStyle
-                        )
+                val xGridPath = Path().apply {
+                    xGridLines.forEach { (startingPoint, endPoint) ->
+                        moveTo(startingPoint.x, startingPoint.y)
+                        lineTo(endPoint.x, endPoint.y)
                     }
                 }
-            }
 
-            val dottedLine = Stroke(
-                width = 2f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(5f, 5f), 0f)
-            )
-            drawPath(
-                path = yGridPath, color = gridLineColor, style = dottedLine
-            )
+                drawPath(
+                    path = xGridPath, color = gridLineColor, style = defaultStroke
+                )
+
+                // draw y grid - dotted lines
+                val middleX = (indicatorCount / 2 - 1) * tickWidth
+                val middleY = topPadding + totalHeight + topPadding
+
+                val endX = totalWidth - tickWidth
+
+                yGridLines.add(
+                    Offset(middleX, topPadding) to Offset(middleX, middleY)
+                )
+                yGridLines.add(
+                    Offset(endX, topPadding) to Offset(endX, topPadding + totalHeight)
+                )
+
+                val yGridPath = Path().apply {
+                    yGridLines.forEachIndexed { index, (startingPoint, endingPoint) ->
+                        moveTo(startingPoint.x, startingPoint.y)
+                        lineTo(endingPoint.x, endingPoint.y)
+
+                        if (index < xAxisTextValues.size - 1) {
+                            drawText(
+                                textMeasurer = textMeasurer,
+                                text = xAxisTextValues[index],
+                                topLeft = endingPoint.copy(
+                                    x = endingPoint.x + topPadding / 2,
+                                    y = endingPoint.y - topPadding
+                                ),
+                                style = textStyle
+                            )
+                        }
+                    }
+                }
+
+                val dottedLine = Stroke(
+                    width = 2f, pathEffect = PathEffect.dashPathEffect(floatArrayOf(5f, 5f), 0f)
+                )
+                drawPath(
+                    path = yGridPath, color = gridLineColor, style = dottedLine
+                )
+            }
         }
     }
 }

@@ -9,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,6 +36,27 @@ fun SalesHistoryView(
     model: FoodTruckViewModel
 ) {
     var timeframe by remember { mutableStateOf(Timeframe.WEEK) }
+    val tabTitles = listOf("2 Weeks", "Months", "Year")
+    val hideChartContent by remember(timeframe) {
+        derivedStateOf { timeframe != Timeframe.WEEK }
+    }
+
+    val salesByCity by remember(timeframe) {
+        derivedStateOf {
+            model.getSalesByCity(timeframe = timeframe)
+        }
+    }
+
+    val totalSales by remember(salesByCity) {
+        derivedStateOf {
+            salesByCity.flatMap { it.entries }
+                .reduce { acc, entry ->
+                    acc.copy(
+                        sales = acc.sales + entry.sales
+                    )
+                }
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -51,16 +73,19 @@ fun SalesHistoryView(
 
         Spacer(modifier = Modifier.height(PaddingExtraLarge))
         TabLayout(
-            titles = Timeframe.values().map { it.title },
+            titles = tabTitles,
             tabContent = {
                 Column {
                     Spacer(modifier = Modifier.height(PaddingExtraLarge))
                     SalesHistoryLineChart(
-                        yAxisTextValues = listOf(400, 300, 200, 100),
+                        hideChartContent = hideChartContent,
+                        yAxisTextValues = listOf(
+                            400, 300, 200, 100
+                        ),
                         xAxisTextValues = listOf("Hello world", "Hello world 1"),
                         lineMarks = listOf(
                             LineMark(
-                                values = listOf(120, 80, 32, 56, 23, 160, 80, 90, 40, 56, 23, 160),
+                                values = salesByCity[0].entries.map { it.sales },
                                 indicatorType = IndicatorType.SQUARE,
                                 indicatorBorderSize = 2.dp,
                                 indicatorSize = 4.dp,

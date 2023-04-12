@@ -18,6 +18,7 @@ import com.phatnhse.sample_food_truck_jc.order.OrderGenerator
 import com.phatnhse.sample_food_truck_jc.order.OrderSummary
 import com.phatnhse.sample_food_truck_jc.order.toOrderSummary
 import com.phatnhse.sample_food_truck_jc.order.unionOrders
+import com.phatnhse.sample_food_truck_jc.truck.SalesByCity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -136,6 +137,39 @@ class FoodTruckViewModel : ViewModel() {
             }
     }
 
+    fun getSalesByCity(timeframe: Timeframe): List<SalesByCity> {
+        fun dateComponents(offset: Int): Pair<LocalDateTime, LocalDateTime> {
+            return when (timeframe) {
+                Timeframe.TODAY -> throw UnsupportedOperationException("Today timeframe is not supported.")
+                Timeframe.WEEK, Timeframe.MONTH -> {
+                    val endDate = LocalDateTime.now()
+                    val startDate = endDate.minusDays(offset.toLong())
+                    Pair(startDate, endDate)
+                }
+
+                Timeframe.YEAR -> {
+                    val endDate = LocalDateTime.now()
+                    val startDate = endDate.minusMonths(offset.toLong())
+                    Pair(startDate, endDate)
+                }
+            }
+        }
+
+        return City.all.map { city ->
+            val summaries: List<OrderSummary> = when (timeframe) {
+                Timeframe.TODAY -> throw UnsupportedOperationException()
+                Timeframe.WEEK -> dailyOrderSummaries[city.id]?.take(14) ?: emptyList()
+                Timeframe.MONTH -> dailyOrderSummaries[city.id]?.take(30) ?: emptyList()
+                Timeframe.YEAR -> monthlyOrderSummaries[city.id] ?: emptyList()
+            }
+            val entries = summaries.mapIndexed { index, summary ->
+                val (startDate, _) = dateComponents(index)
+                val date = startDate.plusDays(index.toLong())
+                SalesByCity.Entry(date = date, sales = summary.totalSales)
+            }
+            SalesByCity(city = city, entries = entries)
+        }
+    }
 
     private fun combinedOrderSummary(timeframe: Timeframe): OrderSummary {
         return when (timeframe) {
