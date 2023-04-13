@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,26 +35,41 @@ fun SalesHistoryView(
     onBackPressed: () -> Unit,
     model: FoodTruckViewModel
 ) {
-    var timeframe by remember { mutableStateOf(Timeframe.WEEK) }
-    val tabTitles = listOf("2 Weeks", "Months", "Year")
+    var tabIndex by remember { mutableStateOf(1) }
+    val timeframe = when (tabIndex) {
+        0 -> Timeframe.WEEK
+        1 -> Timeframe.MONTH
+        2 -> Timeframe.YEAR
+        else -> throw UnsupportedOperationException("Unsupported")
+    }
     val hideChartContent = timeframe != Timeframe.WEEK
+    val tabTitles = listOf("2 Weeks", "Months", "Year")
 
     val salesByCity = model.getSalesByCity(timeframe = timeframe)
-    val totalSales = salesByCity.flatMap { it.entries }
-        .reduce { acc, entry ->
-            acc.copy(
-                sales = acc.sales + entry.sales
-            )
-        }
 
-    val dates = salesByCity.flatMap { it.entries }
-        .map { it.date }
-        .map {
-            it.formattedDate(
-                pattern = "yyyy-MM-dd",
-                withTime = false
-            )
-        }.distinct()
+    val totalSales by remember(salesByCity) {
+        derivedStateOf {
+            salesByCity.flatMap { it.entries }
+                .reduce { acc, entry ->
+                    acc.copy(
+                        sales = acc.sales + entry.sales
+                    )
+                }
+        }
+    }
+
+    val dates by remember(salesByCity) {
+        derivedStateOf {
+            salesByCity.flatMap { it.entries }
+                .map { it.date }
+                .map {
+                    it.formattedDate(
+                        pattern = "yyyy-MM-dd",
+                        withTime = false
+                    )
+                }.distinct()
+        }
+    }
 
 
     Column(
@@ -89,42 +105,37 @@ fun SalesHistoryView(
                         lineMarks = listOf(
                             LineMark(
                                 values = salesByCity[0].entries.map { it.sales },
-                                indicatorType = IndicatorType.SQUARE,
+                                indicatorType = IndicatorType.CIRCLE,
                                 indicatorBorderSize = 2.dp,
-                                indicatorSize = 4.dp,
+                                indicatorSize = 6.dp,
                                 lineColor = chartColorBlue,
                                 indicatorSolidColor = MaterialTheme.colorScheme.background,
                                 indicatorText = salesByCity[0].city.name
                             ),
                             LineMark(
                                 values = salesByCity[1].entries.map { it.sales },
-                                indicatorType = IndicatorType.TRIANGLE,
+                                indicatorType = IndicatorType.SQUARE,
                                 indicatorBorderSize = 2.dp,
-                                indicatorSize = 4.dp,
+                                indicatorSize = 6.dp,
                                 lineColor = chartColorGreen,
                                 indicatorSolidColor = MaterialTheme.colorScheme.background,
-                                indicatorText = salesByCity[0].city.name
+                                indicatorText = salesByCity[1].city.name
                             ), LineMark(
                                 values = salesByCity[2].entries.map { it.sales },
-                                indicatorType = IndicatorType.CIRCLE,
+                                indicatorType = IndicatorType.TRIANGLE,
                                 indicatorBorderSize = 2.dp,
-                                indicatorSize = 4.dp,
+                                indicatorSize = 6.dp,
                                 lineColor = chartColorOrange,
                                 indicatorSolidColor = MaterialTheme.colorScheme.background,
-                                indicatorText = salesByCity[0].city.name
+                                indicatorText = salesByCity[2].city.name
                             )
                         )
                     )
                 }
             },
-            defaultSelected = 0,
+            defaultSelected = tabIndex,
             onTabSelected = {
-                timeframe = when (it) {
-                    0 -> Timeframe.WEEK
-                    1 -> Timeframe.MONTH
-                    2 -> Timeframe.YEAR
-                    else -> throw UnsupportedOperationException("Unsupported")
-                }
+                tabIndex = it
             }
         )
     }

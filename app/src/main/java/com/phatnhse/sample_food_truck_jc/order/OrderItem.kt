@@ -30,6 +30,7 @@ import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
 import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
 import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeRoundedSmall
+import com.phatnhse.sample_food_truck_jc.ui.theme.onBackgroundSecondary
 
 @Composable
 fun OrderRow(
@@ -74,7 +75,7 @@ fun OrderRow(
                         painter = arrowRightPainter(),
                         contentDescription = "Access Order Details",
                         colorFilter = ColorFilter.tint(
-                            color = colorScheme.onBackground.copy(alpha = 0.5F)
+                            color = colorScheme.onBackgroundSecondary()
                         )
                     )
                 }

@@ -44,6 +44,7 @@ import com.phatnhse.sample_food_truck_jc.order.formattedDate
 import com.phatnhse.sample_food_truck_jc.ui.theme.IconSizeLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.IconSizeTiny
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
+import com.phatnhse.sample_food_truck_jc.ui.theme.onBackgroundSecondary
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 
 @Composable
@@ -183,7 +184,7 @@ fun SectionItem(
                             painter = arrowRightPainter(),
                             contentDescription = "Access detail page",
                             colorFilter = ColorFilter.tint(
-                                color = colorScheme.onBackground.copy(alpha = 0.5F)
+                                color = colorScheme.onBackgroundSecondary()
                             )
                         )
                     }

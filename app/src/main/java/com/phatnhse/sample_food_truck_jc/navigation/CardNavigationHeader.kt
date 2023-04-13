@@ -22,6 +22,7 @@ import com.phatnhse.sample_food_truck_jc.foodtruck.general.arrowRightPainter
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.shippingPainter
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
+import com.phatnhse.sample_food_truck_jc.ui.theme.onBackgroundSecondary
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 
 @Composable
@@ -67,7 +68,7 @@ fun CardNavigationHeader(
             painter = arrowRightPainter(),
             contentDescription = "Navigation Icon",
             colorFilter = ColorFilter.tint(
-                color = colorScheme.onBackground.copy(alpha = 0.5F)
+                color = colorScheme.onBackgroundSecondary()
             )
         )
     }

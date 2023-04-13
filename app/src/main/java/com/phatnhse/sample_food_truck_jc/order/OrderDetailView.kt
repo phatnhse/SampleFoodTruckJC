@@ -31,6 +31,7 @@ import com.phatnhse.sample_food_truck_jc.navigation.NavigationHeader
 import com.phatnhse.sample_food_truck_jc.service.CountdownNotificationHelper
 import com.phatnhse.sample_food_truck_jc.ui.composable.Section
 import com.phatnhse.sample_food_truck_jc.ui.theme.IconSizeLarge
+import com.phatnhse.sample_food_truck_jc.ui.theme.onBackgroundSecondary
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 import kotlinx.coroutines.launch
 
@@ -142,7 +143,7 @@ fun StatusSection(order: Order) {
                     contentDescription = "Order status ${order.status.title}",
                     colorFilter = ColorFilter.tint(
                         color = if (order.isComplete) {
-                            colorScheme.onBackground.copy(alpha = 0.5F)
+                            colorScheme.onBackgroundSecondary()
                         } else {
                             colorScheme.primary
                         }
@@ -152,7 +153,7 @@ fun StatusSection(order: Order) {
             {
                 Text(
                     text = order.creationDate.formattedDate(),
-                    color = colorScheme.onBackground.copy(alpha = 0.5F)
+                    color = colorScheme.onBackgroundSecondary()
                 )
             }
         ),
@@ -177,7 +178,7 @@ fun DonutsSection(order: Order) {
             {
                 Text(
                     text = order.sales[it.id].toString(),
-                    color = colorScheme.onBackground.copy(alpha = 0.5F)
+                    color = colorScheme.onBackgroundSecondary()
                 )
             }
         },
@@ -193,7 +194,7 @@ fun TotalDonutsSection(order: Order) {
         trailingViews = listOf {
             Text(
                 text = order.totalSales.toString(),
-                color = colorScheme.onBackground.copy(alpha = 0.5F)
+                color = colorScheme.onBackgroundSecondary()
             )
         },
         onItemClicked = {}

@@ -61,6 +61,7 @@ import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
 import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeRoundedLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeRoundedNormal
+import com.phatnhse.sample_food_truck_jc.ui.theme.onBackgroundSecondary
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 
@@ -129,7 +130,7 @@ fun DonutEditor(
                         Box(
                             modifier = Modifier
                                 .background(
-                                    color = colorScheme.onBackground.copy(alpha = 0.1F),
+                                    color = colorScheme.onBackgroundSecondary(0.1F),
                                     shape = ShapeRoundedLarge
                                 )
                                 .padding(3.dp),
@@ -139,7 +140,7 @@ fun DonutEditor(
                                     .size(IconSizeTiny),
                                 painter = arrowDownPainter(),
                                 contentDescription = "More",
-                                tint = colorScheme.onBackground.copy(alpha = 0.6F)
+                                tint = colorScheme.onBackgroundSecondary(0.6F)
                             )
                         }
                     }

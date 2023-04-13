@@ -47,6 +47,8 @@ import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.chartColorBlue
 import com.phatnhse.sample_food_truck_jc.ui.theme.chartColorGreen
 import com.phatnhse.sample_food_truck_jc.ui.theme.chartColorOrange
+import com.phatnhse.sample_food_truck_jc.ui.theme.onBackgroundSecondary
+import com.phatnhse.sample_food_truck_jc.ui.theme.withOpacity
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 import java.time.LocalDateTime
@@ -73,7 +75,7 @@ data class LineMark(
     val indicatorSolidColor: Color,
     val indicatorType: IndicatorType,
     val indicatorSize: Dp = 3.dp,
-    val indicatorBorderSize: Dp = 1.dp,
+    val indicatorBorderSize: Dp = 2.dp,
     val indicatorText: String
 )
 
@@ -91,22 +93,25 @@ fun SalesHistoryLineChart(
 ) {
     val textMeasurer = rememberTextMeasurer()
     val textPadding = PaddingLarge
-    val gridLineColor = colorScheme.onBackground.copy(alpha = 0.5F)
-    val textStyle = typography.labelSmall.copy(
-        color = gridLineColor, fontWeight = FontWeight.Normal
+    val gridLineColor = colorScheme.onBackgroundSecondary()
+    val textStyle =
+        typography.labelSmall.copy(color = gridLineColor, fontWeight = FontWeight.Normal)
+
+    val allValues = lineMarks.flatMap { it.values }
+    val (yUpperbound, yAxisValues) = generateYAxisValues(
+        lowerBound = 100,
+        upperBound = allValues.max(),
+        count = yAxisTickCount
     )
 
-    val (yUpperbound, yAxisValues) = generateYAxisValues(
-        lowerBound = 0, upperBound = lineMarks.flatMap { it.values }.max(), count = yAxisTickCount
-    )
     val indicatorCount = lineMarks.first().values.size
-    val hideChartContentBg = colorScheme.primary.copy(alpha = 0.25f)
+    val hideChartContentBg = colorScheme.primary.withOpacity(0.25f)
 
     Column(modifier) {
         Text(
             text = "Total Sales",
             style = typography.titleSmall,
-            color = colorScheme.onBackground.copy(alpha = 0.5F)
+            color = colorScheme.onBackgroundSecondary()
         )
         Text(text = "$totalSales donuts", style = typography.titleMedium)
         Spacer(modifier = Modifier.height(PaddingNormal))
@@ -117,16 +122,16 @@ fun SalesHistoryLineChart(
             contentAlignment = Alignment.Center
         ) {
             Canvas(modifier = Modifier.fillMaxSize()) {
-                val topPadding = textPadding.toPx()
-                val totalHeight = size.height - 2 * topPadding
-                val totalWidth = size.width - topPadding * 2
+                val padding = textPadding.toPx()
+                val totalHeight = size.height - 2 * padding
+                val totalWidth = size.width - 2 * padding
                 val tickWidth = (totalWidth) / (indicatorCount - 1)
                 val defaultStroke = Stroke()
 
                 if (hideChartContent) {
                     drawRect(
                         color = hideChartContentBg,
-                        topLeft = Offset(0f, topPadding),
+                        topLeft = Offset(0f, padding),
                         size = Size(totalWidth, totalHeight)
 
                     )
@@ -139,7 +144,7 @@ fun SalesHistoryLineChart(
                     chartHeight = totalHeight,
                     tickWidth = tickWidth,
                     upperBoundValue = yUpperbound,
-                    padding = topPadding,
+                    padding = padding,
                     opacity = if (hideChartContent) 0f else 1f
                 )
 
@@ -149,8 +154,8 @@ fun SalesHistoryLineChart(
                 // draw x axis grid
                 val heightPerXGrid = totalHeight / (yAxisTickCount - 1)
                 (0 until yAxisTickCount).forEach { index ->
-                    val startingPoint = Offset(0f, topPadding + heightPerXGrid * index)
-                    val endingPoint = Offset(totalWidth, topPadding + heightPerXGrid * index)
+                    val startingPoint = Offset(0f, padding + heightPerXGrid * index)
+                    val endingPoint = Offset(totalWidth, padding + heightPerXGrid * index)
                     xGridLines.add(
                         startingPoint to endingPoint
                     )
@@ -159,7 +164,7 @@ fun SalesHistoryLineChart(
                         textMeasurer = textMeasurer,
                         text = yAxisValues.asReversed()[index].toString(),
                         topLeft = endingPoint.copy(
-                            x = endingPoint.x + topPadding / 2, y = endingPoint.y - topPadding / 2
+                            x = endingPoint.x + padding / 2, y = endingPoint.y - padding / 2
                         ),
                         style = textStyle
                     )
@@ -180,8 +185,8 @@ fun SalesHistoryLineChart(
                 val yGridLines: MutableList<Triple<Offset, Offset, Int>> = mutableListOf()
                 var curIndex = xAxisInitialIndex
                 while (curIndex < xyAxis.size) {
-                    val startingPoint = Offset(xyAxis[curIndex].x, topPadding)
-                    val endingPoint = Offset(xyAxis[curIndex].x, topPadding * 2 + totalHeight)
+                    val startingPoint = Offset(xyAxis[curIndex].x, padding)
+                    val endingPoint = Offset(xyAxis[curIndex].x, padding * 2 + totalHeight)
                     yGridLines.add(Triple(startingPoint, endingPoint, curIndex))
                     curIndex += xAxisSpacing
                 }
@@ -192,7 +197,7 @@ fun SalesHistoryLineChart(
                         if (xAxisIndex == xAxisInitialIndex) {
                             lineTo(endingPoint.x, endingPoint.y)
                         } else {
-                            lineTo(endingPoint.x, endingPoint.y - topPadding)
+                            lineTo(endingPoint.x, endingPoint.y - padding)
                         }
 
                         if (index != yGridLines.lastIndex) {
@@ -200,8 +205,8 @@ fun SalesHistoryLineChart(
                                 textMeasurer = textMeasurer,
                                 text = xAxisTextValues[xAxisIndex],
                                 topLeft = endingPoint.copy(
-                                    x = endingPoint.x + topPadding / 2,
-                                    y = endingPoint.y - topPadding
+                                    x = endingPoint.x + padding / 2,
+                                    y = endingPoint.y - padding
                                 ),
                                 style = textStyle
                             )
@@ -455,7 +460,7 @@ fun DrawScope.drawIndicator(
 fun SalesHistoryLineChart_Preview() {
     PreviewSurface {
         SalesHistoryLineChart(
-            hideChartContent = true,
+            hideChartContent = false,
             yAxisTickCount = 4,
             xAxisTextValues = listOf("a", "b", "c", "d", "e", "f", "g", "h", "z", "x", "y", "m"),
             totalSales = 100,
@@ -467,7 +472,7 @@ fun SalesHistoryLineChart_Preview() {
                     indicatorType = IndicatorType.SQUARE,
                     indicatorBorderSize = 2.dp,
                     indicatorSize = 4.dp,
-                    lineColor = chartColorBlue,
+                    lineColor = chartColorGreen,
                     indicatorSolidColor = colorScheme.background,
                     indicatorText = "London"
                 ), LineMark(
@@ -475,7 +480,7 @@ fun SalesHistoryLineChart_Preview() {
                     indicatorType = IndicatorType.TRIANGLE,
                     indicatorBorderSize = 2.dp,
                     indicatorSize = 4.dp,
-                    lineColor = chartColorGreen,
+                    lineColor = chartColorBlue,
                     indicatorSolidColor = colorScheme.background,
                     indicatorText = "San Francisco"
                 ), LineMark(
