@@ -1,5 +1,6 @@
 package com.phatnhse.sample_food_truck_jc.ui.theme
 
+import androidx.compose.material3.ColorScheme
 import androidx.compose.ui.graphics.Color
 
 val md_theme_light_primary = Color(0xFF4F4CCD)
@@ -69,8 +70,8 @@ val SkyEnd = Color(0xFF7897EC)
 
 val bottomBarColor = Color(0xFFCCE0FF)
 
-val chartColorGreen = Color(0xFF3478F6)
-val chartColorBlue = Color(0xFF65C466)
+val chartColorBlue = Color(0xFF3478F6)
+val chartColorGreen = Color(0xFF65C466)
 val chartColorOrange = Color(0xFFF19A37)
 
 // Donut
@@ -99,3 +100,10 @@ val doughWhiteBgLight = Color(0xFFAEB5BD)
 val doughYellowBgDark = Color(0xFF8D7D55)
 val doughYellowBgLight = Color(0xFFD9C794)
 
+fun Color.withOpacity(opacity: Float = 0.5F): Color {
+    return copy(alpha = opacity)
+}
+
+fun ColorScheme.onBackgroundSecondary(opacity: Float = 0.5F): Color {
+    return onBackground.withOpacity(opacity)
+}

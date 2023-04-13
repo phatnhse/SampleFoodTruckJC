@@ -39,6 +39,7 @@ import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
 import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeRoundedLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.bottomBarColor
+import com.phatnhse.sample_food_truck_jc.ui.theme.onBackgroundSecondary
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 import kotlin.math.ceil
@@ -85,7 +86,7 @@ fun DonutSalesBarChart(
         Text(
             text = "Total Sales",
             style = typography.titleSmall,
-            color = colorScheme.onBackground.copy(alpha = 0.5F)
+            color = colorScheme.onBackgroundSecondary()
         )
         Text(text = "$totalSales donuts", style = typography.titleMedium)
         Spacer(modifier = Modifier.height(PaddingLarge))
@@ -242,7 +243,7 @@ fun YAxisGridLine(
         )
         Text(
             text = text,
-            color = colorScheme.onBackground.copy(alpha = 0.5F),
+            color = colorScheme.onBackgroundSecondary(),
             fontSize = 8.sp
         )
     }
@@ -260,7 +261,7 @@ fun DonutFooter(donut: Donut) {
             fontSize = 9.sp,
             textAlign = TextAlign.Center,
             lineHeight = 12.sp,
-            color = colorScheme.onBackground.copy(alpha = 0.5F)
+            color = colorScheme.onBackgroundSecondary()
         )
     }
 }

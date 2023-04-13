@@ -21,6 +21,7 @@ import com.phatnhse.sample_food_truck_jc.navigation.CardNavigationHeader
 import com.phatnhse.sample_food_truck_jc.truck.SocialFeedTag
 import com.phatnhse.sample_food_truck_jc.truck.SocialFeedTagView
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
+import com.phatnhse.sample_food_truck_jc.ui.theme.onBackgroundSecondary
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 import java.lang.Integer.min
 
@@ -60,7 +61,7 @@ fun TruckSocialFeedCard(
             Text(
                 "Trending Topics",
                 fontSize = 12.sp,
-                color = colorScheme.onBackground.copy(alpha = 0.5F)
+                color = colorScheme.onBackgroundSecondary()
             )
         }
     }
