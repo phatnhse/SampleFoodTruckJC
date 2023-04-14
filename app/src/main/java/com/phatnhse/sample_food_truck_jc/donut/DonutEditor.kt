@@ -62,6 +62,7 @@ import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
 import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeRoundedLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeRoundedNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.onBackgroundSecondary
+import com.phatnhse.sample_food_truck_jc.ui.theme.withOpacity
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 
@@ -260,9 +261,7 @@ fun DonutEditor(
                         color = if (isTopFlavor) {
                             colorScheme.primary
                         } else {
-                            colorScheme.onBackground.copy(
-                                alpha = 0.5F
-                            )
+                            colorScheme.onBackground.withOpacity()
                         }
                     )
                     Text(
