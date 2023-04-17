@@ -4,8 +4,10 @@ import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.material3.MaterialTheme.colorScheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -17,10 +19,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 
-
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TabLayout(
     modifier: Modifier = Modifier,
@@ -46,9 +48,6 @@ fun TabLayout(
         }
     }
 
-
-
-
     Column(modifier) {
         TabRow(
             selectedTabIndex = selectedTabIndex,
@@ -73,11 +72,13 @@ fun TabLayout(
             }
         }
 
-        tabContent()
+        HorizontalPager(pageCount = 3) {
+            tabContent()
+        }
     }
 }
 
-@Preview
+@SingleDevicePreview
 @Composable
 fun Tab_Preview() {
     PreviewSurface {
