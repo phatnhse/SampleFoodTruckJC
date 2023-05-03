@@ -57,7 +57,7 @@ import com.phatnhse.sample_food_truck_jc.ui.theme.IconSizeSmaller
 import com.phatnhse.sample_food_truck_jc.ui.theme.IconSizeTiny
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
-import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeRoundedLarge
+import com.phatnhse.sample_food_truck_jc.ui.theme.RoundedLarge
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 
@@ -102,7 +102,7 @@ fun DonutGallery(
             DropdownMenu(modifier = Modifier
                 .defaultMinSize(minWidth = 200.dp)
                 .background(
-                    color = colorScheme.background, shape = ShapeRoundedLarge
+                    color = colorScheme.background, shape = RoundedLarge
                 ),
                 expanded = expanded,
                 onDismissRequest = { expanded = false }

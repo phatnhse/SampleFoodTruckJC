@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.searchPainter
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
-import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeRoundedLarge
+import com.phatnhse.sample_food_truck_jc.ui.theme.RoundedLarge
 
 @Composable
 fun SearchView(
@@ -49,7 +49,7 @@ fun SearchView(
             modifier = Modifier
                 .background(
                     color = colorScheme.surfaceVariant,
-                    shape = ShapeRoundedLarge
+                    shape = RoundedLarge
                 )
                 .weight(1f)
                 .height(48.dp),

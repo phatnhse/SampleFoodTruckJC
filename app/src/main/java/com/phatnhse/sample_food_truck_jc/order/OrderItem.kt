@@ -29,7 +29,7 @@ import com.phatnhse.sample_food_truck_jc.ui.composable.CustomDivider
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
 import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
-import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeRoundedSmall
+import com.phatnhse.sample_food_truck_jc.ui.theme.RoundedSmall
 import com.phatnhse.sample_food_truck_jc.ui.theme.onBackgroundSecondary
 
 @Composable
@@ -96,7 +96,7 @@ fun OrderItem(order: Order) {
             modifier = Modifier
                 .size(40.dp)
                 .background(
-                    color = colorScheme.surface, shape = ShapeRoundedSmall
+                    color = colorScheme.surface, shape = RoundedSmall
                 )
         )
         Spacer(modifier = Modifier.width(PaddingNormal))

@@ -37,7 +37,7 @@ import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutView
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
-import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeRoundedLarge
+import com.phatnhse.sample_food_truck_jc.ui.theme.RoundedLarge
 import com.phatnhse.sample_food_truck_jc.ui.theme.bottomBarColor
 import com.phatnhse.sample_food_truck_jc.ui.theme.onBackgroundSecondary
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
@@ -216,7 +216,7 @@ fun XAxisValueText(text: String) {
         Modifier
             .wrapContentSize(Alignment.TopCenter)
             .background(
-                color = colorScheme.surfaceVariant, shape = ShapeRoundedLarge
+                color = colorScheme.surfaceVariant, shape = RoundedLarge
             )
     ) {
         Text(

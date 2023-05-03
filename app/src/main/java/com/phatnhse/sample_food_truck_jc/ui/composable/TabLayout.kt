@@ -1,15 +1,12 @@
 package com.phatnhse.sample_food_truck_jc.ui.composable
 
-import androidx.compose.animation.animateColor
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.updateTransition
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Tab
+import androidx.compose.material3.TabPosition
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -18,44 +15,75 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
+import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
+import com.phatnhse.sample_food_truck_jc.ui.theme.RoundedLarge
+import com.phatnhse.sample_food_truck_jc.ui.theme.onBackgroundSecondary
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun TabLayout(
     modifier: Modifier = Modifier,
-    titles: List<String>,
-    defaultSelected: Int = 0,
+    tabItems: List<String>,
+    initialPage: Int = 0,
     tabContent: @Composable () -> Unit,
     onTabSelected: (Int) -> Unit
 ) {
-    var selectedTabIndex by remember { mutableStateOf(defaultSelected) }
-    val defaultColor = colorScheme.background
-    val targetColor = colorScheme.surface
-
-    val transition = updateTransition(targetState = selectedTabIndex, label = "")
-    val indicatorLeft by transition.animateColor(
-        transitionSpec = {
-            spring(stiffness = Spring.StiffnessVeryLow)
-        },
-        label = "Indicator left"
-    ) { page ->
-        when (page) {
-            0, 1 -> Color.Red
-            else -> Color.Green
-        }
+    var selectedTabIndex by remember { mutableStateOf(initialPage) }
+    val tabBackground = colorScheme.onBackgroundSecondary(opacity = 0.2F)
+    val tabBackgroundSelected = colorScheme.surface
+    var tabPositionss by remember {
+        mutableStateOf<List<TabPosition>>(listOf())
     }
+
+//    val transition = updateTransition(selectedTabIndex, label = "")
+//    val indicatorStart by transition.animateDp(
+//        transitionSpec = {
+//            if (initialState < targetState) {
+//                spring(dampingRatio = 1f, stiffness = 50f)
+//            } else {
+//                spring(dampingRatio = 1f, stiffness = 1000f)
+//            }
+//        }, label = ""
+//    ) {
+//        tabPositions[it].left
+//    }
+//
+//    val indicatorEnd by transition.animateDp(
+//        transitionSpec = {
+//            if (initialState < targetState) {
+//                spring(dampingRatio = 1f, stiffness = 1000f)
+//            } else {
+//                spring(dampingRatio = 1f, stiffness = 50f)
+//            }
+//        }, label = ""
+//    ) {
+//        tabPositions[it].right
+//    }
+
+//    TabRowDefaults.Indicator(
+//        Modifier
+//            .fillMaxSize()
+//            .wrapContentSize(align = Alignment.BottomStart)
+//            .offset(x = indicatorStart)
+//            .width(indicatorEnd - indicatorStart),
+//        color = tabBackgroundSelected,
+//    )
 
     Column(modifier) {
         TabRow(
             selectedTabIndex = selectedTabIndex,
-            containerColor = indicatorLeft,
-            divider = {},
-            indicator = {}
+            containerColor = tabBackground,
+            modifier = Modifier
+                .padding(PaddingNormal)
+                .clip(RoundedLarge),
+            indicator = @Composable { tabPositions ->
+                tabPositionss = tabPositions
+            },
+            divider = {}
         ) {
-            titles.forEachIndexed { index, title ->
+            tabItems.forEachIndexed { index, title ->
                 Tab(
                     selected = selectedTabIndex == index,
                     onClick = {
@@ -65,17 +93,18 @@ fun TabLayout(
                     text = {
                         Text(
                             text = title,
-                            color = Color.White
+                            style = typography.titleSmall.copy(
+                                color = colorScheme.onBackground
+                            )
                         )
                     },
                 )
             }
         }
 
-        HorizontalPager(pageCount = 3) {
-            tabContent()
-        }
+        tabContent()
     }
+
 }
 
 @SingleDevicePreview
@@ -86,7 +115,7 @@ fun Tab_Preview() {
         var index by remember { mutableStateOf(0) }
 
         TabLayout(Modifier.fillMaxSize(),
-            titles = tabs,
+            tabItems = tabs,
             tabContent = {
                 Text(text = "tab selected ${tabs[index]}")
             },

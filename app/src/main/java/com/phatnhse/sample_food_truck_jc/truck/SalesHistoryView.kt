@@ -1,13 +1,14 @@
 package com.phatnhse.sample_food_truck_jc.truck
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -18,15 +19,14 @@ import androidx.compose.ui.unit.dp
 import com.phatnhse.sample_food_truck_jc.foodtruck.model.FoodTruckViewModel
 import com.phatnhse.sample_food_truck_jc.foodtruck.model.Timeframe
 import com.phatnhse.sample_food_truck_jc.navigation.NavigationHeader
-import com.phatnhse.sample_food_truck_jc.order.formattedDate
 import com.phatnhse.sample_food_truck_jc.ui.composable.TabLayout
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingExtraLarge
-import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.chartColorBlue
 import com.phatnhse.sample_food_truck_jc.ui.theme.chartColorGreen
 import com.phatnhse.sample_food_truck_jc.ui.theme.chartColorOrange
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
+
 
 @Composable
 fun SalesHistoryView(
@@ -35,45 +35,12 @@ fun SalesHistoryView(
     onBackPressed: () -> Unit,
     model: FoodTruckViewModel
 ) {
-    var tabIndex by remember { mutableStateOf(1) }
-    val timeframe = when (tabIndex) {
-        0 -> Timeframe.WEEK
-        1 -> Timeframe.MONTH
-        2 -> Timeframe.YEAR
-        else -> throw UnsupportedOperationException("Unsupported")
-    }
-    val hideChartContent = timeframe != Timeframe.WEEK
-    val tabTitles = listOf("2 Weeks", "Months", "Year")
-
-    val salesByCity = model.getSalesByCity(timeframe = timeframe)
-
-    val totalSales by remember(salesByCity) {
-        derivedStateOf {
-            salesByCity.flatMap { it.entries }
-                .reduce { acc, entry ->
-                    acc.copy(
-                        sales = acc.sales + entry.sales
-                    )
-                }
-        }
-    }
-
-    val dates by remember(salesByCity) {
-        derivedStateOf {
-            salesByCity.flatMap { it.entries }
-                .map { it.date }
-                .map {
-                    it.formattedDate(
-                        pattern = "yyyy-MM-dd",
-                        withTime = false
-                    )
-                }.distinct()
-        }
-    }
-
+    var timeframe by remember { mutableStateOf(Timeframe.WEEK) }
 
     Column(
         modifier = Modifier
+            .background(MaterialTheme.colorScheme.background)
+            .verticalScroll(rememberScrollState())
             .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -85,57 +52,75 @@ fun SalesHistoryView(
 
         Spacer(modifier = Modifier.height(PaddingExtraLarge))
         TabLayout(
-            titles = tabTitles,
+            tabItems = Timeframe.values().map { it.title },
             tabContent = {
                 Column {
                     Spacer(modifier = Modifier.height(PaddingExtraLarge))
                     SalesHistoryLineChart(
-                        Modifier.padding(PaddingNormal),
-                        totalSales = totalSales.sales,
-                        hideChartContent = hideChartContent,
-                        yAxisTickCount = 4,
-                        xAxisTextValues = dates,
-                        xAxisInitialIndex = 2,
-                        xAxisSpacing = when (timeframe) {
-                            Timeframe.WEEK -> 8 // 8 days
-                            Timeframe.MONTH -> 7 // 7 days
-                            Timeframe.YEAR -> 4 // 4 months
-                            else -> 0
-                        },
+                        xAxisInitialIndex = 1,
+                        xAxisSpacing = 4,
+                        xAxisTextValues = listOf("Hello world", "Hello world 1"),
                         lineMarks = listOf(
                             LineMark(
-                                values = salesByCity[0].entries.map { it.sales },
-                                indicatorType = IndicatorType.CIRCLE,
-                                indicatorBorderSize = 2.dp,
-                                indicatorSize = 6.dp,
-                                lineColor = chartColorBlue,
-                                indicatorSolidColor = MaterialTheme.colorScheme.background,
-                                indicatorText = salesByCity[0].city.name
-                            ),
-                            LineMark(
-                                values = salesByCity[1].entries.map { it.sales },
+                                values = listOf(120, 80, 32, 56, 23, 160, 80, 90, 40, 56, 23, 160),
                                 indicatorType = IndicatorType.SQUARE,
                                 indicatorBorderSize = 2.dp,
-                                indicatorSize = 6.dp,
-                                lineColor = chartColorGreen,
+                                indicatorSize = 4.dp,
+                                lineColor = chartColorBlue,
                                 indicatorSolidColor = MaterialTheme.colorScheme.background,
-                                indicatorText = salesByCity[1].city.name
+                                indicatorText = "London"
                             ), LineMark(
-                                values = salesByCity[2].entries.map { it.sales },
+                                values = listOf(
+                                    160,
+                                    120,
+                                    180,
+                                    78,
+                                    99,
+                                    112,
+                                    30,
+                                    16,
+                                    204,
+                                    240,
+                                    78,
+                                    99
+                                ),
                                 indicatorType = IndicatorType.TRIANGLE,
                                 indicatorBorderSize = 2.dp,
-                                indicatorSize = 6.dp,
+                                indicatorSize = 4.dp,
+                                lineColor = chartColorGreen,
+                                indicatorSolidColor = MaterialTheme.colorScheme.background,
+                                indicatorText = "San Francisco"
+                            ), LineMark(
+                                values = listOf(
+                                    384,
+                                    320,
+                                    240,
+                                    280,
+                                    400,
+                                    281,
+                                    210,
+                                    300,
+                                    270,
+                                    400,
+                                    312,
+                                    300
+                                ),
+                                indicatorType = IndicatorType.CIRCLE,
+                                indicatorBorderSize = 2.dp,
+                                indicatorSize = 4.dp,
                                 lineColor = chartColorOrange,
                                 indicatorSolidColor = MaterialTheme.colorScheme.background,
-                                indicatorText = salesByCity[2].city.name
+                                indicatorText = "Cupertino"
                             )
-                        )
+                        ),
+                        yAxisTickCount = 4,
+                        totalSales = 40
                     )
                 }
             },
-            defaultSelected = tabIndex,
+            initialPage = timeframe.ordinal,
             onTabSelected = {
-                tabIndex = it
+                timeframe = Timeframe.values()[it]
             }
         )
     }

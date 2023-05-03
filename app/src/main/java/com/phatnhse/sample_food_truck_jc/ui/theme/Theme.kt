@@ -87,6 +87,6 @@ fun SampleFoodTruckJCTheme(
         colorScheme = colorSchemeColors,
         content = content,
         typography = Typography,
-        shapes = MaterialTheme.shapes.copy(extraSmall = ShapeRoundedLarge)
+        shapes = MaterialTheme.shapes.copy(extraSmall = RoundedLarge)
     )
 }
