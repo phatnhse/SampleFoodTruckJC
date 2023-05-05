@@ -59,9 +59,10 @@ import com.phatnhse.sample_food_truck_jc.ui.theme.IconSizeSmall
 import com.phatnhse.sample_food_truck_jc.ui.theme.IconSizeTiny
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
-import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeRoundedLarge
-import com.phatnhse.sample_food_truck_jc.ui.theme.ShapeRoundedNormal
+import com.phatnhse.sample_food_truck_jc.ui.theme.RoundedLarge
+import com.phatnhse.sample_food_truck_jc.ui.theme.RoundedNormal
 import com.phatnhse.sample_food_truck_jc.ui.theme.onBackgroundSecondary
+import com.phatnhse.sample_food_truck_jc.ui.theme.withOpacity
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 
@@ -131,7 +132,7 @@ fun DonutEditor(
                             modifier = Modifier
                                 .background(
                                     color = colorScheme.onBackgroundSecondary(0.1F),
-                                    shape = ShapeRoundedLarge
+                                    shape = RoundedLarge
                                 )
                                 .padding(3.dp),
                         ) {
@@ -255,14 +256,12 @@ fun DonutEditor(
                         modifier = Modifier
                             .weight(12F)
                             .height(PaddingNormal)
-                            .clip(ShapeRoundedNormal),
+                            .clip(RoundedNormal),
                         progress = flavorValue / topFlavorValue.toFloat(),
                         color = if (isTopFlavor) {
                             colorScheme.primary
                         } else {
-                            colorScheme.onBackground.copy(
-                                alpha = 0.5F
-                            )
+                            colorScheme.onBackground.withOpacity()
                         }
                     )
                     Text(
@@ -383,7 +382,7 @@ fun IngredientRow(
                 modifier = Modifier
                     .defaultMinSize(minWidth = 200.dp)
                     .background(
-                        color = colorScheme.background, shape = ShapeRoundedLarge
+                        color = colorScheme.background, shape = RoundedLarge
                     ),
                 expanded = expanded,
                 onDismissRequest = { expanded = false }

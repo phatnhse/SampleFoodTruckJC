@@ -1,157 +1,161 @@
 package com.phatnhse.sample_food_truck_jc.ui.composable
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import android.util.Log
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.updateTransition
+import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.Interaction
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme.colorScheme
+import androidx.compose.material3.MaterialTheme.typography
 import androidx.compose.material3.Tab
+import androidx.compose.material3.TabPosition
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
+import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingNormal
+import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingSmall
+import com.phatnhse.sample_food_truck_jc.ui.theme.RoundedLarge
+import com.phatnhse.sample_food_truck_jc.ui.theme.onBackgroundSecondary
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
-
+import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.emptyFlow
 
 @Composable
 fun TabLayout(
     modifier: Modifier = Modifier,
-    titles: List<String>,
-    defaultSelected: Int = 0,
+    tabItems: List<String>,
+    initialPage: Int = 0,
     tabContent: @Composable () -> Unit,
     onTabSelected: (Int) -> Unit
 ) {
-    //    val indicator = @Composable { tabPositions: List<TabPosition> ->
-//        FancyAnimatedIndicator(tabPositions = tabPositions, selectedTabIndex = state)
-//    }
+    var selectedTabIndex by remember { mutableStateOf(initialPage) }
+    val tabBackground = colorScheme.onBackgroundSecondary(opacity = 0.2F)
+    val tabBackgroundSelected = colorScheme.secondaryContainer
+    var tabPositions by remember {
+        mutableStateOf<List<TabPosition>>(listOf())
+    }
 
+    val transition = updateTransition(selectedTabIndex, label = "")
 
-    // TODO work on the animated tab layout
-    var state by remember { mutableStateOf(defaultSelected) }
+    val indicatorStart by transition.animateDp(
+        transitionSpec = {
+            spring(
+                dampingRatio = 0.8F,
+                stiffness = Spring.StiffnessMedium
+            )
+        }, label = ""
+    ) {
+        if (tabPositions.isEmpty()) {
+            0.dp
+        } else {
+            tabPositions[it].left
+        }
+    }
+
+    val indicatorEnd by transition.animateDp(
+        transitionSpec = {
+            spring(
+                dampingRatio = 0.8F,
+                stiffness = Spring.StiffnessMedium
+            )
+        }, label = ""
+    ) {
+        if (tabPositions.isEmpty()) {
+            0.dp
+        } else {
+            tabPositions[it].right
+        }
+    }
 
     Column(modifier) {
-        TabRow(
-            selectedTabIndex = state
+        Box(
+            Modifier
+                .height(IntrinsicSize.Max)
+                .padding(PaddingNormal)
         ) {
-            titles.forEachIndexed { index, title ->
-                Tab(
-                    selected = state == index,
-                    onClick = {
-                        state = index
-                        onTabSelected(index)
-                    },
-                    text = { Text(title) }
-                )
+            Box(
+                modifier = Modifier
+                    .offset(x = indicatorStart)
+                    .width(indicatorEnd - indicatorStart)
+                    .fillMaxHeight()
+                    .padding(PaddingSmall)
+                    .clip(RoundedLarge)
+                    .background(color = tabBackgroundSelected)
+            )
+            TabRow(
+                selectedTabIndex = selectedTabIndex,
+                containerColor = tabBackground,
+                modifier = Modifier
+                    .height(48.dp)
+                    .clip(RoundedLarge),
+                indicator = @Composable { positions ->
+                    tabPositions = positions
+                },
+                divider = {}
+            ) {
+                tabItems.forEachIndexed { index, title ->
+                    Tab(
+                        interactionSource = remember { NoRippleInteractionSource() },
+                        selected = selectedTabIndex == index,
+                        onClick = {
+                            selectedTabIndex = index
+                            onTabSelected(index)
+                        },
+                        text = {
+                            Text(
+                                text = title, style = typography.titleSmall.copy(
+                                    color = colorScheme.onBackground
+                                )
+                            )
+                        },
+                    )
+                }
             }
         }
 
-        tabContent()
+        Box(modifier = Modifier.padding(PaddingNormal)){
+            tabContent()
+        }
     }
 }
 
-//@Composable
-//fun FancyAnimatedIndicator() {
-//    val colors = listOf(
-//        colorScheme.primary,
-//        colorScheme.secondary,
-//        colorScheme.tertiary,
-//    )
-//    val transition = updateTransition(selectedTabIndex)
-//    val indicatorStart by transition.animateDp(
-//        transitionSpec = {
-//            // Handle directionality here, if we are moving to the right, we
-//            // want the right side of the indicator to move faster, if we are
-//            // moving to the left, we want the left side to move faster.
-//            if (initialState < targetState) {
-//                spring(dampingRatio = 1f, stiffness = 50f)
-//            } else {
-//                spring(dampingRatio = 1f, stiffness = 1000f)
-//            }
-//        }
-//    ) {
-//        tabPositions[it].left
-//    }
-//
-//    val indicatorEnd by transition.animateDp(
-//        transitionSpec = {
-//            // Handle directionality here, if we are moving to the right, we
-//            // want the right side of the indicator to move faster, if we are
-//            // moving to the left, we want the left side to move faster.
-//            if (initialState < targetState) {
-//                spring(dampingRatio = 1f, stiffness = 1000f)
-//            } else {
-//                spring(dampingRatio = 1f, stiffness = 50f)
-//            }
-//        }
-//    ) {
-//        tabPositions[it].right
-//    }
-//
-//    val indicatorColor by transition.animateColor {
-//        colors[it % colors.size]
-//    }
-//
-//    FancyIndicator(
-//        // Pass the current color to the indicator
-//        indicatorColor,
-//        modifier = Modifier
-//            // Fill up the entire TabRow, and place the indicator at the start
-//            .fillMaxSize()
-//            .wrapContentSize(align = Alignment.BottomStart)
-//            // Apply an offset from the start to correctly position the indicator around the tab
-//            .offset(x = indicatorStart)
-//            // Make the width of the indicator follow the animated width as we move between tabs
-//            .width(indicatorEnd - indicatorStart)
-//    )
-//}
-//
-//@Composable
-//fun FancyTab(
-//    title: String,
-//    selected: Boolean,
-//    onClick: (Int) -> Unit
-//) {
-//    Column(
-//        Modifier
-//            .padding(10.dp)
-//            .height(50.dp)
-//            .fillMaxWidth(),
-//        verticalArrangement = Arrangement.SpaceBetween
-//    ) {
-//        Box(
-//            Modifier
-//                .size(10.dp)
-//                .align(Alignment.CenterHorizontally)
-//                .background(
-//                    color = if (selected) colorScheme.primary
-//                    else colorScheme.background
-//                )
-//        )
-//        Text(
-//            text = title,
-//            style = typography.bodyLarge,
-//            modifier = Modifier.align(Alignment.CenterHorizontally)
-//        )
-//    }
-//}
+class NoRippleInteractionSource : MutableInteractionSource {
 
-@Preview
+    override val interactions: Flow<Interaction> = emptyFlow()
+
+    override suspend fun emit(interaction: Interaction) {}
+
+    override fun tryEmit(interaction: Interaction) = true
+}
+
+@SingleDevicePreview
 @Composable
 fun Tab_Preview() {
     PreviewSurface {
         val tabs = listOf("Tab 1", "Tab 2", "Tab 3", "Tab 4")
         var index by remember { mutableStateOf(0) }
 
-        TabLayout(Modifier.fillMaxSize(),
-            titles = tabs,
-            tabContent = {
-                Text(text = "tab selected ${tabs[index]}")
-            },
-            onTabSelected = {
-                index = it
-            }
-        )
+        TabLayout(Modifier.fillMaxSize(), tabItems = tabs, tabContent = {
+            Text(text = "tab selected ${tabs[index]}")
+        }, onTabSelected = {
+            index = it
+        })
     }
 }
