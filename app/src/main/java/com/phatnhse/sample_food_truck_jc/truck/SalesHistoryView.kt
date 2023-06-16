@@ -27,7 +27,6 @@ import com.phatnhse.sample_food_truck_jc.ui.theme.chartColorOrange
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 
-
 @Composable
 fun SalesHistoryView(
     previousViewTitle: String = "Food Truck",
@@ -57,9 +56,10 @@ fun SalesHistoryView(
                 Column {
                     Spacer(modifier = Modifier.height(PaddingExtraLarge))
                     SalesHistoryLineChart(
+                        hideChartContent = timeframe != Timeframe.TODAY,
                         xAxisInitialIndex = 1,
                         xAxisSpacing = 4,
-                        xAxisTextValues = listOf("Hello world", "Hello world 1"),
+                        xAxisTextValues = listOf("Hello world", "Hello world 1","Hello world 2"),
                         lineMarks = listOf(
                             LineMark(
                                 values = listOf(120, 80, 32, 56, 23, 160, 80, 90, 40, 56, 23, 160),
@@ -125,7 +125,6 @@ fun SalesHistoryView(
         )
     }
 }
-
 
 @SingleDevicePreview
 @Composable

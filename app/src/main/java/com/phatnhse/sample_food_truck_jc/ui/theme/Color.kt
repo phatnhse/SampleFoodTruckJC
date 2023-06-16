@@ -74,32 +74,6 @@ val chartColorBlue = Color(0xFF3478F6)
 val chartColorGreen = Color(0xFF65C466)
 val chartColorOrange = Color(0xFFF19A37)
 
-// Donut
-val donutSugarDark = Color(0xFFCEF9FF)
-val donutSugarLight = Color(0xFFD9EEFF)
-
-// Dough
-val doughBlueBgDark = Color(0xFF4E6D80)
-val doughBlueBgLight = Color(0xFF9CAEBF)
-
-val doughBrownBgDark = Color(0xFF5B4E41)
-val doughBrownBgLight = Color(0xFF998069)
-
-val doughGreenBgDark = Color(0xFF46694D)
-val doughGreenBgLight = Color(0xFF8CC096)
-
-val doughPinkBgDark = Color(0xFF7B4F4D)
-val doughPinkBgLight = Color(0xFFBE9A99)
-
-val doughPlainBgDark = Color(0xFF6F604E)
-val doughPlainBgLight = Color(0xFFC2A27B)
-
-val doughWhiteBgDark = Color(0xFF586777)
-val doughWhiteBgLight = Color(0xFFAEB5BD)
-
-val doughYellowBgDark = Color(0xFF8D7D55)
-val doughYellowBgLight = Color(0xFFD9C794)
-
 fun Color.withOpacity(opacity: Float = 0.5F): Color {
     return copy(alpha = opacity)
 }
@@ -107,3 +81,4 @@ fun Color.withOpacity(opacity: Float = 0.5F): Color {
 fun ColorScheme.onBackgroundSecondary(opacity: Float = 0.5F): Color {
     return onBackground.withOpacity(opacity)
 }
+

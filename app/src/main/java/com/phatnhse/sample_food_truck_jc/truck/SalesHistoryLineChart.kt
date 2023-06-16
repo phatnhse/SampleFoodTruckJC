@@ -133,7 +133,6 @@ fun SalesHistoryLineChart(
                         color = hideChartContentBg,
                         topLeft = Offset(0f, padding),
                         size = Size(totalWidth, totalHeight)
-
                     )
                 }
 
@@ -203,7 +202,7 @@ fun SalesHistoryLineChart(
                         if (index != yGridLines.lastIndex) {
                             drawText(
                                 textMeasurer = textMeasurer,
-                                text = xAxisTextValues[xAxisIndex],
+                                text = xAxisTextValues[index],
                                 topLeft = endingPoint.copy(
                                     x = endingPoint.x + padding / 2,
                                     y = endingPoint.y - padding
