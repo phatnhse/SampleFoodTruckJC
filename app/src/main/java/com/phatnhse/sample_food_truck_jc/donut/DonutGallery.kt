@@ -65,7 +65,7 @@ import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 fun DonutGallery(
     previousViewTitle: String,
     currentViewTitle: String,
-    onBackClicked: () -> Unit,
+    onBackPressed: () -> Unit,
     onDonutClicked: (Donut) -> Unit,
     onNewDonutClicked: () -> Unit,
     model: FoodTruckViewModel
@@ -189,7 +189,7 @@ fun DonutGallery(
         NavigationHeader(
             previousViewTitle = previousViewTitle,
             currentViewTitle = currentViewTitle,
-            onBackPressed = onBackClicked,
+            onBackPressed = onBackPressed,
             menuItems = {
                 Row {
                     Icon(
@@ -230,8 +230,7 @@ fun DonutGallery(
 
 @Composable
 fun DonutGalleryList(donuts: List<Donut>) {
-    LazyColumn(
-    ) {
+    LazyColumn {
         itemsIndexed(
             items = donuts,
             key = { index, donut -> donut.id }
@@ -342,7 +341,7 @@ fun DonutGallery_Preview() {
         DonutGallery(
             previousViewTitle = "Food Truck",
             currentViewTitle = "Donuts",
-            onBackClicked = {},
+            onBackPressed = {},
             onDonutClicked = {},
             onNewDonutClicked = {},
             model = FoodTruckViewModel.preview,

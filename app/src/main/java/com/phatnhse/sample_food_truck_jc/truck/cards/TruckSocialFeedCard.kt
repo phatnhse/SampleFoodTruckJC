@@ -70,6 +70,7 @@ fun TruckSocialFeedCard(
 @Composable
 fun FlowLayout(
     modifier: Modifier = Modifier,
+    alignCenter: Boolean = true,
     children: @Composable () -> Unit
 ) {
     data class RowInfo(
@@ -118,7 +119,12 @@ fun FlowLayout(
         layout(constraints.maxWidth, min(constraints.maxHeight, totalHeight)) {
             rows.forEach { (placeables, width) ->
                 placeables.forEach { (placeable, offset) ->
-                    val horizontalSpacing = (constraints.maxWidth - width) * 0.5
+                    val horizontalSpacing =
+                        if (alignCenter) {
+                            (constraints.maxWidth - width) * 0.5
+                        } else {
+                            0F
+                        }
                     placeable.placeRelative(
                         x = offset.x + horizontalSpacing.toInt(),
                         y = offset.y

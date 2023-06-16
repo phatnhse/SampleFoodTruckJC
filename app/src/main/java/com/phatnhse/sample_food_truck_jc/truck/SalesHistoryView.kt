@@ -27,7 +27,6 @@ import com.phatnhse.sample_food_truck_jc.ui.theme.chartColorOrange
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 
-
 @Composable
 fun SalesHistoryView(
     previousViewTitle: String = "Food Truck",
@@ -126,7 +125,6 @@ fun SalesHistoryView(
         )
     }
 }
-
 
 @SingleDevicePreview
 @Composable
