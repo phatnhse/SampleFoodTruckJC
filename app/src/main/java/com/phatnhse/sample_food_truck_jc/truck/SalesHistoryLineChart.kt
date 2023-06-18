@@ -73,11 +73,32 @@ data class LineMark(
     val values: List<Int>,
     val lineColor: Color,
     val indicatorSolidColor: Color,
-    val indicatorType: IndicatorType,
+    val indicatorShape: IndicatorType,
     val indicatorSize: Dp = 3.dp,
     val indicatorBorderSize: Dp = 2.dp,
     val indicatorText: String
 )
+
+@Composable
+fun List<SalesByCity>.toLineMarks(): List<LineMark> {
+    return mapIndexed { index, salesByCity ->
+        val (shape, color) = when (index) {
+            0 -> IndicatorType.CIRCLE to chartColorBlue
+            1 -> IndicatorType.SQUARE to chartColorGreen
+            2 -> IndicatorType.TRIANGLE to chartColorOrange
+            else -> throw UnsupportedOperationException("Not supported chart with more than 3 columns")
+        }
+        LineMark(
+            values = salesByCity.entries.map { it.sales },
+            indicatorShape = shape,
+            indicatorBorderSize = 2.dp,
+            indicatorSize = 4.dp,
+            lineColor = color,
+            indicatorSolidColor = colorScheme.background,
+            indicatorText = "London"
+        )
+    }
+}
 
 @OptIn(ExperimentalTextApi::class)
 @Composable
@@ -317,7 +338,7 @@ private fun DrawScope.drawLineMarks(
         // draw indicators
         xyAxisIndicators.forEach { centerOffset ->
             drawIndicator(
-                indicator = lineMark.indicatorType,
+                indicator = lineMark.indicatorShape,
                 borderColor = lineMark.lineColor.copy(alpha = opacity),
                 solidColor = lineMark.indicatorSolidColor.copy(alpha = opacity),
                 indicatorSize = indicatorSize,
@@ -328,7 +349,7 @@ private fun DrawScope.drawLineMarks(
         }
 
         drawIndicator(
-            indicator = lineMark.indicatorType,
+            indicator = lineMark.indicatorShape,
             borderColor = lineMark.lineColor,
             solidColor = lineMark.indicatorSolidColor,
             indicatorSize = indicatorSize,
@@ -468,7 +489,7 @@ fun SalesHistoryLineChart_Preview() {
             lineMarks = listOf(
                 LineMark(
                     values = listOf(120, 80, 32, 56, 23, 160, 80, 90, 40, 56, 23, 160),
-                    indicatorType = IndicatorType.SQUARE,
+                    indicatorShape = IndicatorType.SQUARE,
                     indicatorBorderSize = 2.dp,
                     indicatorSize = 4.dp,
                     lineColor = chartColorGreen,
@@ -476,7 +497,7 @@ fun SalesHistoryLineChart_Preview() {
                     indicatorText = "London"
                 ), LineMark(
                     values = listOf(160, 120, 180, 78, 99, 112, 30, 16, 204, 240, 78, 99),
-                    indicatorType = IndicatorType.TRIANGLE,
+                    indicatorShape = IndicatorType.TRIANGLE,
                     indicatorBorderSize = 2.dp,
                     indicatorSize = 4.dp,
                     lineColor = chartColorBlue,
@@ -484,7 +505,7 @@ fun SalesHistoryLineChart_Preview() {
                     indicatorText = "San Francisco"
                 ), LineMark(
                     values = listOf(384, 320, 240, 280, 400, 281, 210, 300, 270, 400, 312, 300),
-                    indicatorType = IndicatorType.CIRCLE,
+                    indicatorShape = IndicatorType.CIRCLE,
                     indicatorBorderSize = 2.dp,
                     indicatorSize = 4.dp,
                     lineColor = chartColorOrange,
