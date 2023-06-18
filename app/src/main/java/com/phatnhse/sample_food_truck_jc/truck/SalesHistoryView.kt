@@ -15,15 +15,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import com.phatnhse.sample_food_truck_jc.foodtruck.model.FoodTruckViewModel
 import com.phatnhse.sample_food_truck_jc.foodtruck.model.Timeframe
 import com.phatnhse.sample_food_truck_jc.navigation.NavigationHeader
+import com.phatnhse.sample_food_truck_jc.order.formattedDate
 import com.phatnhse.sample_food_truck_jc.ui.composable.TabLayout
 import com.phatnhse.sample_food_truck_jc.ui.theme.PaddingExtraLarge
-import com.phatnhse.sample_food_truck_jc.ui.theme.chartColorBlue
-import com.phatnhse.sample_food_truck_jc.ui.theme.chartColorGreen
-import com.phatnhse.sample_food_truck_jc.ui.theme.chartColorOrange
 import com.phatnhse.sample_food_truck_jc.utils.PreviewSurface
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
 
@@ -36,6 +33,9 @@ fun SalesHistoryView(
     model: FoodTruckViewModel
 ) {
     var timeframe by remember { mutableStateOf(Timeframe.WEEK) }
+    val supportedTimeframes = Timeframe.values().toList() - Timeframe.TODAY
+    val salesByCity = model.getSalesByCity(timeframe)
+    val totalSales = salesByCity.flatMap { it.entries }.sumOf { it.sales }
 
     Column(
         modifier = Modifier
@@ -52,75 +52,25 @@ fun SalesHistoryView(
 
         Spacer(modifier = Modifier.height(PaddingExtraLarge))
         TabLayout(
-            tabItems = Timeframe.values().map { it.title },
+            tabItems = supportedTimeframes.map { it.title },
             tabContent = {
                 Column {
                     Spacer(modifier = Modifier.height(PaddingExtraLarge))
                     SalesHistoryLineChart(
+                        hideChartContent = timeframe != Timeframe.WEEK,
                         xAxisInitialIndex = 1,
-                        xAxisSpacing = 4,
-                        xAxisTextValues = listOf("Hello world", "Hello world 1"),
-                        lineMarks = listOf(
-                            LineMark(
-                                values = listOf(120, 80, 32, 56, 23, 160, 80, 90, 40, 56, 23, 160),
-                                indicatorType = IndicatorType.SQUARE,
-                                indicatorBorderSize = 2.dp,
-                                indicatorSize = 4.dp,
-                                lineColor = chartColorBlue,
-                                indicatorSolidColor = MaterialTheme.colorScheme.background,
-                                indicatorText = "London"
-                            ), LineMark(
-                                values = listOf(
-                                    160,
-                                    120,
-                                    180,
-                                    78,
-                                    99,
-                                    112,
-                                    30,
-                                    16,
-                                    204,
-                                    240,
-                                    78,
-                                    99
-                                ),
-                                indicatorType = IndicatorType.TRIANGLE,
-                                indicatorBorderSize = 2.dp,
-                                indicatorSize = 4.dp,
-                                lineColor = chartColorGreen,
-                                indicatorSolidColor = MaterialTheme.colorScheme.background,
-                                indicatorText = "San Francisco"
-                            ), LineMark(
-                                values = listOf(
-                                    384,
-                                    320,
-                                    240,
-                                    280,
-                                    400,
-                                    281,
-                                    210,
-                                    300,
-                                    270,
-                                    400,
-                                    312,
-                                    300
-                                ),
-                                indicatorType = IndicatorType.CIRCLE,
-                                indicatorBorderSize = 2.dp,
-                                indicatorSize = 4.dp,
-                                lineColor = chartColorOrange,
-                                indicatorSolidColor = MaterialTheme.colorScheme.background,
-                                indicatorText = "Cupertino"
-                            )
-                        ),
+                        xAxisSpacing = 7,
+                        xAxisTextValues = salesByCity.flatMap { it.entries }
+                            .map { it.date.formattedDate(withTime = false) },
+                        lineMarks = salesByCity.toLineMarks(),
                         yAxisTickCount = 4,
-                        totalSales = 40
+                        totalSales = totalSales
                     )
                 }
             },
-            initialPage = timeframe.ordinal,
+            initialPage = supportedTimeframes.indexOf(timeframe),
             onTabSelected = {
-                timeframe = Timeframe.values()[it]
+                timeframe = supportedTimeframes[it]
             }
         )
     }

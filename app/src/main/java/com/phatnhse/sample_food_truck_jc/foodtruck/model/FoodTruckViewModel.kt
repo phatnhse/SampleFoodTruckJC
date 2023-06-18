@@ -164,7 +164,8 @@ class FoodTruckViewModel : ViewModel() {
                 val startDate = dateComponents(offset)
                 SalesByCity.Entry(date = startDate, sales = summary.totalSales)
             }
-            SalesByCity(city = city, entries = entries)
+
+            SalesByCity(city = city, entries = entries.asReversed())
         }
     }
 
