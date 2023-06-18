@@ -7,6 +7,7 @@ import androidx.compose.ui.unit.dp
 val Typography = Typography()
 
 val PaddingZero = 0.dp
+val PaddingTiny = 2.dp
 val PaddingSmall = 6.dp
 val PaddingNormal = 12.dp
 val PaddingLarge = 18.dp

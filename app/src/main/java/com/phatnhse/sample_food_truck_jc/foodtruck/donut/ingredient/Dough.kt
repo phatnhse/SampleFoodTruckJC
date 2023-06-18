@@ -1,5 +1,6 @@
 package com.phatnhse.sample_food_truck_jc.foodtruck.donut.ingredient
 
+import androidx.compose.ui.graphics.Color
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.FlavorProfile
 
 data class Dough(
@@ -8,11 +9,36 @@ data class Dough(
     override val flavors: FlavorProfile,
     override val imagePrefix: String = "dough"
 ) : Ingredient(name, flavors, imageAssetName, imagePrefix) {
-    fun backgroundColorName(darkTheme: Boolean): String {
-        return "${imagePrefix.uppercase()}${imageAssetName.uppercase()}Bg${if (darkTheme) "Dark" else "Light"}"
+    fun backgroundColorName(darkTheme: Boolean): Color {
+        val colorName =
+            "${imagePrefix}${imageAssetName.capitalize()}Bg${if (darkTheme) "Dark" else "Light"}"
+        return doughBgColors.getOrDefault(colorName, Color(0xFF5B4E41))
     }
 
     companion object {
+        val doughBgColors = mapOf(
+            "doughBlueBgDark" to Color(0xFF4E6D80),
+            "doughBlueBgLight" to Color(0xFF9CAEBF),
+
+            "doughBrownBgDark" to Color(0xFF5B4E41),
+            "doughBrownBgLight" to Color(0xFF998069),
+
+            "doughGreenBgDark" to Color(0xFF46694D),
+            "doughGreenBgLight" to Color(0xFF8CC096),
+
+            "doughPinkBgDark" to Color(0xFF7B4F4D),
+            "doughPinkBgLight" to Color(0xFFBE9A99),
+
+            "doughPlainBgDark" to Color(0xFF6F604E),
+            "doughPlainBgLight" to Color(0xFFC2A27B),
+
+            "doughWhiteBgDark" to Color(0xFF586777),
+            "doughWhiteBgLight" to Color(0xFFAEB5BD),
+
+            "doughYellowBgDark" to Color(0xFF8D7D55),
+            "doughYellowBgLight" to Color(0xFFD9C794)
+        )
+
         val blueberry = Dough(
             name = "Blueberry Dough",
             imageAssetName = "blue",

@@ -22,30 +22,101 @@ import com.phatnhse.sample_food_truck_jc.foodtruck.donut.Donut
 import com.phatnhse.sample_food_truck_jc.foodtruck.donut.DonutView
 import com.phatnhse.sample_food_truck_jc.foodtruck.general.buildingPainter
 import com.phatnhse.sample_food_truck_jc.truck.SocialFeedTag.Companion.tags
-import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
 import com.phatnhse.sample_food_truck_jc.ui.theme.RoundedSmall
+import com.phatnhse.sample_food_truck_jc.ui.theme.SampleFoodTruckJCTheme
 import com.phatnhse.sample_food_truck_jc.utils.SingleDevicePreview
-import java.util.Calendar
-import java.util.Date
+import java.time.LocalDateTime
 import java.util.UUID
 
 data class SocialFeedPost(
     val id: UUID = UUID.randomUUID(),
     val favoriteDonut: Donut,
     val message: String,
-    val date: Date,
+    val date: LocalDateTime,
     val tags: List<SocialFeedTag>
 ) {
 
     companion object {
-        private val date = Date()
 
-        private fun olderDate(): Date {
-            val calendar = Calendar.getInstance()
-            calendar.time = date
-            calendar.add(Calendar.MINUTE, -60 * (5..30).random())
-            return calendar.time
+        private fun olderDate(): LocalDateTime {
+            val now = LocalDateTime.now()
+            val minusMin = -60 * (5..30).random()
+            now.minusMinutes(minusMin.toLong())
+            return now
         }
+
+        val standardContent = listOf(
+            SocialFeedPost(
+                favoriteDonut = Donut.classic,
+                message = "I can't wait for the Food Truck to make its way to London!",
+                date = olderDate(),
+                tags = listOf(
+                    SocialFeedTag.CityTag(City.london),
+                    SocialFeedTag.TitleTag("I'm waiting..."),
+                    SocialFeedTag.TitleTag("One of these days!")
+                )
+            ),
+            SocialFeedPost(
+                favoriteDonut = Donut.blackRaspberry,
+                message = "I'm really looking forward to trying the new chocolate donuts next time the truck is in town.",
+                date = olderDate(),
+                tags = listOf(
+                    SocialFeedTag.DonutTag(Donut.lemonChocolate),
+                    SocialFeedTag.TitleTag("Chocolate!!!"),
+                    SocialFeedTag.DonutTag(Donut.powderedChocolate),
+                    SocialFeedTag.CityTag(City.sanFrancisco)
+                )
+            ),
+            SocialFeedPost(
+                favoriteDonut = Donut.daytime,
+                message = "Do you think there are any donuts in space?",
+                date = olderDate(),
+                tags = listOf(
+                    SocialFeedTag.DonutTag(Donut.cosmos),
+                    SocialFeedTag.TitleTag("Space")
+                )
+            ),
+            SocialFeedPost(
+                favoriteDonut = Donut.nighttime,
+                message = "Thinking of checking out the Food Truck in its new location in SF today, anyone else down?",
+                date = olderDate(),
+                tags = listOf(
+                    SocialFeedTag.CityTag(City.sanFrancisco),
+                    SocialFeedTag.TitleTag("Donuts for one"),
+                    SocialFeedTag.TitleTag("Unless...?")
+                )
+            ),
+            SocialFeedPost(
+                favoriteDonut = Donut.custard,
+                message = "I heard the Food Truck was in Cupertino today! Did anyone get a chance to visit?",
+                date = olderDate(),
+                tags = listOf(
+                    SocialFeedTag.CityTag(City.cupertino),
+                    SocialFeedTag.TitleTag("Food Truck sighting")
+                )
+            ),
+            SocialFeedPost(
+                favoriteDonut = Donut.figureSkater,
+                message = "Okay, long day of work complete. Time to grab a bunch of donuts and get out of here!",
+                date = olderDate(),
+                tags = listOf(
+                    SocialFeedTag.DonutTag(Donut.figureSkater),
+                    SocialFeedTag.DonutTag(Donut.blueberryFrosted),
+                    SocialFeedTag.DonutTag(Donut.powderedStrawberry),
+                    SocialFeedTag.TitleTag("Many more")
+                )
+            ),
+            SocialFeedPost(
+                favoriteDonut = Donut.blueberryFrosted,
+                message = "I think I just saw the Food Truck on its way to San Francisco! Taxi, follow that truck!",
+                date = olderDate(),
+                tags = listOf(
+                    SocialFeedTag.DonutTag(Donut.classic),
+                    SocialFeedTag.CityTag(City.sanFrancisco),
+                    SocialFeedTag.TitleTag("And away we go!")
+                )
+            )
+        )
 
         val socialFeedPlusContent = listOf(
             SocialFeedPost(
@@ -122,12 +193,14 @@ sealed class SocialFeedTag(
 @Composable
 fun SocialFeedTagView(modifier: Modifier = Modifier, socialFeedTag: SocialFeedTag) {
     Card(
-        modifier = modifier, shape = RoundedSmall, colors = CardDefaults.cardColors(
+        modifier = modifier, shape = RoundedSmall,
+        colors = CardDefaults.cardColors(
             containerColor = colorScheme.secondaryContainer
         )
     ) {
         Row(
-            modifier = Modifier.padding(4.dp), verticalAlignment = Alignment.CenterVertically
+            modifier = Modifier.padding(4.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             TagIcon(socialFeedTag = socialFeedTag)
             Spacer(modifier = Modifier.padding(4.dp))
