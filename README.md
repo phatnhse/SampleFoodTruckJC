@@ -2,7 +2,7 @@
 
 <img src="/previews/food-truck.gif" align="right" width="320"/>
 
-This project is aimed to demonstrate the modern android Jetpack Compose library.
+This project is aimed to demonstrate the modern declarative android Compose UIs.
 
 This is for educational purposes only.
 
@@ -11,6 +11,8 @@ This is for educational purposes only.
 This is a clone version from [sample-food-truck](https://github.com/apple/sample-food-truck) which was written in SwiftUI.
 
 The project was presented and associated with [WWDC22 session 110492](https://developer.apple.com/videos/wwdc2022).
+
+For quick installation, please grab the latest version in the [Release]([url](https://github.com/phatnhse/SampleFoodTruckJC/releases)) section.
 
 ## Tech stack
 
