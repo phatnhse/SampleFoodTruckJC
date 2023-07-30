@@ -12,7 +12,7 @@ This is a clone version from [sample-food-truck](https://github.com/apple/sample
 
 The project was presented and associated with [WWDC22 session 110492](https://developer.apple.com/videos/wwdc2022).
 
-For quick installation, please grab the latest version in the [Release]([url](https://github.com/phatnhse/SampleFoodTruckJC/releases)) section.
+For quick installation, please grab the latest version in the [Release](https://github.com/phatnhse/SampleFoodTruckJC/releases) section.
 
 ## Tech stack
 
