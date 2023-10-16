@@ -63,6 +63,34 @@ fun TruckView(
     }
 }
 
+@Composable
+fun NamePicker(
+    header: String,
+    names: List<String>,
+    onNameClicked: (String) -> Unit
+) {
+    Column {
+        // this will recompose when [header] changes, but not when [names] changes
+        Text(header, style = MaterialTheme.typography.bodyLarge)
+        Divider()
+
+        // LazyColumn is the Compose version of a RecyclerView.
+        // The lambda passed to items() is similar to a RecyclerView.ViewHolder.
+        LazyColumn {
+            items(names) { name ->
+                // When an item's [name] updates, the adapter for that item
+                // will recompose. This will not recompose when [header] changes
+                NamePickerItem(name, onNameClicked)
+            }
+        }
+    }
+}
+
+@Composable
+private fun NamePickerItem(name: String, onClicked: (String) -> Unit) {
+    Text(name, Modifier.clickable(onClick = { onClicked(name) }))
+}
+
 @SingleDevicePreview
 @Composable
 fun TruckView_Preview() {
